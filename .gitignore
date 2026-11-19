@@ -1,0 +1,17 @@
+# Never publish API keys or local environment files.
+API키.txt
+API키*.txt
+.env
+.env.*
+
+# Local development and preview files.
+.preview_tmp/
+__pycache__/
+*.pyc
+
+# Files from the former Python desktop version are not used by this site.
+server.py
+실행.bat
+방문지_입력양식.xlsx
+사용설명서.txt
+
