@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b5bd3">
-  <title>모바일 방문경로 최적화 KJS </title>
+  <meta name="theme-color" content="#0f7a4f">
+  <title>방문경로 최적화</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     :root{
@@ -29,9 +29,11 @@
     .topbar{
       position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:center;
       padding:11px max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left));
-      color:#fff;background:linear-gradient(135deg,#0748a8,#0b69e5);box-shadow:0 5px 18px #16488130;
+      color:#fff;background:linear-gradient(135deg,#0b6f46,#18a568);box-shadow:0 5px 18px #116f4a30;
     }
+    .brand{display:flex;align-items:baseline;justify-content:center;gap:7px;white-space:nowrap}
     .brand h1{margin:0;font-size:1.16rem;line-height:1.2;letter-spacing:-.02em}
+    .brand .version{color:#ddf7e9;font-size:.67rem;font-weight:750;letter-spacing:.015em}
     .key-dot{width:8px;height:8px;border-radius:50%;background:#ffca4b;box-shadow:0 0 0 3px #ffca4b28}
     .key-dot.ready{background:#6ce9a6;box-shadow:0 0 0 3px #6ce9a628}
     main{padding:10px max(10px,env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
@@ -61,7 +63,7 @@
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.02rem;text-shadow:0 1px 1px #a63c0040}
     .btn-primary:active{transform:translateY(1px)}
     .btn-secondary{color:var(--blue-dark);background:#eaf2ff}
-    .api-key-button{display:flex;align-items:center;justify-content:center;gap:6px;height:26px;min-height:26px;border:1px solid #c5d3e6;border-radius:999px;padding:0 7px;color:#28466d;background:linear-gradient(180deg,#f8fbff,#e7eef8);box-shadow:0 4px 10px #334d6d1c,inset 0 1px 0 #fff;font-size:.7rem;font-weight:850;white-space:nowrap}
+    .api-key-button{display:flex;align-items:center;justify-content:center;gap:6px;height:31.2px;min-height:31.2px;border:1px solid #c5d3e6;border-radius:999px;padding:0 7px;color:#28466d;background:linear-gradient(180deg,#f8fbff,#e7eef8);box-shadow:0 4px 10px #334d6d1c,inset 0 1px 0 #fff;font-size:.7rem;font-weight:850;white-space:nowrap}
     .api-key-button .key-dot{background:#f59e0b;box-shadow:0 0 0 3px #f59e0b20}
     .api-key-button .key-dot.ready{background:#17a05d;box-shadow:0 0 0 3px #17a05d20}
     .visit-list{display:grid;gap:7px}
@@ -80,6 +82,9 @@
     .status.success{background:#eaf8f0;color:#126a3a}
     .progress{height:3px;margin-top:6px;border-radius:999px;background:#e8edf5;overflow:hidden}
     .progress>span{display:block;width:0;height:100%;border-radius:inherit;background:#1872e8;transition:width .25s}
+    .result-placeholder{display:grid;place-items:center;min-height:145px;margin-bottom:9px;border:1.5px solid #aeb7c3;border-radius:14px;background:#fafbfc;padding:22px;text-align:center}
+    .result-placeholder p{margin:0;color:#a6aeb8;font-size:.88rem;font-weight:700;line-height:1.5}
+    .result-placeholder[hidden]{display:none}
     .results[hidden]{display:none}
     .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
     .metric{padding:11px 8px;border-radius:12px;background:#f1f6fd;text-align:center}
@@ -123,7 +128,8 @@
   <div class="app">
     <header class="topbar">
       <div class="brand">
-        <h1>방문경로 최적화 KJS 2026 V5 </h1>
+        <h1>방문경로 최적화</h1>
+        <span class="version">2026 V6 KJS</span>
       </div>
     </header>
 
@@ -172,6 +178,10 @@
           <div class="status" id="status" role="status" aria-live="polite">주소와 출발지를 입력한 뒤 계산하세요.</div>
           <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
         </div>
+      </section>
+
+      <section class="result-placeholder" id="resultPlaceholder" aria-label="계산 결과 표시 영역 안내">
+        <p>이곳에 최적경로 지도와 리스트가 표시됩니다.</p>
       </section>
 
       <section class="results" id="results" hidden>
@@ -264,7 +274,7 @@
     function setKeyState(){
       const ready = Boolean(state.apiKey);
       $('keyDot').classList.toggle('ready',ready);
-      $('keyState').textContent = ready ? '키 설정됨' : 'API 키 설정';
+      $('keyState').textContent = ready ? 'API 키 설정됨' : 'API 키 설정';
     }
     function currentStartTime(){
       const now = new Date();
@@ -550,6 +560,7 @@
       $('totalTime').textContent=formatTime(result.totalTime);
       $('totalStops').textContent=result.ordered.length+'곳';
       renderTable(result);
+      $('resultPlaceholder').hidden=true;
       $('results').hidden=false;
       requestAnimationFrame(()=>{
         if(state.mapReady){state.map.invalidateSize();drawResult(result)}
@@ -575,6 +586,7 @@
       const runId=++state.runId;
       $('calculate').disabled=true;
       $('results').hidden=true;
+      $('resultPlaceholder').hidden=false;
       clearMap();
       try{
         setStatus('출발지 주소를 확인하고 있습니다.','info',5);
@@ -645,7 +657,7 @@
     $('clearAddresses').addEventListener('click',()=>{
       const hasInput=state.inputRows.some(row=>row.name.trim()||row.address.trim()||row.phone.trim());
       if(hasInput && !confirm('입력한 방문지를 모두 지우시겠습니까?')) return;
-      ++state.runId;state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];renderInputRows();$('results').hidden=true;state.result=null;clearMap();
+      ++state.runId;state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];renderInputRows();$('results').hidden=true;$('resultPlaceholder').hidden=false;state.result=null;clearMap();
       setStatus('방문지 주소를 초기화했습니다.');
     });
     $('endMode').addEventListener('change',()=>{$('endField').hidden=$('endMode').value==='return'});
