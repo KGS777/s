@@ -39,6 +39,7 @@
     .card-body{padding:12px}
     .section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
     .section-head h2{margin:0;font-size:1rem;letter-spacing:-.015em}
+    .visit-card{border:1.5px solid #98a2ae;box-shadow:0 5px 16px #46546618}
     .visit-card .section-head h2{font-size:1.2rem}
     .count{font-size:.8rem;color:var(--muted);font-weight:700}
     label{display:block;margin:0 0 4px;font-size:.81rem;font-weight:800;color:#344055}
@@ -47,7 +48,8 @@
       padding:9px 10px;min-height:42px;transition:border-color .15s,box-shadow .15s;
     }
     input:focus,select:focus{border-color:#2878e8;box-shadow:0 0 0 4px #2878e821}
-    select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#607089 50%),linear-gradient(135deg,#607089 50%,transparent 50%);background-position:calc(100% - 17px) 18px,calc(100% - 12px) 18px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
+    select{appearance:none;background:#edf0f3;border-color:#c8ced6;padding:0 6px;text-align:center;text-align-last:center;font-size:.75rem;font-weight:850;letter-spacing:-.035em;white-space:nowrap;overflow:hidden}
+    select option{font-size:.82rem;font-weight:700}
     .hint{margin:8px 0 0;color:var(--muted);font-size:.78rem;line-height:1.55}
     .field+.field{margin-top:0}
     .inline-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(108px,3fr);gap:8px}
@@ -55,11 +57,11 @@
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
     .btn-text{min-height:32px;color:var(--danger);background:#fff2f0;font-size:.8rem}
-    .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:stretch}
-    .btn-primary{width:100%;min-height:52px;border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.02rem;text-shadow:0 1px 1px #a63c0040}
+    .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:center}
+    .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.02rem;text-shadow:0 1px 1px #a63c0040}
     .btn-primary:active{transform:translateY(1px)}
     .btn-secondary{color:var(--blue-dark);background:#eaf2ff}
-    .api-key-button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:52px;border:1px solid #c5d3e6;border-radius:999px;padding:0 9px;color:#28466d;background:linear-gradient(180deg,#f8fbff,#e7eef8);box-shadow:0 5px 14px #334d6d20,inset 0 1px 0 #fff;font-size:.78rem;font-weight:850;white-space:nowrap}
+    .api-key-button{display:flex;align-items:center;justify-content:center;gap:6px;height:26px;min-height:26px;border:1px solid #c5d3e6;border-radius:999px;padding:0 7px;color:#28466d;background:linear-gradient(180deg,#f8fbff,#e7eef8);box-shadow:0 4px 10px #334d6d1c,inset 0 1px 0 #fff;font-size:.7rem;font-weight:850;white-space:nowrap}
     .api-key-button .key-dot{background:#f59e0b;box-shadow:0 0 0 3px #f59e0b20}
     .api-key-button .key-dot.ready{background:#17a05d;box-shadow:0 0 0 3px #17a05d20}
     .visit-list{display:grid;gap:7px}
@@ -147,8 +149,8 @@
             <div class="field">
               <label for="endMode">도착 방식</label>
               <select id="endMode">
-                <option value="return">출발지로 복귀</option>
-                <option value="custom">다른 곳에서 종료</option>
+                <option value="return">출발지복귀</option>
+                <option value="custom">다른곳복귀</option>
               </select>
             </div>
             <div class="field custom-end" id="endField" hidden>
