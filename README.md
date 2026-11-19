@@ -11,7 +11,7 @@
 - `.gitignore`
 - `README.md`
 
-`API키.txt`는 절대 GitHub에 올리지 마십시오. TMAP API 키는 실행 후 화면 오른쪽 위의 `키 설정`에서 각 사용자가 직접 입력합니다.
+`API키.txt`는 절대 GitHub에 올리지 마십시오. TMAP API 키는 실행 후 `최적경로 계산` 버튼 오른쪽의 `API 키 설정`에서 각 사용자가 직접 입력합니다.
 
 ## GitHub Pages 배포
 
@@ -30,7 +30,7 @@ https://GITHUB_ID.github.io/REPOSITORY_NAME/
 
 ## 사용 순서
 
-1. `키 설정`에서 각 사용자의 TMAP API 키를 입력합니다.
+1. `최적경로 계산` 버튼 오른쪽의 `API 키 설정`에서 각 사용자의 TMAP API 키를 입력합니다.
 2. 방문처명, 주소와 전화번호를 입력합니다.
 3. 출발지와 도착 방식을 설정합니다.
 4. `최적경로 계산`을 누릅니다.
