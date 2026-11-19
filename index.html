@@ -27,53 +27,56 @@
     button{touch-action:manipulation}
     .app{width:min(100%,760px);min-height:100vh;margin:0 auto;background:#f8fafe}
     .topbar{
-      position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
-      gap:12px;padding:14px max(16px,env(safe-area-inset-right)) 13px max(16px,env(safe-area-inset-left));
+      position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+      padding:11px max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left));
       color:#fff;background:linear-gradient(135deg,#0748a8,#0b69e5);box-shadow:0 5px 18px #16488130;
     }
-    .brand{min-width:0}
-    .brand h1{margin:0;font-size:1.13rem;line-height:1.25;letter-spacing:-.02em}
-    .brand p{margin:4px 0 0;font-size:.78rem;color:#dbeaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .key-button{display:flex;align-items:center;gap:7px;min-height:42px;border:1px solid #ffffff50;border-radius:999px;padding:0 12px;color:#fff;background:#ffffff16;font-size:.84rem;font-weight:700}
+    .brand h1{margin:0;font-size:1.16rem;line-height:1.2;letter-spacing:-.02em}
     .key-dot{width:8px;height:8px;border-radius:50%;background:#ffca4b;box-shadow:0 0 0 3px #ffca4b28}
     .key-dot.ready{background:#6ce9a6;box-shadow:0 0 0 3px #6ce9a628}
-    main{padding:16px max(14px,env(safe-area-inset-right)) calc(36px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
-    .card{margin-bottom:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 8px 26px #294a7510;overflow:hidden}
-    .card-body{padding:17px}
-    .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    main{padding:10px max(10px,env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+    .card{margin-bottom:9px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-shadow:0 5px 16px #294a750d;overflow:hidden}
+    .card-body{padding:12px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
     .section-head h2{margin:0;font-size:1rem;letter-spacing:-.015em}
+    .visit-card .section-head h2{font-size:1.2rem}
     .count{font-size:.8rem;color:var(--muted);font-weight:700}
-    label{display:block;margin:0 0 7px;font-size:.87rem;font-weight:800;color:#344055}
+    label{display:block;margin:0 0 4px;font-size:.81rem;font-weight:800;color:#344055}
     input,select{
       width:100%;border:1px solid #cfd8e6;border-radius:12px;background:#fff;color:var(--ink);outline:none;
-      padding:12px 13px;min-height:48px;transition:border-color .15s,box-shadow .15s;
+      padding:9px 10px;min-height:42px;transition:border-color .15s,box-shadow .15s;
     }
     input:focus,select:focus{border-color:#2878e8;box-shadow:0 0 0 4px #2878e821}
-    select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#607089 50%),linear-gradient(135deg,#607089 50%,transparent 50%);background-position:calc(100% - 18px) 21px,calc(100% - 13px) 21px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+    select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#607089 50%),linear-gradient(135deg,#607089 50%,transparent 50%);background-position:calc(100% - 17px) 18px,calc(100% - 12px) 18px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
     .hint{margin:8px 0 0;color:var(--muted);font-size:.78rem;line-height:1.55}
-    .field+.field{margin-top:13px}
-    .inline-grid{display:grid;grid-template-columns:1fr;gap:13px}
+    .field+.field{margin-top:0}
+    .inline-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(108px,3fr);gap:8px}
+    .custom-end{grid-column:1/-1}
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
-    .btn-text{min-height:36px;color:var(--danger);background:#fff2f0;font-size:.82rem}
-    .btn-primary{width:100%;min-height:56px;color:#fff;background:linear-gradient(135deg,var(--blue),#1477ee);box-shadow:0 9px 18px #0b5bd32b;font-size:1.02rem}
+    .btn-text{min-height:32px;color:var(--danger);background:#fff2f0;font-size:.8rem}
+    .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:stretch}
+    .btn-primary{width:100%;min-height:52px;border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.02rem;text-shadow:0 1px 1px #a63c0040}
     .btn-primary:active{transform:translateY(1px)}
     .btn-secondary{color:var(--blue-dark);background:#eaf2ff}
-    .visit-list{display:grid;gap:10px}
-    .visit-entry{border:1px solid #d5deea;border-radius:14px;background:#fbfcfe;overflow:hidden}
-    .visit-top{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px;border-bottom:1px solid #e4e9f0}
-    .visit-number{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;color:#fff;background:#1969d7;font-size:.78rem;font-weight:900}
-    .visit-top input{min-height:42px;padding:9px 10px;font-weight:750}
-    .visit-buttons{display:flex;gap:5px}
-    .visit-buttons button{display:grid;place-items:center;width:38px;height:38px;min-height:38px;padding:0;border:0;border-radius:10px;font-size:1.2rem;font-weight:900}
+    .api-key-button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:52px;border:1px solid #c5d3e6;border-radius:999px;padding:0 9px;color:#28466d;background:linear-gradient(180deg,#f8fbff,#e7eef8);box-shadow:0 5px 14px #334d6d20,inset 0 1px 0 #fff;font-size:.78rem;font-weight:850;white-space:nowrap}
+    .api-key-button .key-dot{background:#f59e0b;box-shadow:0 0 0 3px #f59e0b20}
+    .api-key-button .key-dot.ready{background:#17a05d;box-shadow:0 0 0 3px #17a05d20}
+    .visit-list{display:grid;gap:7px}
+    .visit-entry{border:1px solid #d5deea;border-radius:11px;background:#fbfcfe;overflow:hidden}
+    .visit-top{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px;border-bottom:1px solid #e4e9f0}
+    .visit-number{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;color:#fff;background:#1969d7;font-size:.75rem;font-weight:900}
+    .visit-top input{min-height:38px;padding:7px 9px;font-weight:750}
+    .visit-buttons{display:flex;gap:4px}
+    .visit-buttons button{display:grid;place-items:center;width:34px;height:34px;min-height:34px;padding:0;border:0;border-radius:9px;font-size:1.1rem;font-weight:900}
     .visit-add{color:#0759c6;background:#e7f0ff}
     .visit-delete{color:#ad241b;background:#ffedeb}
-    .visit-bottom{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(112px,.75fr);gap:8px;padding:9px}
-    .visit-bottom input{min-width:0;min-height:44px;padding:9px 10px;font-size:.9rem}
-    .status{margin-top:12px;border-radius:12px;padding:11px 12px;background:#eef5ff;color:#244c7d;font-size:.84rem;line-height:1.5}
+    .visit-bottom{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(108px,.75fr);gap:6px;padding:6px}
+    .visit-bottom input{min-width:0;min-height:40px;padding:7px 9px;font-size:.88rem}
+    .status{margin-top:8px;border-radius:10px;padding:8px 10px;background:#eef5ff;color:#244c7d;font-size:.8rem;line-height:1.35}
     .status.error{background:#fff0ee;color:#9f2118}
     .status.success{background:#eaf8f0;color:#126a3a}
-    .progress{height:4px;margin-top:10px;border-radius:999px;background:#e8edf5;overflow:hidden}
+    .progress{height:3px;margin-top:6px;border-radius:999px;background:#e8edf5;overflow:hidden}
     .progress>span{display:block;width:0;height:100%;border-radius:inherit;background:#1872e8;transition:width .25s}
     .results[hidden]{display:none}
     .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
@@ -109,8 +112,7 @@
     .dialog-actions .wide{grid-column:1/-1}
     .dialog-delete{color:var(--danger);background:#fff0ee}
     @media(min-width:620px){
-      main{padding-top:20px}.inline-grid{grid-template-columns:1fr 180px}.custom-end{grid-column:1/-1}
-      .card-body{padding:20px}.brand h1{font-size:1.22rem}
+      main{padding-top:12px}.brand h1{font-size:1.22rem}
     }
     @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
   </style>
@@ -119,23 +121,18 @@
   <div class="app">
     <header class="topbar">
       <div class="brand">
-        <h1>모바일 방문경로 최적화</h1>
-        <p>주소만 입력하면 도로 기준 방문 순서를 계산합니다</p>
+        <h1>방문경로 최적화</h1>
       </div>
-      <button class="key-button" id="openKey" type="button" aria-label="TMAP API 키 설정">
-        <span class="key-dot" id="keyDot"></span><span id="keyState">키 설정</span>
-      </button>
     </header>
 
     <main>
-      <section class="card">
+      <section class="card visit-card">
         <div class="card-body">
           <div class="section-head">
             <h2>방문지 주소입력</h2>
             <div><span class="count" id="addressCount">0 / 20</span> <button class="btn btn-text" id="clearAddresses" type="button">초기화</button></div>
           </div>
           <div class="visit-list" id="visitInputs"></div>
-          <p class="hint">방문지는 최대 20곳입니다. + 버튼은 바로 아래에 새 입력 단위를 추가합니다.</p>
         </div>
       </section>
 
@@ -164,7 +161,12 @@
 
       <section class="card">
         <div class="card-body">
-          <button class="btn btn-primary" id="calculate" type="button">최적경로 계산</button>
+          <div class="route-actions">
+            <button class="btn btn-primary" id="calculate" type="button">최적경로 계산</button>
+            <button class="api-key-button" id="openKey" type="button" aria-label="TMAP API 키 설정">
+              <span class="key-dot" id="keyDot"></span><span id="keyState">API 키 설정</span>
+            </button>
+          </div>
           <div class="status" id="status" role="status" aria-live="polite">주소와 출발지를 입력한 뒤 계산하세요.</div>
           <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
         </div>
@@ -260,7 +262,7 @@
     function setKeyState(){
       const ready = Boolean(state.apiKey);
       $('keyDot').classList.toggle('ready',ready);
-      $('keyState').textContent = ready ? '키 설정됨' : '키 설정';
+      $('keyState').textContent = ready ? '키 설정됨' : 'API 키 설정';
     }
     function currentStartTime(){
       const now = new Date();
