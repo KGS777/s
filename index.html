@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b5bd3">
+  <title>모바일 방문경로 최적화</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root{
+      color-scheme:light;
+      --blue:#0b5bd3;
+      --blue-dark:#0847a5;
+      --ink:#172033;
+      --muted:#657086;
+      --line:#dce3ed;
+      --surface:#fff;
+      --soft:#f4f7fb;
+      --danger:#b42318;
+      --success:#147a43;
+      font-family:"Pretendard","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--soft)}
+    body{margin:0;color:var(--ink);background:var(--soft);font-size:16px}
+    button,input,textarea,select{font:inherit}
+    button{touch-action:manipulation}
+    .app{width:min(100%,760px);min-height:100vh;margin:0 auto;background:#f8fafe}
+    .topbar{
+      position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;
+      gap:12px;padding:14px max(16px,env(safe-area-inset-right)) 13px max(16px,env(safe-area-inset-left));
+      color:#fff;background:linear-gradient(135deg,#0748a8,#0b69e5);box-shadow:0 5px 18px #16488130;
+    }
+    .brand{min-width:0}
+    .brand h1{margin:0;font-size:1.13rem;line-height:1.25;letter-spacing:-.02em}
+    .brand p{margin:4px 0 0;font-size:.78rem;color:#dbeaff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .key-button{display:flex;align-items:center;gap:7px;min-height:42px;border:1px solid #ffffff50;border-radius:999px;padding:0 12px;color:#fff;background:#ffffff16;font-size:.84rem;font-weight:700}
+    .key-dot{width:8px;height:8px;border-radius:50%;background:#ffca4b;box-shadow:0 0 0 3px #ffca4b28}
+    .key-dot.ready{background:#6ce9a6;box-shadow:0 0 0 3px #6ce9a628}
+    main{padding:16px max(14px,env(safe-area-inset-right)) calc(36px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+    .card{margin-bottom:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:0 8px 26px #294a7510;overflow:hidden}
+    .card-body{padding:17px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .section-head h2{margin:0;font-size:1rem;letter-spacing:-.015em}
+    .count{font-size:.8rem;color:var(--muted);font-weight:700}
+    label{display:block;margin:0 0 7px;font-size:.87rem;font-weight:800;color:#344055}
+    input,select{
+      width:100%;border:1px solid #cfd8e6;border-radius:12px;background:#fff;color:var(--ink);outline:none;
+      padding:12px 13px;min-height:48px;transition:border-color .15s,box-shadow .15s;
+    }
+    input:focus,select:focus{border-color:#2878e8;box-shadow:0 0 0 4px #2878e821}
+    select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#607089 50%),linear-gradient(135deg,#607089 50%,transparent 50%);background-position:calc(100% - 18px) 21px,calc(100% - 13px) 21px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+    .hint{margin:8px 0 0;color:var(--muted);font-size:.78rem;line-height:1.55}
+    .field+.field{margin-top:13px}
+    .inline-grid{display:grid;grid-template-columns:1fr;gap:13px}
+    .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
+    .btn:disabled{opacity:.55;cursor:wait}
+    .btn-text{min-height:36px;color:var(--danger);background:#fff2f0;font-size:.82rem}
+    .btn-primary{width:100%;min-height:56px;color:#fff;background:linear-gradient(135deg,var(--blue),#1477ee);box-shadow:0 9px 18px #0b5bd32b;font-size:1.02rem}
+    .btn-primary:active{transform:translateY(1px)}
+    .btn-secondary{color:var(--blue-dark);background:#eaf2ff}
+    .visit-list{display:grid;gap:10px}
+    .visit-entry{border:1px solid #d5deea;border-radius:14px;background:#fbfcfe;overflow:hidden}
+    .visit-top{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;align-items:center;padding:9px;border-bottom:1px solid #e4e9f0}
+    .visit-number{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;color:#fff;background:#1969d7;font-size:.78rem;font-weight:900}
+    .visit-top input{min-height:42px;padding:9px 10px;font-weight:750}
+    .visit-buttons{display:flex;gap:5px}
+    .visit-buttons button{display:grid;place-items:center;width:38px;height:38px;min-height:38px;padding:0;border:0;border-radius:10px;font-size:1.2rem;font-weight:900}
+    .visit-add{color:#0759c6;background:#e7f0ff}
+    .visit-delete{color:#ad241b;background:#ffedeb}
+    .visit-bottom{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(112px,.75fr);gap:8px;padding:9px}
+    .visit-bottom input{min-width:0;min-height:44px;padding:9px 10px;font-size:.9rem}
+    .status{margin-top:12px;border-radius:12px;padding:11px 12px;background:#eef5ff;color:#244c7d;font-size:.84rem;line-height:1.5}
+    .status.error{background:#fff0ee;color:#9f2118}
+    .status.success{background:#eaf8f0;color:#126a3a}
+    .progress{height:4px;margin-top:10px;border-radius:999px;background:#e8edf5;overflow:hidden}
+    .progress>span{display:block;width:0;height:100%;border-radius:inherit;background:#1872e8;transition:width .25s}
+    .results[hidden]{display:none}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+    .metric{padding:11px 8px;border-radius:12px;background:#f1f6fd;text-align:center}
+    .metric span{display:block;color:var(--muted);font-size:.7rem;font-weight:700}
+    .metric strong{display:block;margin-top:4px;color:#114d99;font-size:.92rem;white-space:nowrap}
+    #map{height:42vh;min-height:310px;max-height:470px;background:#e9eef5}
+    .leaflet-container{font-family:inherit}
+    .map-pin{display:grid;place-items:center;width:30px;height:30px;border:3px solid #fff;border-radius:50%;color:#fff;background:#1266d6;box-shadow:0 3px 10px #17203350;font-weight:900;font-size:12px}
+    .map-pin.start{background:#127343}.map-pin.end{background:#b42318}
+    .map-label{position:absolute;left:34px;top:50%;transform:translateY(-50%);max-width:180px;padding:4px 7px;border:1px solid #b7c3d3;border-radius:6px;background:#fffffff2;color:#21344e;box-shadow:0 2px 6px #17203325;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .result-actions{display:flex;justify-content:flex-end;padding:12px 14px;border-top:1px solid var(--line);background:#fff}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
+    th{padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
+    td{padding:11px 8px;border-top:1px solid #e5eaf1;vertical-align:top;line-height:1.4;overflow-wrap:anywhere}
+    th:first-child,td:first-child{width:48px;text-align:center}
+    th:nth-child(3),td:nth-child(3){width:86px;text-align:right;white-space:nowrap}
+    .order-num{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
+    .visit-name{display:block;margin-bottom:3px;font-weight:850;color:#25334a}
+    .visit-address{color:#59657a}
+    .nav-button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:34px;margin-top:8px;border:1px solid #18a05e;border-radius:9px;padding:0 10px;color:#087642;background:#edfff5;font-size:.75rem;font-weight:900;white-space:nowrap}
+    .nav-button:active{background:#d9f8e8}
+    .legal-note{padding:12px 14px;border-top:1px solid var(--line);color:#707b8f;font-size:.72rem;line-height:1.5}
+    dialog{width:min(calc(100% - 28px),430px);border:0;border-radius:18px;padding:0;box-shadow:0 25px 80px #081a3860}
+    dialog::backdrop{background:#0e1b30a8;backdrop-filter:blur(2px)}
+    .dialog-body{padding:20px}
+    .dialog-body h2{margin:0 0 7px;font-size:1.1rem}
+    .dialog-body p{margin:0 0 16px;color:var(--muted);font-size:.82rem;line-height:1.55}
+    .remember{display:flex;align-items:center;gap:9px;margin-top:11px;color:#3d4a61;font-size:.83rem;font-weight:700}
+    .remember input{width:20px;min-height:20px;height:20px;margin:0;accent-color:var(--blue)}
+    .dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:17px}
+    .dialog-actions .wide{grid-column:1/-1}
+    .dialog-delete{color:var(--danger);background:#fff0ee}
+    @media(min-width:620px){
+      main{padding-top:20px}.inline-grid{grid-template-columns:1fr 180px}.custom-end{grid-column:1/-1}
+      .card-body{padding:20px}.brand h1{font-size:1.22rem}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1>모바일 방문경로 최적화</h1>
+        <p>주소만 입력하면 도로 기준 방문 순서를 계산합니다</p>
+      </div>
+      <button class="key-button" id="openKey" type="button" aria-label="TMAP API 키 설정">
+        <span class="key-dot" id="keyDot"></span><span id="keyState">키 설정</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="card">
+        <div class="card-body">
+          <div class="section-head">
+            <h2>방문지 주소입력</h2>
+            <div><span class="count" id="addressCount">0 / 20</span> <button class="btn btn-text" id="clearAddresses" type="button">초기화</button></div>
+          </div>
+          <div class="visit-list" id="visitInputs"></div>
+          <p class="hint">방문지는 최대 20곳입니다. + 버튼은 바로 아래에 새 입력 단위를 추가합니다.</p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-body">
+          <div class="section-head"><h2>출발·도착 설정</h2></div>
+          <div class="inline-grid">
+            <div class="field">
+              <label for="startAddress">출발지 주소</label>
+              <input id="startAddress" autocomplete="street-address" placeholder="출발지 주소">
+            </div>
+            <div class="field">
+              <label for="endMode">도착 방식</label>
+              <select id="endMode">
+                <option value="return">출발지로 복귀</option>
+                <option value="custom">다른 곳에서 종료</option>
+              </select>
+            </div>
+            <div class="field custom-end" id="endField" hidden>
+              <label for="endAddress">최종 도착지 주소</label>
+              <input id="endAddress" autocomplete="street-address" placeholder="최종 도착지 주소">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-body">
+          <button class="btn btn-primary" id="calculate" type="button">최적경로 계산</button>
+          <div class="status" id="status" role="status" aria-live="polite">주소와 출발지를 입력한 뒤 계산하세요.</div>
+          <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+        </div>
+      </section>
+
+      <section class="results" id="results" hidden>
+        <div id="captureArea">
+          <section class="card">
+            <div class="card-body">
+              <div class="section-head"><h2>최적경로</h2></div>
+              <div class="summary">
+                <div class="metric"><span>총 거리</span><strong id="totalDistance">—</strong></div>
+                <div class="metric"><span>예상 시간</span><strong id="totalTime">—</strong></div>
+                <div class="metric"><span>방문지</span><strong id="totalStops">—</strong></div>
+              </div>
+            </div>
+            <div id="map" aria-label="최적 방문경로 지도"></div>
+            <div class="result-actions" data-html2canvas-ignore="true">
+              <button class="btn btn-secondary" id="saveImage" type="button">결과 이미지 저장</button>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="section-head card-body" style="margin-bottom:0;padding-bottom:12px"><h2>방문순서 표</h2></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>순서</th><th>방문지·주소·전화번호</th><th>구간</th></tr></thead>
+                <tbody id="routeBody"></tbody>
+              </table>
+            </div>
+            <div class="legal-note">주소 좌표와 실제 차량 진입구가 다를 수 있습니다. 중앙분리대, 좌우측 접근, 회전 제한 및 현장 교통통제를 확인하세요.</div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="keyDialog">
+    <div class="dialog-body">
+      <h2>TMAP API 키</h2>
+      <p>각 사용자가 발급받은 키를 입력합니다. 키는 이 HTML 파일이나 GitHub에 기록되지 않습니다.</p>
+      <label for="apiKey">API 키</label>
+      <input id="apiKey" type="password" autocomplete="off" spellcheck="false" placeholder="TMAP appKey 입력">
+      <label class="remember"><input id="rememberKey" type="checkbox"> 이 브라우저에 키 저장</label>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" id="closeKey" type="button">취소</button>
+        <button class="btn btn-primary" id="saveKey" type="button" style="min-height:45px;font-size:.92rem">적용</button>
+        <button class="btn dialog-delete wide" id="deleteKey" type="button">저장된 키 삭제</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    'use strict';
+
+    const TMAP_BASE = 'https://apis.openapi.sk.com';
+    const KEY_STORAGE = 'mobileRoutePlanner.tmapKey.v1';
+    const START_STORAGE = 'mobileRoutePlanner.startAddress.v1';
+    const MAX_VISITS = 20;
+    const $ = id => document.getElementById(id);
+
+    const state = {
+      apiKey: '',
+      map: null,
+      mapReady: false,
+      markers: [],
+      routeLine: null,
+      geocodeCache: new Map(),
+      runId: 0,
+      result: null,
+      inputRows:[],
+      nextInputId:1
+    };
+
+    function readLocal(key){
+      try{return localStorage.getItem(key) || ''}catch{return ''}
+    }
+    function writeLocal(key,value){
+      try{value ? localStorage.setItem(key,value) : localStorage.removeItem(key)}catch{}
+    }
+    function escapeHtml(value){
+      return String(value ?? '').replace(/[&<>"']/g,ch=>({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      })[ch]);
+    }
+    function setStatus(message,type='info',progress=0){
+      $('status').textContent = message;
+      $('status').className = 'status' + (type === 'info' ? '' : ' ' + type);
+      $('progressBar').style.width = Math.max(0,Math.min(100,progress)) + '%';
+    }
+    function setKeyState(){
+      const ready = Boolean(state.apiKey);
+      $('keyDot').classList.toggle('ready',ready);
+      $('keyState').textContent = ready ? '키 설정됨' : '키 설정';
+    }
+    function currentStartTime(){
+      const now = new Date();
+      const p = number => String(number).padStart(2,'0');
+      return now.getFullYear()+p(now.getMonth()+1)+p(now.getDate())+p(now.getHours())+p(now.getMinutes());
+    }
+    function formatDistance(meters){
+      return Number.isFinite(meters) ? (meters/1000).toFixed(meters >= 100000 ? 0 : 1) + ' km' : '—';
+    }
+    function formatTime(seconds){
+      if(!Number.isFinite(seconds)) return '—';
+      const minutes = Math.round(seconds/60);
+      return minutes >= 60 ? Math.floor(minutes/60)+'시간 '+(minutes%60)+'분' : minutes+'분';
+    }
+    function isCoordinate(item){
+      return Number.isFinite(item?.lat) && Number.isFinite(item?.lon) && item.lat>32 && item.lat<40 && item.lon>123 && item.lon<133;
+    }
+
+    function addInputRow(afterId=null){
+      if(state.inputRows.length>=MAX_VISITS){setStatus('방문지는 최대 '+MAX_VISITS+'곳까지 추가할 수 있습니다.','error');return}
+      const row={key:state.nextInputId++,name:'',address:'',phone:''};
+      const index=afterId===null?state.inputRows.length:state.inputRows.findIndex(item=>item.key===afterId)+1;
+      state.inputRows.splice(index<0?state.inputRows.length:index,0,row);
+      renderInputRows(row.key);
+    }
+    function removeInputRow(key){
+      if(state.inputRows.length===1){
+        state.inputRows[0]={...state.inputRows[0],name:'',address:'',phone:''};
+      }else state.inputRows=state.inputRows.filter(item=>item.key!==key);
+      renderInputRows();
+    }
+    function renderInputRows(focusKey=null){
+      const host=$('visitInputs');host.innerHTML='';
+      state.inputRows.forEach((row,index)=>{
+        const entry=document.createElement('div');entry.className='visit-entry';entry.dataset.key=row.key;
+        entry.innerHTML='<div class="visit-top">'+
+          '<span class="visit-number">'+(index+1)+'</span>'+
+          '<input data-field="name" aria-label="'+(index+1)+'번 방문지명" placeholder="방문지 '+(index+1)+'" value="'+escapeHtml(row.name)+'">'+
+          '<div class="visit-buttons"><button class="visit-add" type="button" aria-label="아래에 방문지 추가">+</button><button class="visit-delete" type="button" aria-label="이 방문지 삭제">−</button></div></div>'+
+          '<div class="visit-bottom"><input data-field="address" autocomplete="street-address" aria-label="'+(index+1)+'번 주소" placeholder="주소" value="'+escapeHtml(row.address)+'">'+
+          '<input data-field="phone" inputmode="tel" autocomplete="tel" aria-label="'+(index+1)+'번 전화번호" placeholder="전화번호" value="'+escapeHtml(row.phone)+'"></div>';
+        for(const input of entry.querySelectorAll('input')) input.addEventListener('input',()=>{row[input.dataset.field]=input.value});
+        entry.querySelector('.visit-add').addEventListener('click',()=>addInputRow(row.key));
+        entry.querySelector('.visit-delete').addEventListener('click',()=>removeInputRow(row.key));
+        host.appendChild(entry);
+      });
+      $('addressCount').textContent=state.inputRows.length+' / '+MAX_VISITS;
+      if(focusKey!==null){
+        requestAnimationFrame(()=>host.querySelector('[data-key="'+focusKey+'"] input[data-field="name"]')?.focus());
+      }
+    }
+    function parseVisits(){
+      if(state.inputRows.length>MAX_VISITS) throw new Error('방문지는 최대 '+MAX_VISITS+'곳까지 입력할 수 있습니다.');
+      const visits=state.inputRows.map((row,index)=>({
+        id:'visit-'+(index+1),name:row.name.trim()||'방문지 '+(index+1),address:row.address.trim(),phone:row.phone.trim()
+      }));
+      const empty=visits.findIndex(visit=>!visit.address);
+      if(empty>=0) throw new Error((empty+1)+'번 방문지의 주소를 입력하세요.');
+      return visits;
+    }
+
+    function openKeyDialog(){
+      $('apiKey').value = state.apiKey;
+      $('rememberKey').checked = Boolean(readLocal(KEY_STORAGE));
+      if(typeof $('keyDialog').showModal === 'function') $('keyDialog').showModal();
+      else $('keyDialog').setAttribute('open','');
+      setTimeout(()=>$('apiKey').focus(),50);
+    }
+    function closeKeyDialog(){
+      if(typeof $('keyDialog').close === 'function') $('keyDialog').close();
+      else $('keyDialog').removeAttribute('open');
+    }
+
+    function initMap(){
+      if(typeof L === 'undefined'){
+        setStatus('지도 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.','error');
+        return;
+      }
+      state.map = L.map('map',{zoomControl:true,preferCanvas:true}).setView([36.5,127.8],7);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:19,
+        crossOrigin:'anonymous',
+        attribution:'&copy; OpenStreetMap contributors'
+      }).addTo(state.map);
+      state.mapReady = true;
+    }
+
+    function markerIcon(label,type,name){
+      return L.divIcon({
+        className:'',
+        iconSize:[30,30],
+        iconAnchor:[15,15],
+        html:'<div style="position:relative"><div class="map-pin '+type+'">'+escapeHtml(label)+'</div><span class="map-label">'+escapeHtml(name)+'</span></div>'
+      });
+    }
+    function clearMap(){
+      if(!state.mapReady) return;
+      state.markers.forEach(marker=>state.map.removeLayer(marker));
+      state.markers = [];
+      if(state.routeLine){state.map.removeLayer(state.routeLine);state.routeLine=null}
+    }
+    function drawResult(result){
+      if(!state.mapReady) return;
+      clearMap();
+      const allPoints = [];
+      const addMarker = (point,label,type,name,address)=>{
+        const marker = L.marker([point.lat,point.lon],{icon:markerIcon(label,type,name)})
+          .addTo(state.map)
+          .bindPopup('<b>'+escapeHtml(name)+'</b><br>'+escapeHtml(address));
+        state.markers.push(marker);
+        allPoints.push([point.lat,point.lon]);
+      };
+      addMarker(result.start,'S','start','출발지',result.startAddress);
+      result.ordered.forEach((visit,index)=>addMarker(visit,index+1,'',visit.name,visit.address));
+      if(result.endMode === 'custom') addMarker(result.end,'E','end','도착지',result.endAddress);
+      if(result.path.length > 1){
+        const latlngs = result.path.map(pair=>[pair[1],pair[0]]);
+        state.routeLine = L.polyline(latlngs,{color:'#0b66d7',weight:5,opacity:.88}).addTo(state.map);
+        allPoints.push(...latlngs.filter((_,index)=>index%Math.max(1,Math.floor(latlngs.length/150))===0));
+      }
+      if(allPoints.length) state.map.fitBounds(L.latLngBounds(allPoints).pad(.12),{maxZoom:16});
+    }
+
+    async function fetchJson(url,options={}){
+      let response;
+      try{response = await fetch(url,{...options,cache:'no-store'})}
+      catch{
+        throw new Error('TMAP 직접 연결이 차단되었습니다. 네트워크 또는 브라우저 CORS 정책을 확인하세요.');
+      }
+      let data;
+      try{data = await response.json()}
+      catch{throw new Error('TMAP에서 올바르지 않은 응답을 받았습니다.');}
+      if(!response.ok){
+        const apiMessage = data?.error?.message || data?.errorMessage || data?.message || data?.resultMessage;
+        throw new Error(apiMessage || 'TMAP API 오류 (HTTP '+response.status+')');
+      }
+      return data;
+    }
+
+    async function geocode(address,runId){
+      const cacheKey = address.trim();
+      if(state.geocodeCache.has(cacheKey)) return state.geocodeCache.get(cacheKey);
+      const query = new URLSearchParams({
+        version:'1',format:'json',addressFlag:'F00',coordType:'WGS84GEO',
+        fullAddr:cacheKey,page:'1',count:'3'
+      });
+      const data = await fetchJson(TMAP_BASE+'/tmap/geo/fullAddrGeo?'+query,{
+        headers:{Accept:'application/json',appKey:state.apiKey}
+      });
+      if(runId !== state.runId) throw new Error('새 계산으로 취소되었습니다.');
+      const raw = data?.coordinateInfo?.coordinate;
+      const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
+      const coordinateFields = [
+        ['newLatEntr','newLonEntr'],['latEntr','lonEntr'],['newLat','newLon'],['lat','lon']
+      ];
+      for(const item of list){
+        for(const [latKey,lonKey] of coordinateFields){
+          const point = {lat:Number(item[latKey]),lon:Number(item[lonKey])};
+          if(isCoordinate(point)){
+            state.geocodeCache.set(cacheKey,point);
+            return point;
+          }
+        }
+      }
+      throw new Error('주소 좌표를 찾을 수 없습니다: '+address);
+    }
+
+    function collectRoute(features){
+      const points=[];
+      const path=[];
+      let distance=0,time=0;
+      for(const feature of features){
+        const geometry=feature?.geometry || {};
+        const properties=feature?.properties || {};
+        if(geometry.type==='LineString' || geometry.type==='MultiLineString'){
+          const lines=geometry.type==='LineString' ? [geometry.coordinates] : geometry.coordinates;
+          for(const line of lines || []) for(const pair of line || []){
+            const lon=Number(pair?.[0]),lat=Number(pair?.[1]);
+            if(Number.isFinite(lon)&&Number.isFinite(lat)) path.push([lon,lat]);
+          }
+          distance += Math.max(0,Number(properties.distance)||0);
+          time += Math.max(0,Number(properties.time)||0);
+        }
+        if(geometry.type==='Point'){
+          points.push({properties,coordinates:geometry.coordinates,legDistance:distance,legTime:time});
+          distance=0;time=0;
+        }
+      }
+      return {points,path};
+    }
+    function parseRoute(data,visits){
+      const features=data?.features;
+      if(!Array.isArray(features)||!features.length) throw new Error('TMAP 경로 정보를 찾을 수 없습니다.');
+      const {points,path}=collectRoute(features);
+      const used=new Set();
+      const ordered=[];
+      for(const point of points){
+        const id=String(point.properties?.viaPointId ?? '').trim();
+        const name=String(point.properties?.viaPointName ?? '').trim();
+        let visit=visits.find(item=>item.id===id&&!used.has(item.id));
+        if(!visit&&name) visit=visits.find(item=>item.name===name&&!used.has(item.id));
+        if(visit){
+          used.add(visit.id);
+          ordered.push({...visit,legDistance:point.legDistance,legTime:point.legTime});
+        }
+      }
+      if(ordered.length!==visits.length){
+        const matched=new Set();
+        const byPosition=[];
+        for(const point of points){
+          const lon=Number(point.coordinates?.[0]),lat=Number(point.coordinates?.[1]);
+          if(!Number.isFinite(lon)||!Number.isFinite(lat)) continue;
+          let best=null,error=Infinity;
+          for(const visit of visits){
+            if(matched.has(visit.id)) continue;
+            const km=Math.hypot((visit.lat-lat)*111,(visit.lon-lon)*88);
+            if(km<error){best=visit;error=km}
+          }
+          if(best&&error<.25){
+            matched.add(best.id);
+            byPosition.push({...best,legDistance:point.legDistance,legTime:point.legTime});
+          }
+        }
+        if(byPosition.length===visits.length){ordered.splice(0,ordered.length,...byPosition)}
+      }
+      if(ordered.length!==visits.length) throw new Error('TMAP 응답에서 전체 방문 순서를 확인하지 못했습니다.');
+      const summary=features.find(feature=>feature?.properties?.totalDistance!==undefined)?.properties || {};
+      const totalDistance=Number(summary.totalDistance);
+      const totalTime=Number(summary.totalTime);
+      return {
+        ordered,path,
+        totalDistance:Number.isFinite(totalDistance)?totalDistance:null,
+        totalTime:Number.isFinite(totalTime)?totalTime:null
+      };
+    }
+
+    function renderTable(result){
+      const body=$('routeBody');
+      body.innerHTML='';
+      result.ordered.forEach((visit,index)=>{
+        const row=document.createElement('tr');
+        row.innerHTML='<td><span class="order-num">'+(index+1)+'</span></td>'+
+          '<td><span class="visit-name">'+escapeHtml(visit.name)+'</span><span class="visit-address">'+escapeHtml(visit.address)+'</span>'+
+          (visit.phone?'<br><span class="visit-address">'+escapeHtml(visit.phone)+'</span>':'')+
+          '<br><button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">N 네이버 내비</button></td>'+
+          '<td>'+escapeHtml(formatDistance(visit.legDistance))+'<br><span class="visit-address">'+escapeHtml(formatTime(visit.legTime))+'</span></td>';
+        row.querySelector('.nav-button').addEventListener('click',()=>openNaverNavigation(visit));
+        body.appendChild(row);
+      });
+    }
+    function openNaverNavigation(visit){
+      if(!isCoordinate(visit)){
+        setStatus('이 방문지의 좌표가 없어 네비게이션을 실행할 수 없습니다.','error');
+        return;
+      }
+      const appName=/^https?:$/.test(location.protocol)
+        ? location.origin+location.pathname
+        : 'mobile-route-planner';
+      const params=new URLSearchParams({
+        dlat:String(visit.lat),dlng:String(visit.lon),dname:visit.name||visit.address,appname:appName
+      }).toString();
+      const schemeUrl='nmap://navigation?'+params;
+      const androidIntent='intent://navigation?'+params+
+        '#Intent;scheme=nmap;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;package=com.nhn.android.nmap;end';
+      const agent=navigator.userAgent||'';
+      if(/Android/i.test(agent)){
+        location.href=androidIntent;
+        return;
+      }
+      if(/iPhone|iPad|iPod/i.test(agent)){
+        const started=Date.now();
+        location.href=schemeUrl;
+        setTimeout(()=>{
+          if(!document.hidden&&Date.now()-started<2600) location.href='https://apps.apple.com/app/id311867728';
+        },1800);
+        return;
+      }
+      location.href=schemeUrl;
+    }
+    function showResult(result){
+      state.result=result;
+      $('totalDistance').textContent=formatDistance(result.totalDistance);
+      $('totalTime').textContent=formatTime(result.totalTime);
+      $('totalStops').textContent=result.ordered.length+'곳';
+      renderTable(result);
+      $('results').hidden=false;
+      requestAnimationFrame(()=>{
+        if(state.mapReady){state.map.invalidateSize();drawResult(result)}
+        $('results').scrollIntoView({behavior:'smooth',block:'start'});
+      });
+    }
+
+    async function calculateRoute(){
+      if(!state.apiKey){
+        setStatus('먼저 상단의 키 설정에서 TMAP API 키를 입력하세요.','error');
+        openKeyDialog();
+        return;
+      }
+      let visits;
+      try{visits=parseVisits()}catch(error){setStatus(error.message,'error');return}
+      const startAddress=$('startAddress').value.trim();
+      const endMode=$('endMode').value;
+      const endAddress=endMode==='return'?startAddress:$('endAddress').value.trim();
+      if(!visits.length){setStatus('방문지 주소를 한 곳 이상 입력하세요.','error');return}
+      if(!startAddress){setStatus('출발지 주소를 입력하세요.','error');return}
+      if(!endAddress){setStatus('최종 도착지 주소를 입력하세요.','error');return}
+
+      const runId=++state.runId;
+      $('calculate').disabled=true;
+      $('results').hidden=true;
+      clearMap();
+      try{
+        setStatus('출발지 주소를 확인하고 있습니다.','info',5);
+        const start=await geocode(startAddress,runId);
+        const end=endMode==='return'?start:await geocode(endAddress,runId);
+        for(let index=0;index<visits.length;index++){
+          if(runId!==state.runId) return;
+          setStatus('방문지 주소 확인 '+(index+1)+' / '+visits.length,'info',10+Math.round((index+1)/visits.length*60));
+          Object.assign(visits[index],await geocode(visits[index].address,runId));
+        }
+        setStatus('도로 기준 최적 방문 순서를 계산하고 있습니다.','info',82);
+        const payload={
+          reqCoordType:'WGS84GEO',resCoordType:'WGS84GEO',
+          startName:'출발지',startX:String(start.lon),startY:String(start.lat),startTime:currentStartTime(),
+          endName:'도착지',endX:String(end.lon),endY:String(end.lat),
+          searchOption:'2',carType:'1',coordinateFlag:'0',
+          viaPoints:visits.map(visit=>({
+            viaPointId:visit.id,viaPointName:visit.name,viaX:String(visit.lon),viaY:String(visit.lat)
+          }))
+        };
+        const data=await fetchJson(TMAP_BASE+'/tmap/routes/routeOptimization20?version=1',{
+          method:'POST',
+          headers:{Accept:'application/json','Content-Type':'application/json;charset=UTF-8',appKey:state.apiKey},
+          body:JSON.stringify(payload)
+        });
+        if(runId!==state.runId) return;
+        const route=parseRoute(data,visits);
+        const result={...route,start,end,startAddress,endAddress,endMode};
+        showResult(result);
+        setStatus('최적 방문 순서를 계산했습니다.','success',100);
+        writeLocal(START_STORAGE,startAddress);
+      }catch(error){
+        if(runId===state.runId) setStatus('계산 실패: '+error.message,'error',0);
+      }finally{
+        if(runId===state.runId) $('calculate').disabled=false;
+      }
+    }
+
+    async function saveResultImage(){
+      if(!state.result) return;
+      if(typeof html2canvas==='undefined'){
+        setStatus('이미지 저장 라이브러리를 불러오지 못했습니다.','error');
+        return;
+      }
+      $('saveImage').disabled=true;
+      setStatus('결과 이미지를 만들고 있습니다.','info',100);
+      try{
+        const canvas=await html2canvas($('captureArea'),{
+          backgroundColor:'#f8fafe',scale:Math.min(2,window.devicePixelRatio||1.5),useCORS:true,
+          logging:false,windowWidth:$('captureArea').scrollWidth
+        });
+        const jpg=document.createElement('canvas');
+        jpg.width=canvas.width;jpg.height=canvas.height;
+        const context=jpg.getContext('2d');
+        context.fillStyle='#fff';context.fillRect(0,0,jpg.width,jpg.height);context.drawImage(canvas,0,0);
+        const blob=await new Promise((resolve,reject)=>jpg.toBlob(value=>value?resolve(value):reject(new Error('이미지 변환 실패')),'image/jpeg',.92));
+        const url=URL.createObjectURL(blob);
+        const link=document.createElement('a');
+        link.href=url;link.download='최적방문경로_'+new Date().toISOString().slice(0,10)+'.jpg';
+        document.body.appendChild(link);link.click();link.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1500);
+        setStatus('결과 이미지를 저장했습니다.','success',100);
+      }catch(error){
+        setStatus('이미지 저장 실패: 지도 타일의 보안 정책 또는 브라우저 설정을 확인하세요.','error',100);
+      }finally{$('saveImage').disabled=false}
+    }
+
+    $('clearAddresses').addEventListener('click',()=>{
+      const hasInput=state.inputRows.some(row=>row.name.trim()||row.address.trim()||row.phone.trim());
+      if(hasInput && !confirm('입력한 방문지를 모두 지우시겠습니까?')) return;
+      ++state.runId;state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];renderInputRows();$('results').hidden=true;state.result=null;clearMap();
+      setStatus('방문지 주소를 초기화했습니다.');
+    });
+    $('endMode').addEventListener('change',()=>{$('endField').hidden=$('endMode').value==='return'});
+    $('calculate').addEventListener('click',calculateRoute);
+    $('saveImage').addEventListener('click',saveResultImage);
+    $('openKey').addEventListener('click',openKeyDialog);
+    $('closeKey').addEventListener('click',closeKeyDialog);
+    $('saveKey').addEventListener('click',()=>{
+      const key=$('apiKey').value.trim();
+      if(key.length<8){$('apiKey').focus();return}
+      state.apiKey=key;
+      writeLocal(KEY_STORAGE,$('rememberKey').checked?key:'');
+      setKeyState();closeKeyDialog();setStatus('API 키를 적용했습니다.');
+    });
+    $('deleteKey').addEventListener('click',()=>{
+      state.apiKey='';$('apiKey').value='';$('rememberKey').checked=false;writeLocal(KEY_STORAGE,'');setKeyState();
+      setStatus('저장된 API 키를 삭제했습니다.');closeKeyDialog();
+    });
+    $('keyDialog').addEventListener('click',event=>{
+      if(event.target===$('keyDialog')) closeKeyDialog();
+    });
+
+    window.addEventListener('DOMContentLoaded',()=>{
+      state.apiKey=readLocal(KEY_STORAGE);
+      $('startAddress').value=readLocal(START_STORAGE);
+      state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];
+      setKeyState();renderInputRows();initMap();
+    });
+  </script>
+</body>
+</html>
