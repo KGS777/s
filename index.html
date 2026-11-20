@@ -120,10 +120,11 @@
     table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
     th{padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
     td{padding:8px;border-top:1px solid #e5eaf1;vertical-align:middle;line-height:1.35;overflow-wrap:anywhere}
-    th:first-child,td:first-child{width:118px;text-align:left}
-    th:nth-child(3),td:nth-child(3){width:66px;text-align:center;white-space:nowrap}
-    th:nth-child(4),td:nth-child(4){width:64px;text-align:right;white-space:nowrap}
-    .order-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
+    th:first-child,td:first-child{width:104px;padding-left:3px;padding-right:2px;text-align:left}
+    th:nth-child(2),td:nth-child(2){padding-left:3px;padding-right:3px}
+    th:nth-child(3),td:nth-child(3){width:38px;padding-left:1px;padding-right:1px;text-align:center;line-height:1.05;white-space:normal}
+    th:nth-child(4),td:nth-child(4){width:64px;padding-left:1px;padding-right:3px;text-align:right;white-space:nowrap}
+    .order-actions{display:flex;align-items:center;gap:3px;white-space:nowrap}
     .order-num{display:inline-grid;flex:0 0 27px;place-items:center;width:27px;min-width:27px;height:27px;min-height:27px;aspect-ratio:1;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
     .visit-mainline{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
     .visit-name{display:block;min-width:0;overflow:hidden;color:#25334a;font-size:1.08rem;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
@@ -131,7 +132,7 @@
     .visit-subline .visit-address:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
     .visit-phone{flex:none;margin-left:auto;color:#59657a;font-size:.97rem;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
     .visit-address{color:#59657a}
-    .nav-button{display:inline-flex;flex:none;align-items:center;justify-content:center;min-height:30px;margin:0;border:1px solid #18a05e;border-radius:8px;padding:0 6px;color:#087642;background:#edfff5;font-size:1.08rem;font-weight:900;line-height:1;white-space:nowrap}
+    .nav-button{display:inline-flex;flex:none;align-items:center;justify-content:center;min-height:30px;margin:0;border:1px solid #18a05e;border-radius:8px;padding:0 4px;color:#087642;background:#edfff5;font-size:1.08rem;font-weight:900;line-height:1;white-space:nowrap}
     .nav-button:active{background:#d9f8e8}
     .visit-check{appearance:auto;width:24px;min-width:24px;height:24px;min-height:24px;margin:0;padding:0;accent-color:#168653;cursor:pointer}
     .route-row td{transition:background-color .15s,color .15s}
@@ -234,7 +235,7 @@
             <div class="section-head card-body" style="margin-bottom:0;padding-bottom:12px"><h2>방문순서 표</h2></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>순서</th><th>방문지·주소·전화번호</th><th>방문체크</th><th>구간별</th></tr></thead>
+                <thead><tr><th>순서</th><th>방문지·주소·전화번호</th><th>방문<br>체크</th><th>구간별</th></tr></thead>
                 <tbody id="routeBody"></tbody>
               </table>
             </div>
