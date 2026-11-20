@@ -87,7 +87,6 @@
     .result-placeholder[hidden]{display:none}
     .results[hidden]{display:none}
     #captureArea{display:flow-root;outline:1px solid #111;outline-offset:-1px;border-radius:15px}
-    .route-summary-body{padding-bottom:3px}
     .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:0;border:1px solid #c7cdd4;border-radius:10px;padding:4px;background:#eef1f4}
     .metric{padding:5px 4px;border:1px dashed #6f829a;border-radius:8px;background:#dbe8f6;text-align:center}
     .metric span{display:block;color:#111;font-size:.88rem;font-weight:800;line-height:1.15}
@@ -96,9 +95,12 @@
     .leaflet-container{font-family:inherit}
     .map-pin{position:relative;z-index:3;display:grid;place-items:center;width:30px;height:30px;border:3px solid #fff;border-radius:50%;color:#fff;background:#1266d6;box-shadow:0 3px 10px #17203350;font-weight:900;font-size:12px}
     .map-pin.start{background:#127343}.map-pin.end{background:#b42318}
+    .map-pin.visited{background:#747c86;box-shadow:0 2px 7px #3f46504a}
     .map-marker{position:relative;width:30px;height:30px}
     .map-label{position:absolute;z-index:2;max-width:180px;padding:4px 7px;border:1px solid #7d8793;border-radius:6px;background:#fffffff2;color:#21344e;box-shadow:0 2px 6px #17203325;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .map-connector{position:absolute;z-index:1;display:block;background:#111;pointer-events:none}
+    .map-marker.marker-visited .map-label{border-color:#8a9098;background:#c8ccd1f2;color:#646b74;box-shadow:none}
+    .map-marker.marker-visited .map-connector{background:#777e86}
     .pos-right .map-label{left:40px;top:50%;transform:translateY(-50%)}
     .pos-right .map-connector{left:28px;top:14px;width:13px;height:1.5px}
     .pos-left .map-label{right:40px;top:50%;transform:translateY(-50%)}
@@ -115,11 +117,16 @@
     .pos-top-left .map-connector{left:5px;top:5px;width:13px;height:1.5px;transform:rotate(-135deg);transform-origin:left center}
     .pos-bottom-left .map-label{right:34px;top:34px}
     .pos-bottom-left .map-connector{left:5px;top:25px;width:13px;height:1.5px;transform:rotate(135deg);transform-origin:left center}
-    .route-result-head{margin-bottom:6px}
+    .route-result-head{margin-bottom:0}
+    .route-map-title-body{padding-bottom:6px}
+    .route-table-summary{padding:7px 8px 4px}
+    .route-table-title{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:0;padding:7px 8px}
+    .route-table-title h2{grid-column:2;margin:0;font-size:1.32rem;text-align:center}
+    .route-table-title .save-image-button{grid-column:3;justify-self:end}
     .save-image-button{min-height:30px;border:1px solid #111;border-radius:8px;padding:0 9px;color:#17120a;background:#f6c945;font-size:.83rem;font-weight:900}
     .table-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
-    th{border-bottom:1px solid #111;padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
+    th{border-top:1px solid #111;border-bottom:1px solid #111;padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
     td{padding:8px;border-top:1px solid #111;vertical-align:middle;line-height:1.35;overflow-wrap:anywhere}
     th:first-child,td:first-child{width:33px;padding-left:1px;padding-right:1px;text-align:center}
     th:nth-child(2),td:nth-child(2){width:64px;padding-left:1px;padding-right:1px;text-align:center}
@@ -137,10 +144,10 @@
     .nav-button:active{background:#d9f8e8}
     .visit-check{appearance:auto;width:24px;min-width:24px;height:24px;min-height:24px;margin:0;padding:0;accent-color:#168653;cursor:pointer}
     .route-row td{transition:background-color .15s,color .15s}
-    .route-row.visit-complete td{background:#e1e4e8;color:#6b7280}
-    .route-row.visit-complete .visit-name,.route-row.visit-complete .visit-address,.route-row.visit-complete .visit-phone{color:#6b7280}
-    .route-row.visit-complete .order-num{background:#7b8490}
-    .route-row.visit-complete .nav-button{border-color:#8d969f;color:#626b73;background:#f0f1f2}
+    .route-row.visit-complete td{background:#c4c9d0;color:#4f5660}
+    .route-row.visit-complete .visit-name,.route-row.visit-complete .visit-address,.route-row.visit-complete .visit-phone{color:#4f5660}
+    .route-row.visit-complete .order-num{background:#646d77}
+    .route-row.visit-complete .nav-button{border-color:#737b84;color:#4f5660;background:#d9dde1}
     .legal-note{padding:12px 14px;border-top:1px solid #111;color:#707b8f;font-size:.72rem;line-height:1.5}
     dialog{width:min(calc(100% - 28px),430px);border:0;border-radius:18px;padding:0;box-shadow:0 25px 80px #081a3860}
     dialog::backdrop{background:#0e1b30a8;backdrop-filter:blur(2px)}
@@ -221,19 +228,21 @@
       <section class="results" id="results" hidden>
         <div id="captureArea">
           <section class="card">
-            <div class="card-body route-summary-body">
-              <div class="section-head route-result-head"><h2>최적경로</h2><button class="save-image-button" id="saveImage" type="button" data-html2canvas-ignore="true">저장</button></div>
+            <div class="card-body route-map-title-body">
+              <div class="section-head route-result-head"><h2>최적경로</h2></div>
+            </div>
+            <div id="map" aria-label="최적 방문경로 지도"></div>
+          </section>
+
+          <section class="card">
+            <div class="route-table-summary">
               <div class="summary">
                 <div class="metric"><span>총 거리</span><strong id="totalDistance">—</strong></div>
                 <div class="metric"><span>총 이동시간</span><strong id="totalTime">—</strong></div>
                 <div class="metric"><span>방문지</span><strong id="totalStops">—</strong></div>
               </div>
             </div>
-            <div id="map" aria-label="최적 방문경로 지도"></div>
-          </section>
-
-          <section class="card">
-            <div class="section-head card-body" style="margin-bottom:0;padding-bottom:12px"><h2>방문순서 표</h2></div>
+            <div class="route-table-title"><h2>방문순서 표</h2><button class="save-image-button" id="saveImage" type="button" data-html2canvas-ignore="true">저장</button></div>
             <div class="table-wrap">
               <table>
                 <thead><tr><th>순서</th><th>네비</th><th>방문지·주소·전화번호</th><th>방문<br>체크</th><th>구간별</th></tr></thead>
@@ -491,11 +500,12 @@
     }
 
     function markerIcon(label,type,name,placement='right'){
+      const markerState=type==='visited'?' marker-visited':'';
       return L.divIcon({
         className:'',
         iconSize:[30,30],
         iconAnchor:[15,15],
-        html:'<div class="map-marker pos-'+placement+'"><span class="map-connector"></span><div class="map-pin '+type+'">'+escapeHtml(label)+'</div><span class="map-label">'+escapeHtml(name)+'</span></div>'
+        html:'<div class="map-marker'+markerState+' pos-'+placement+'"><span class="map-connector"></span><div class="map-pin '+type+'">'+escapeHtml(label)+'</div><span class="map-label">'+escapeHtml(name)+'</span></div>'
       });
     }
     const LABEL_PLACEMENTS=['right','left','top','bottom','top-right','bottom-right','top-left','bottom-left'];
@@ -540,6 +550,7 @@
           markerBoxes.forEach((markerBox,markerIndex)=>{if(markerIndex!==entryIndex) score+=overlapArea(box,markerBox)*20});
           if(score<bestScore){bestScore=score;bestPlacement=placement;bestBox=box}
         });
+        entry.placement=bestPlacement;
         entry.marker.setIcon(markerIcon(entry.label,entry.type,entry.name,bestPlacement));
         placed.push(bestBox);
       });
@@ -547,6 +558,13 @@
     function scheduleMarkerLabels(){
       if(state.labelRaf) cancelAnimationFrame(state.labelRaf);
       state.labelRaf=requestAnimationFrame(()=>{state.labelRaf=0;placeMarkerLabels()});
+    }
+    function updateVisitMarkerState(index,visited){
+      const entry=state.labelEntries.find(item=>item.visitIndex===index);
+      if(!entry) return;
+      entry.type=visited?'visited':'';
+      entry.marker.setIcon(markerIcon(entry.label,entry.type,entry.name,entry.placement||'right'));
+      scheduleMarkerLabels();
     }
     function clearMap(){
       if(!state.mapReady) return;
@@ -560,16 +578,16 @@
       if(!state.mapReady) return;
       clearMap();
       const allPoints = [];
-      const addMarker = (point,label,type,name,address)=>{
+      const addMarker = (point,label,type,name,address,visitIndex=null)=>{
         const marker = L.marker([point.lat,point.lon],{icon:markerIcon(label,type,name)})
           .addTo(state.map)
           .bindPopup('<b>'+escapeHtml(name)+'</b><br>'+escapeHtml(address));
         state.markers.push(marker);
-        state.labelEntries.push({marker,point,label,type,name});
+        state.labelEntries.push({marker,point,label,type,name,visitIndex,placement:'right'});
         allPoints.push([point.lat,point.lon]);
       };
       addMarker(result.start,'S','start','출발지',result.startAddress);
-      result.ordered.forEach((visit,index)=>addMarker(visit,index+1,'',visit.name,visit.address));
+      result.ordered.forEach((visit,index)=>addMarker(visit,index+1,visit.visited?'visited':'',visit.name,visit.address,index));
       if(result.endMode === 'custom') addMarker(result.end,'E','end','도착지',result.endAddress);
       const routeLayers=[];
       if(Array.isArray(result.legs) && result.legs.length){
@@ -775,6 +793,7 @@
           visit.visited=checked;
           row.classList.toggle('visit-complete',checked);
           if(state.result?.ordered?.[index]) state.result.ordered[index].visited=checked;
+          updateVisitMarkerState(index,checked);
           const stored=await saveRouteSnapshot(createRouteSnapshot(state.result));
           if(!stored) setStatus('방문 체크 상태를 휴대폰에 저장하지 못했습니다.','error');
         });
