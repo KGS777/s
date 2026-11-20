@@ -58,7 +58,7 @@
     .custom-end{grid-column:1/-1}
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
-    .btn-text{min-height:32px;color:var(--danger);background:#fff2f0;font-size:.8rem}
+    .btn-text{min-height:32px;border:1px solid #9da6b1;color:var(--danger);background:#fff2f0;font-size:.8rem}
     .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:center}
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.53rem;text-shadow:0 1px 1px #a63c0040}
     .btn-primary:active{transform:translateY(1px)}
@@ -69,7 +69,7 @@
     .visit-list{display:grid;gap:7px}
     .visit-entry{border:1px solid #d5deea;border-radius:11px;background:#fbfcfe;overflow:hidden}
     .visit-top{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px;border-bottom:1px solid #e4e9f0}
-    .visit-number{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;color:#fff;background:#1969d7;font-size:.75rem;font-weight:900}
+    .visit-number{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff;background:#1969d7;font-size:.75rem;font-weight:900}
     .visit-top input{min-height:38px;padding:7px 9px;font-weight:750}
     .visit-buttons{display:flex;gap:4px}
     .visit-buttons button{display:grid;place-items:center;width:34px;height:34px;min-height:34px;padding:0;border:0;border-radius:9px;font-size:1.1rem;font-weight:900}
@@ -86,26 +86,32 @@
     .result-placeholder p{margin:0;color:#a6aeb8;font-size:.88rem;font-weight:700;line-height:1.5}
     .result-placeholder[hidden]{display:none}
     .results[hidden]{display:none}
-    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
-    .metric{padding:11px 8px;border-radius:12px;background:#f1f6fd;text-align:center}
-    .metric span{display:block;color:var(--muted);font-size:.7rem;font-weight:700}
-    .metric strong{display:block;margin-top:4px;color:#114d99;font-size:.92rem;white-space:nowrap}
+    #captureArea{display:flow-root;outline:1px solid #111;outline-offset:-1px;border-radius:15px}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+    .metric{padding:5px 4px;border-radius:8px;background:#f1f6fd;text-align:center}
+    .metric span{display:block;color:var(--muted);font-size:.68rem;font-weight:700;line-height:1.15}
+    .metric strong{display:block;margin-top:2px;color:#114d99;font-size:.86rem;line-height:1.2;white-space:nowrap}
     #map{height:42vh;min-height:310px;max-height:470px;background:#e9eef5}
     .leaflet-container{font-family:inherit}
     .map-pin{display:grid;place-items:center;width:30px;height:30px;border:3px solid #fff;border-radius:50%;color:#fff;background:#1266d6;box-shadow:0 3px 10px #17203350;font-weight:900;font-size:12px}
     .map-pin.start{background:#127343}.map-pin.end{background:#b42318}
     .map-label{position:absolute;left:34px;top:50%;transform:translateY(-50%);max-width:180px;padding:4px 7px;border:1px solid #b7c3d3;border-radius:6px;background:#fffffff2;color:#21344e;box-shadow:0 2px 6px #17203325;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .result-actions{display:flex;justify-content:flex-end;padding:12px 14px;border-top:1px solid var(--line);background:#fff}
+    .save-image-button{border:1px solid #e26c6c}
     .table-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
     th{padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
-    td{padding:11px 8px;border-top:1px solid #e5eaf1;vertical-align:top;line-height:1.4;overflow-wrap:anywhere}
+    td{padding:8px;border-top:1px solid #e5eaf1;vertical-align:middle;line-height:1.35;overflow-wrap:anywhere}
     th:first-child,td:first-child{width:48px;text-align:center}
-    th:nth-child(3),td:nth-child(3){width:86px;text-align:right;white-space:nowrap}
+    th:nth-child(3),td:nth-child(3){width:96px;text-align:right;white-space:nowrap}
     .order-num{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
-    .visit-name{display:block;margin-bottom:3px;font-weight:850;color:#25334a}
+    .visit-mainline{display:flex;align-items:center;gap:6px;min-width:0}
+    .visit-name{display:block;min-width:0;overflow:hidden;color:#25334a;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
+    .visit-subline{display:flex;align-items:center;gap:6px;min-width:0;margin-top:4px;white-space:nowrap}
+    .visit-subline .visit-address:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
+    .visit-phone{flex:none}
     .visit-address{color:#59657a}
-    .nav-button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:34px;margin-top:8px;border:1px solid #18a05e;border-radius:9px;padding:0 10px;color:#087642;background:#edfff5;font-size:.75rem;font-weight:900;white-space:nowrap}
+    .nav-button{display:inline-flex;flex:none;align-items:center;justify-content:center;gap:4px;min-height:28px;margin:0;border:1px solid #18a05e;border-radius:8px;padding:0 7px;color:#087642;background:#edfff5;font-size:.7rem;font-weight:900;white-space:nowrap}
     .nav-button:active{background:#d9f8e8}
     .legal-note{padding:12px 14px;border-top:1px solid var(--line);color:#707b8f;font-size:.72rem;line-height:1.5}
     dialog{width:min(calc(100% - 28px),430px);border:0;border-radius:18px;padding:0;box-shadow:0 25px 80px #081a3860}
@@ -191,13 +197,13 @@
               <div class="section-head"><h2>최적경로</h2></div>
               <div class="summary">
                 <div class="metric"><span>총 거리</span><strong id="totalDistance">—</strong></div>
-                <div class="metric"><span>예상 시간</span><strong id="totalTime">—</strong></div>
+                <div class="metric"><span>총 이동시간</span><strong id="totalTime">—</strong></div>
                 <div class="metric"><span>방문지</span><strong id="totalStops">—</strong></div>
               </div>
             </div>
             <div id="map" aria-label="최적 방문경로 지도"></div>
             <div class="result-actions" data-html2canvas-ignore="true">
-              <button class="btn btn-secondary" id="saveImage" type="button">결과 이미지 저장</button>
+              <button class="btn btn-secondary save-image-button" id="saveImage" type="button">이미지 저장</button>
             </div>
           </section>
 
@@ -205,7 +211,7 @@
             <div class="section-head card-body" style="margin-bottom:0;padding-bottom:12px"><h2>방문순서 표</h2></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>순서</th><th>방문지·주소·전화번호</th><th>구간</th></tr></thead>
+                <thead><tr><th>순서</th><th>방문지·주소·전화번호</th><th>구간별 거리</th></tr></thead>
                 <tbody id="routeBody"></tbody>
               </table>
             </div>
@@ -239,6 +245,10 @@
     const TMAP_BASE = 'https://apis.openapi.sk.com';
     const KEY_STORAGE = 'mobileRoutePlanner.tmapKey.v1';
     const START_STORAGE = 'mobileRoutePlanner.startAddress.v1';
+    const ROUTE_STORAGE = 'mobileRoutePlanner.activeRoute.v1';
+    const ROUTE_DB_NAME = 'mobileRoutePlanner';
+    const ROUTE_DB_STORE = 'savedRoutes';
+    const ROUTE_DB_RECORD = 'activeRoute';
     const MAX_VISITS = 20;
     const $ = id => document.getElementById(id);
 
@@ -260,6 +270,96 @@
     }
     function writeLocal(key,value){
       try{value ? localStorage.setItem(key,value) : localStorage.removeItem(key)}catch{}
+    }
+    function openRouteDatabase(){
+      return new Promise((resolve,reject)=>{
+        if(!('indexedDB' in window)){reject(new Error('IndexedDB를 지원하지 않습니다.'));return}
+        const request=indexedDB.open(ROUTE_DB_NAME,1);
+        request.onupgradeneeded=()=>{
+          const database=request.result;
+          if(!database.objectStoreNames.contains(ROUTE_DB_STORE)) database.createObjectStore(ROUTE_DB_STORE);
+        };
+        request.onsuccess=()=>resolve(request.result);
+        request.onerror=()=>reject(request.error || new Error('경로 저장소를 열 수 없습니다.'));
+        request.onblocked=()=>reject(new Error('경로 저장소가 다른 창에서 사용 중입니다.'));
+      });
+    }
+    async function saveRouteSnapshot(snapshot){
+      let saved=false;
+      try{
+        const database=await openRouteDatabase();
+        await new Promise((resolve,reject)=>{
+          const transaction=database.transaction(ROUTE_DB_STORE,'readwrite');
+          transaction.objectStore(ROUTE_DB_STORE).put(snapshot,ROUTE_DB_RECORD);
+          transaction.oncomplete=resolve;
+          transaction.onerror=()=>reject(transaction.error || new Error('경로 저장에 실패했습니다.'));
+          transaction.onabort=()=>reject(transaction.error || new Error('경로 저장이 취소되었습니다.'));
+        });
+        database.close();
+        saved=true;
+      }catch{}
+      try{
+        const encoded=JSON.stringify(snapshot);
+        if(encoded.length<3500000){localStorage.setItem(ROUTE_STORAGE,encoded);saved=true}
+        else localStorage.removeItem(ROUTE_STORAGE);
+      }catch{}
+      return saved;
+    }
+    async function readRouteSnapshot(){
+      try{
+        const database=await openRouteDatabase();
+        const snapshot=await new Promise((resolve,reject)=>{
+          const request=database.transaction(ROUTE_DB_STORE,'readonly').objectStore(ROUTE_DB_STORE).get(ROUTE_DB_RECORD);
+          request.onsuccess=()=>resolve(request.result || null);
+          request.onerror=()=>reject(request.error || new Error('저장된 경로를 읽을 수 없습니다.'));
+        });
+        database.close();
+        if(snapshot) return snapshot;
+      }catch{}
+      try{return JSON.parse(localStorage.getItem(ROUTE_STORAGE) || 'null')}catch{return null}
+    }
+    async function deleteRouteSnapshot(){
+      try{
+        const database=await openRouteDatabase();
+        await new Promise((resolve,reject)=>{
+          const transaction=database.transaction(ROUTE_DB_STORE,'readwrite');
+          transaction.objectStore(ROUTE_DB_STORE).delete(ROUTE_DB_RECORD);
+          transaction.oncomplete=resolve;
+          transaction.onerror=()=>reject(transaction.error || new Error('저장된 경로를 삭제할 수 없습니다.'));
+          transaction.onabort=()=>reject(transaction.error || new Error('저장된 경로 삭제가 취소되었습니다.'));
+        });
+        database.close();
+      }catch{}
+      writeLocal(ROUTE_STORAGE,'');
+    }
+    function createRouteSnapshot(result){
+      return {
+        version:1,
+        savedAt:Date.now(),
+        inputRows:state.inputRows.map(row=>({name:row.name,address:row.address,phone:row.phone})),
+        startAddress:$('startAddress').value.trim(),
+        endMode:$('endMode').value,
+        endAddress:$('endAddress').value.trim(),
+        result
+      };
+    }
+    async function restoreSavedRoute(){
+      const snapshot=await readRouteSnapshot();
+      if(!snapshot || snapshot.version!==1 || !snapshot.result || !Array.isArray(snapshot.result.ordered)) return false;
+      const rows=Array.isArray(snapshot.inputRows)?snapshot.inputRows.slice(0,MAX_VISITS):[];
+      state.inputRows=(rows.length?rows:[{name:'',address:'',phone:''}]).map(row=>({
+        key:state.nextInputId++,
+        name:String(row?.name || ''),
+        address:String(row?.address || ''),
+        phone:String(row?.phone || '')
+      }));
+      $('startAddress').value=String(snapshot.startAddress || snapshot.result.startAddress || '');
+      $('endMode').value=snapshot.endMode==='custom'?'custom':'return';
+      $('endAddress').value=String(snapshot.endAddress || snapshot.result.endAddress || '');
+      $('endField').hidden=$('endMode').value==='return';
+      renderInputRows();
+      showResult(snapshot.result);
+      return true;
     }
     function escapeHtml(value){
       return String(value ?? '').replace(/[&<>"']/g,ch=>({
@@ -390,11 +490,24 @@
       addMarker(result.start,'S','start','출발지',result.startAddress);
       result.ordered.forEach((visit,index)=>addMarker(visit,index+1,'',visit.name,visit.address));
       if(result.endMode === 'custom') addMarker(result.end,'E','end','도착지',result.endAddress);
-      if(result.path.length > 1){
-        const latlngs = result.path.map(pair=>[pair[1],pair[0]]);
-        state.routeLine = L.polyline(latlngs,{color:'#0b66d7',weight:5,opacity:.88}).addTo(state.map);
+      const routeLayers=[];
+      if(Array.isArray(result.legs) && result.legs.length){
+        result.legs.forEach((leg,index)=>{
+          if(!Array.isArray(leg.path) || leg.path.length<2) return;
+          const latlngs=leg.path.map(pair=>[pair[1],pair[0]]);
+          const isOuterLeg=index===0 || index===result.legs.length-1;
+          routeLayers.push(L.polyline(latlngs,isOuterLeg
+            ? {color:'#4e9fe6',weight:2,opacity:.82}
+            : {color:'#0b66d7',weight:5,opacity:.9}
+          ));
+          allPoints.push(...latlngs.filter((_,pointIndex)=>pointIndex%Math.max(1,Math.floor(latlngs.length/80))===0));
+        });
+      }else if(result.path.length > 1){
+        const latlngs=result.path.map(pair=>[pair[1],pair[0]]);
+        routeLayers.push(L.polyline(latlngs,{color:'#0b66d7',weight:5,opacity:.88}));
         allPoints.push(...latlngs.filter((_,index)=>index%Math.max(1,Math.floor(latlngs.length/150))===0));
       }
+      if(routeLayers.length) state.routeLine=L.layerGroup(routeLayers).addTo(state.map);
       if(allPoints.length) state.map.fitBounds(L.latLngBounds(allPoints).pad(.12),{maxZoom:16});
     }
 
@@ -445,7 +558,12 @@
     function collectRoute(features){
       const points=[];
       const path=[];
-      let distance=0,time=0;
+      const legs=[];
+      let legDistance=0,legTime=0,totalDistance=0,totalTime=0,legPath=[];
+      const addCoordinate=(target,lon,lat)=>{
+        const previous=target[target.length-1];
+        if(!previous || previous[0]!==lon || previous[1]!==lat) target.push([lon,lat]);
+      };
       for(const feature of features){
         const geometry=feature?.geometry || {};
         const properties=feature?.properties || {};
@@ -453,22 +571,41 @@
           const lines=geometry.type==='LineString' ? [geometry.coordinates] : geometry.coordinates;
           for(const line of lines || []) for(const pair of line || []){
             const lon=Number(pair?.[0]),lat=Number(pair?.[1]);
-            if(Number.isFinite(lon)&&Number.isFinite(lat)) path.push([lon,lat]);
+            if(Number.isFinite(lon)&&Number.isFinite(lat)){
+              addCoordinate(path,lon,lat);
+              addCoordinate(legPath,lon,lat);
+            }
           }
-          distance += Math.max(0,Number(properties.distance)||0);
-          time += Math.max(0,Number(properties.time)||0);
+          const distance=Math.max(0,Number(properties.distance)||0);
+          const time=Math.max(0,Number(properties.time)||0);
+          legDistance+=distance;legTime+=time;
+          totalDistance+=distance;totalTime+=time;
         }
         if(geometry.type==='Point'){
-          points.push({properties,coordinates:geometry.coordinates,legDistance:distance,legTime:time});
-          distance=0;time=0;
+          const viaId=String(properties.viaPointId ?? '').trim();
+          const viaName=String(properties.viaPointName ?? '').trim();
+          const pointType=String(properties.pointType ?? '').trim().toUpperCase();
+          const turnType=Number(properties.turnType);
+          const isRouteBoundary=Boolean(viaId || viaName || pointType==='S' || pointType==='E' || pointType==='SP' || pointType==='EP' || turnType===200 || turnType===201);
+          if(!isRouteBoundary) continue;
+          const point={properties,coordinates:geometry.coordinates,legDistance,legTime};
+          points.push(point);
+          if(legPath.length>1 || legDistance>0 || legTime>0){
+            legs.push({path:legPath.slice(),distance:legDistance,time:legTime,arrival:point});
+          }
+          legDistance=0;legTime=0;legPath=[];
         }
       }
-      return {points,path};
+      if(legPath.length>1 || legDistance>0 || legTime>0){
+        legs.push({path:legPath.slice(),distance:legDistance,time:legTime,arrival:null});
+      }
+      return {points,path,legs,totalDistance,totalTime};
     }
     function parseRoute(data,visits){
       const features=data?.features;
       if(!Array.isArray(features)||!features.length) throw new Error('TMAP 경로 정보를 찾을 수 없습니다.');
-      const {points,path}=collectRoute(features);
+      const route=collectRoute(features);
+      const {points,path,legs}=route;
       const used=new Set();
       const ordered=[];
       for(const point of points){
@@ -502,10 +639,12 @@
       }
       if(ordered.length!==visits.length) throw new Error('TMAP 응답에서 전체 방문 순서를 확인하지 못했습니다.');
       const summary=features.find(feature=>feature?.properties?.totalDistance!==undefined)?.properties || {};
-      const totalDistance=Number(summary.totalDistance);
-      const totalTime=Number(summary.totalTime);
+      const summaryDistance=Number(summary.totalDistance);
+      const summaryTime=Number(summary.totalTime);
+      const totalDistance=route.totalDistance>0?route.totalDistance:summaryDistance;
+      const totalTime=route.totalTime>0?route.totalTime:summaryTime;
       return {
-        ordered,path,
+        ordered,path,legs,
         totalDistance:Number.isFinite(totalDistance)?totalDistance:null,
         totalTime:Number.isFinite(totalTime)?totalTime:null
       };
@@ -517,9 +656,10 @@
       result.ordered.forEach((visit,index)=>{
         const row=document.createElement('tr');
         row.innerHTML='<td><span class="order-num">'+(index+1)+'</span></td>'+
-          '<td><span class="visit-name">'+escapeHtml(visit.name)+'</span><span class="visit-address">'+escapeHtml(visit.address)+'</span>'+
-          (visit.phone?'<br><span class="visit-address">'+escapeHtml(visit.phone)+'</span>':'')+
-          '<br><button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">N 네이버 내비</button></td>'+
+          '<td><div class="visit-mainline"><span class="visit-name" title="'+escapeHtml(visit.name)+'">'+escapeHtml(visit.name)+'</span>'+ 
+          '<button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">N 네이버 내비</button></div>'+ 
+          '<div class="visit-subline"><span class="visit-address" title="'+escapeHtml(visit.address)+'">'+escapeHtml(visit.address)+'</span>'+ 
+          (visit.phone?'<span class="visit-address visit-phone">'+escapeHtml(visit.phone)+'</span>':'')+'</div></td>'+ 
           '<td>'+escapeHtml(formatDistance(visit.legDistance))+'<br><span class="visit-address">'+escapeHtml(formatTime(visit.legTime))+'</span></td>';
         row.querySelector('.nav-button').addEventListener('click',()=>openNaverNavigation(visit));
         body.appendChild(row);
@@ -616,7 +756,8 @@
         const route=parseRoute(data,visits);
         const result={...route,start,end,startAddress,endAddress,endMode};
         showResult(result);
-        setStatus('최적 방문 순서를 계산했습니다.','success',100);
+        const stored=await saveRouteSnapshot(createRouteSnapshot(result));
+        setStatus(stored?'최적 방문 순서를 계산하고 휴대폰에 저장했습니다.':'최적경로는 계산했지만 브라우저 저장소 사용이 차단되어 자동 저장하지 못했습니다.',stored?'success':'error',100);
         writeLocal(START_STORAGE,startAddress);
       }catch(error){
         if(runId===state.runId) setStatus('계산 실패: '+error.message,'error',0);
@@ -654,10 +795,11 @@
       }finally{$('saveImage').disabled=false}
     }
 
-    $('clearAddresses').addEventListener('click',()=>{
+    $('clearAddresses').addEventListener('click',async()=>{
       const hasInput=state.inputRows.some(row=>row.name.trim()||row.address.trim()||row.phone.trim());
-      if(hasInput && !confirm('입력한 방문지를 모두 지우시겠습니까?')) return;
+      if((hasInput||state.result) && !confirm('입력한 방문지와 저장된 계산결과를 모두 지우시겠습니까?')) return;
       ++state.runId;state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];renderInputRows();$('results').hidden=true;$('resultPlaceholder').hidden=false;state.result=null;clearMap();
+      await deleteRouteSnapshot();
       setStatus('방문지 주소를 초기화했습니다.');
     });
     $('endMode').addEventListener('change',()=>{$('endField').hidden=$('endMode').value==='return'});
@@ -680,11 +822,13 @@
       if(event.target===$('keyDialog')) closeKeyDialog();
     });
 
-    window.addEventListener('DOMContentLoaded',()=>{
+    window.addEventListener('DOMContentLoaded',async()=>{
       state.apiKey=readLocal(KEY_STORAGE);
       $('startAddress').value=readLocal(START_STORAGE);
       state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];
       setKeyState();renderInputRows();initMap();
+      const restored=await restoreSavedRoute();
+      if(restored) setStatus('저장된 최적경로를 복원했습니다.','success',100);
     });
   </script>
 </body>
