@@ -89,7 +89,7 @@
     #captureArea{display:flow-root;outline:1px solid #111;outline-offset:-1px;border-radius:15px}
     .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
     .metric{padding:5px 4px;border:1px dashed #6f829a;border-radius:8px;background:#dbe8f6;text-align:center}
-    .metric span{display:block;color:var(--muted);font-size:.68rem;font-weight:700;line-height:1.15}
+    .metric span{display:block;color:#111;font-size:.88rem;font-weight:800;line-height:1.15}
     .metric strong{display:block;margin-top:2px;color:#114d99;font-size:.86rem;line-height:1.2;white-space:nowrap}
     #map{height:42vh;min-height:310px;max-height:470px;background:#e9eef5}
     .leaflet-container{font-family:inherit}
@@ -115,7 +115,7 @@
     .pos-bottom-left .map-label{right:34px;top:34px}
     .pos-bottom-left .map-connector{left:5px;top:25px;width:13px;height:1.5px;transform:rotate(135deg);transform-origin:left center}
     .route-result-head{margin-bottom:6px}
-    .save-image-button{min-height:30px;border:1px solid #111;border-radius:8px;padding:0 9px;background:#eaf2ff;font-size:.75rem}
+    .save-image-button{min-height:30px;border:1px solid #111;border-radius:8px;padding:0 9px;color:#17120a;background:#f6c945;font-size:.83rem;font-weight:900}
     .table-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
     th{padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
@@ -123,14 +123,14 @@
     th:first-child,td:first-child{width:118px;text-align:left}
     th:nth-child(3),td:nth-child(3){width:96px;text-align:right;white-space:nowrap}
     .order-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
-    .order-num{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
+    .order-num{display:inline-grid;flex:0 0 27px;place-items:center;width:27px;min-width:27px;height:27px;min-height:27px;aspect-ratio:1;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
     .visit-mainline{display:flex;align-items:center;gap:6px;min-width:0}
     .visit-name{display:block;min-width:0;overflow:hidden;color:#25334a;font-size:1.08rem;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
     .visit-subline{display:flex;align-items:center;gap:6px;min-width:0;margin-top:4px;font-size:1.08rem;white-space:nowrap}
     .visit-subline .visit-address:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
     .visit-phone{flex:none}
     .visit-address{color:#59657a}
-    .nav-button{display:inline-flex;flex:none;align-items:center;justify-content:center;gap:4px;min-height:28px;margin:0;border:1px solid #18a05e;border-radius:8px;padding:0 7px;color:#087642;background:#edfff5;font-size:.7rem;font-weight:900;white-space:nowrap}
+    .nav-button{display:inline-flex;flex:none;align-items:center;justify-content:center;min-height:30px;margin:0;border:1px solid #18a05e;border-radius:8px;padding:0 6px;color:#087642;background:#edfff5;font-size:1.08rem;font-weight:900;line-height:1;white-space:nowrap}
     .nav-button:active{background:#d9f8e8}
     .legal-note{padding:12px 14px;border-top:1px solid var(--line);color:#707b8f;font-size:.72rem;line-height:1.5}
     dialog{width:min(calc(100% - 28px),430px);border:0;border-radius:18px;padding:0;box-shadow:0 25px 80px #081a3860}
@@ -213,7 +213,7 @@
         <div id="captureArea">
           <section class="card">
             <div class="card-body">
-              <div class="section-head route-result-head"><h2>최적경로</h2><button class="save-image-button" id="saveImage" type="button" data-html2canvas-ignore="true">이미지 저장</button></div>
+              <div class="section-head route-result-head"><h2>최적경로</h2><button class="save-image-button" id="saveImage" type="button" data-html2canvas-ignore="true">저장</button></div>
               <div class="summary">
                 <div class="metric"><span>총 거리</span><strong id="totalDistance">—</strong></div>
                 <div class="metric"><span>총 이동시간</span><strong id="totalTime">—</strong></div>
@@ -752,7 +752,7 @@
       result.ordered.forEach((visit,index)=>{
         const row=document.createElement('tr');
         row.innerHTML='<td><div class="order-actions"><span class="order-num">'+(index+1)+'</span>'+ 
-          '<button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">N 네이버 내비</button></div></td>'+ 
+          '<button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">길찾기</button></div></td>'+ 
           '<td><div class="visit-mainline"><span class="visit-name" title="'+escapeHtml(visit.name)+'">'+escapeHtml(visit.name)+'</span></div>'+ 
           '<div class="visit-subline"><span class="visit-address" title="'+escapeHtml(visit.address)+'">'+escapeHtml(visit.address)+'</span>'+ 
           (visit.phone?'<span class="visit-address visit-phone">'+escapeHtml(visit.phone)+'</span>':'')+'</div></td>'+ 
