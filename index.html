@@ -69,7 +69,7 @@
     .visit-list{display:grid;gap:7px}
     .visit-entry{border:1px solid #d5deea;border-radius:11px;background:#fbfcfe;overflow:hidden}
     .visit-top{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px;border-bottom:1px solid #e4e9f0}
-    .visit-number{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff;background:#1969d7;font-size:.75rem;font-weight:900}
+    .visit-number{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff;background:#168653;font-size:.75rem;font-weight:900}
     .visit-top input{min-height:38px;padding:7px 9px;font-weight:750}
     .visit-buttons{display:flex;gap:4px}
     .visit-buttons button{display:grid;place-items:center;width:34px;height:34px;min-height:34px;padding:0;border:0;border-radius:9px;font-size:1.1rem;font-weight:900}
@@ -88,26 +88,45 @@
     .results[hidden]{display:none}
     #captureArea{display:flow-root;outline:1px solid #111;outline-offset:-1px;border-radius:15px}
     .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
-    .metric{padding:5px 4px;border-radius:8px;background:#f1f6fd;text-align:center}
+    .metric{padding:5px 4px;border:1px dashed #6f829a;border-radius:8px;background:#dbe8f6;text-align:center}
     .metric span{display:block;color:var(--muted);font-size:.68rem;font-weight:700;line-height:1.15}
     .metric strong{display:block;margin-top:2px;color:#114d99;font-size:.86rem;line-height:1.2;white-space:nowrap}
     #map{height:42vh;min-height:310px;max-height:470px;background:#e9eef5}
     .leaflet-container{font-family:inherit}
-    .map-pin{display:grid;place-items:center;width:30px;height:30px;border:3px solid #fff;border-radius:50%;color:#fff;background:#1266d6;box-shadow:0 3px 10px #17203350;font-weight:900;font-size:12px}
+    .map-pin{position:relative;z-index:3;display:grid;place-items:center;width:30px;height:30px;border:3px solid #fff;border-radius:50%;color:#fff;background:#1266d6;box-shadow:0 3px 10px #17203350;font-weight:900;font-size:12px}
     .map-pin.start{background:#127343}.map-pin.end{background:#b42318}
-    .map-label{position:absolute;left:34px;top:50%;transform:translateY(-50%);max-width:180px;padding:4px 7px;border:1px solid #b7c3d3;border-radius:6px;background:#fffffff2;color:#21344e;box-shadow:0 2px 6px #17203325;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .result-actions{display:flex;justify-content:flex-end;padding:12px 14px;border-top:1px solid var(--line);background:#fff}
-    .save-image-button{border:1px solid #e26c6c}
+    .map-marker{position:relative;width:30px;height:30px}
+    .map-label{position:absolute;z-index:2;max-width:180px;padding:4px 7px;border:1px solid #7d8793;border-radius:6px;background:#fffffff2;color:#21344e;box-shadow:0 2px 6px #17203325;font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .map-connector{position:absolute;z-index:1;display:block;background:#111;pointer-events:none}
+    .pos-right .map-label{left:40px;top:50%;transform:translateY(-50%)}
+    .pos-right .map-connector{left:28px;top:14px;width:13px;height:1.5px}
+    .pos-left .map-label{right:40px;top:50%;transform:translateY(-50%)}
+    .pos-left .map-connector{right:28px;top:14px;width:13px;height:1.5px}
+    .pos-top .map-label{left:50%;bottom:40px;transform:translateX(-50%)}
+    .pos-top .map-connector{left:14px;top:-11px;width:1.5px;height:12px}
+    .pos-bottom .map-label{left:50%;top:40px;transform:translateX(-50%)}
+    .pos-bottom .map-connector{left:14px;top:29px;width:1.5px;height:12px}
+    .pos-top-right .map-label{left:34px;bottom:34px}
+    .pos-top-right .map-connector{left:25px;top:4px;width:13px;height:1.5px;transform:rotate(-45deg);transform-origin:left center}
+    .pos-bottom-right .map-label{left:34px;top:34px}
+    .pos-bottom-right .map-connector{left:25px;top:25px;width:13px;height:1.5px;transform:rotate(45deg);transform-origin:left center}
+    .pos-top-left .map-label{right:34px;bottom:34px}
+    .pos-top-left .map-connector{left:5px;top:5px;width:13px;height:1.5px;transform:rotate(-135deg);transform-origin:left center}
+    .pos-bottom-left .map-label{right:34px;top:34px}
+    .pos-bottom-left .map-connector{left:5px;top:25px;width:13px;height:1.5px;transform:rotate(135deg);transform-origin:left center}
+    .route-result-head{margin-bottom:6px}
+    .save-image-button{min-height:30px;border:1px solid #111;border-radius:8px;padding:0 9px;background:#eaf2ff;font-size:.75rem}
     .table-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
     th{padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
     td{padding:8px;border-top:1px solid #e5eaf1;vertical-align:middle;line-height:1.35;overflow-wrap:anywhere}
-    th:first-child,td:first-child{width:48px;text-align:center}
+    th:first-child,td:first-child{width:118px;text-align:left}
     th:nth-child(3),td:nth-child(3){width:96px;text-align:right;white-space:nowrap}
+    .order-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
     .order-num{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
     .visit-mainline{display:flex;align-items:center;gap:6px;min-width:0}
-    .visit-name{display:block;min-width:0;overflow:hidden;color:#25334a;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
-    .visit-subline{display:flex;align-items:center;gap:6px;min-width:0;margin-top:4px;white-space:nowrap}
+    .visit-name{display:block;min-width:0;overflow:hidden;color:#25334a;font-size:1.08rem;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
+    .visit-subline{display:flex;align-items:center;gap:6px;min-width:0;margin-top:4px;font-size:1.08rem;white-space:nowrap}
     .visit-subline .visit-address:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
     .visit-phone{flex:none}
     .visit-address{color:#59657a}
@@ -194,7 +213,7 @@
         <div id="captureArea">
           <section class="card">
             <div class="card-body">
-              <div class="section-head"><h2>최적경로</h2></div>
+              <div class="section-head route-result-head"><h2>최적경로</h2><button class="save-image-button" id="saveImage" type="button" data-html2canvas-ignore="true">이미지 저장</button></div>
               <div class="summary">
                 <div class="metric"><span>총 거리</span><strong id="totalDistance">—</strong></div>
                 <div class="metric"><span>총 이동시간</span><strong id="totalTime">—</strong></div>
@@ -202,9 +221,6 @@
               </div>
             </div>
             <div id="map" aria-label="최적 방문경로 지도"></div>
-            <div class="result-actions" data-html2canvas-ignore="true">
-              <button class="btn btn-secondary save-image-button" id="saveImage" type="button">이미지 저장</button>
-            </div>
           </section>
 
           <section class="card">
@@ -257,6 +273,8 @@
       map: null,
       mapReady: false,
       markers: [],
+      labelEntries: [],
+      labelRaf: 0,
       routeLine: null,
       geocodeCache: new Map(),
       runId: 0,
@@ -459,21 +477,74 @@
         crossOrigin:'anonymous',
         attribution:'&copy; OpenStreetMap contributors'
       }).addTo(state.map);
+      state.map.on('zoomend moveend resize',scheduleMarkerLabels);
       state.mapReady = true;
     }
 
-    function markerIcon(label,type,name){
+    function markerIcon(label,type,name,placement='right'){
       return L.divIcon({
         className:'',
         iconSize:[30,30],
         iconAnchor:[15,15],
-        html:'<div style="position:relative"><div class="map-pin '+type+'">'+escapeHtml(label)+'</div><span class="map-label">'+escapeHtml(name)+'</span></div>'
+        html:'<div class="map-marker pos-'+placement+'"><span class="map-connector"></span><div class="map-pin '+type+'">'+escapeHtml(label)+'</div><span class="map-label">'+escapeHtml(name)+'</span></div>'
       });
+    }
+    const LABEL_PLACEMENTS=['right','left','top','bottom','top-right','bottom-right','top-left','bottom-left'];
+    function estimatedLabelBox(point,name,placement){
+      const textWidth=[...String(name||'')].reduce((sum,char)=>sum+(/[\u3131-\uD79D]/.test(char)?12:7),0);
+      const width=Math.min(180,Math.max(44,textWidth+16));
+      const height=28;
+      const boxes={
+        right:{x:point.x+40,y:point.y-height/2},
+        left:{x:point.x-40-width,y:point.y-height/2},
+        top:{x:point.x-width/2,y:point.y-40-height},
+        bottom:{x:point.x-width/2,y:point.y+40},
+        'top-right':{x:point.x+34,y:point.y-34-height},
+        'bottom-right':{x:point.x+34,y:point.y+34},
+        'top-left':{x:point.x-34-width,y:point.y-34-height},
+        'bottom-left':{x:point.x-34-width,y:point.y+34}
+      };
+      const box=boxes[placement];
+      return {...box,width,height,right:box.x+width,bottom:box.y+height};
+    }
+    function overlapArea(first,second){
+      return Math.max(0,Math.min(first.right,second.right)-Math.max(first.x,second.x))*
+        Math.max(0,Math.min(first.bottom,second.bottom)-Math.max(first.y,second.y));
+    }
+    function placeMarkerLabels(){
+      if(!state.mapReady || !state.labelEntries.length) return;
+      const size=state.map.getSize();
+      const markerBoxes=state.labelEntries.map(entry=>{
+        const point=state.map.latLngToContainerPoint([entry.point.lat,entry.point.lon]);
+        return {x:point.x-17,y:point.y-17,right:point.x+17,bottom:point.y+17,width:34,height:34};
+      });
+      const placed=[];
+      state.labelEntries.forEach((entry,entryIndex)=>{
+        const point=state.map.latLngToContainerPoint([entry.point.lat,entry.point.lon]);
+        let bestPlacement='right',bestBox=null,bestScore=Infinity;
+        LABEL_PLACEMENTS.forEach((placement,candidateIndex)=>{
+          const box=estimatedLabelBox(point,entry.name,placement);
+          const outsideX=Math.max(0,-box.x)+Math.max(0,box.right-size.x);
+          const outsideY=Math.max(0,-box.y)+Math.max(0,box.bottom-size.y);
+          let score=(outsideX+outsideY)*200+candidateIndex*.01;
+          for(const prior of placed) score+=overlapArea(box,prior)*50;
+          markerBoxes.forEach((markerBox,markerIndex)=>{if(markerIndex!==entryIndex) score+=overlapArea(box,markerBox)*20});
+          if(score<bestScore){bestScore=score;bestPlacement=placement;bestBox=box}
+        });
+        entry.marker.setIcon(markerIcon(entry.label,entry.type,entry.name,bestPlacement));
+        placed.push(bestBox);
+      });
+    }
+    function scheduleMarkerLabels(){
+      if(state.labelRaf) cancelAnimationFrame(state.labelRaf);
+      state.labelRaf=requestAnimationFrame(()=>{state.labelRaf=0;placeMarkerLabels()});
     }
     function clearMap(){
       if(!state.mapReady) return;
+      if(state.labelRaf){cancelAnimationFrame(state.labelRaf);state.labelRaf=0}
       state.markers.forEach(marker=>state.map.removeLayer(marker));
       state.markers = [];
+      state.labelEntries = [];
       if(state.routeLine){state.map.removeLayer(state.routeLine);state.routeLine=null}
     }
     function drawResult(result){
@@ -485,6 +556,7 @@
           .addTo(state.map)
           .bindPopup('<b>'+escapeHtml(name)+'</b><br>'+escapeHtml(address));
         state.markers.push(marker);
+        state.labelEntries.push({marker,point,label,type,name});
         allPoints.push([point.lat,point.lon]);
       };
       addMarker(result.start,'S','start','출발지',result.startAddress);
@@ -497,7 +569,7 @@
           const latlngs=leg.path.map(pair=>[pair[1],pair[0]]);
           const isOuterLeg=index===0 || index===result.legs.length-1;
           routeLayers.push(L.polyline(latlngs,isOuterLeg
-            ? {color:'#4e9fe6',weight:2,opacity:.82}
+            ? {color:'#d62828',weight:2,opacity:.9}
             : {color:'#0b66d7',weight:5,opacity:.9}
           ));
           allPoints.push(...latlngs.filter((_,pointIndex)=>pointIndex%Math.max(1,Math.floor(latlngs.length/80))===0));
@@ -508,7 +580,8 @@
         allPoints.push(...latlngs.filter((_,index)=>index%Math.max(1,Math.floor(latlngs.length/150))===0));
       }
       if(routeLayers.length) state.routeLine=L.layerGroup(routeLayers).addTo(state.map);
-      if(allPoints.length) state.map.fitBounds(L.latLngBounds(allPoints).pad(.12),{maxZoom:16});
+      if(allPoints.length) state.map.fitBounds(L.latLngBounds(allPoints).pad(.12),{maxZoom:16,animate:false});
+      scheduleMarkerLabels();
     }
 
     async function fetchJson(url,options={}){
@@ -559,7 +632,7 @@
       const points=[];
       const path=[];
       const legs=[];
-      let legDistance=0,legTime=0,totalDistance=0,totalTime=0,legPath=[];
+      let totalDistance=0,totalTime=0;
       const addCoordinate=(target,lon,lat)=>{
         const previous=target[target.length-1];
         if(!previous || previous[0]!==lon || previous[1]!==lat) target.push([lon,lat]);
@@ -569,6 +642,7 @@
         const properties=feature?.properties || {};
         if(geometry.type==='LineString' || geometry.type==='MultiLineString'){
           const lines=geometry.type==='LineString' ? [geometry.coordinates] : geometry.coordinates;
+          const legPath=[];
           for(const line of lines || []) for(const pair of line || []){
             const lon=Number(pair?.[0]),lat=Number(pair?.[1]);
             if(Number.isFinite(lon)&&Number.isFinite(lat)){
@@ -578,8 +652,8 @@
           }
           const distance=Math.max(0,Number(properties.distance)||0);
           const time=Math.max(0,Number(properties.time)||0);
-          legDistance+=distance;legTime+=time;
           totalDistance+=distance;totalTime+=time;
+          if(legPath.length>1 || distance>0 || time>0) legs.push({path:legPath,distance,time,properties});
         }
         if(geometry.type==='Point'){
           const viaId=String(properties.viaPointId ?? '').trim();
@@ -588,16 +662,13 @@
           const turnType=Number(properties.turnType);
           const isRouteBoundary=Boolean(viaId || viaName || pointType==='S' || pointType==='E' || pointType==='SP' || pointType==='EP' || turnType===200 || turnType===201);
           if(!isRouteBoundary) continue;
-          const point={properties,coordinates:geometry.coordinates,legDistance,legTime};
-          points.push(point);
-          if(legPath.length>1 || legDistance>0 || legTime>0){
-            legs.push({path:legPath.slice(),distance:legDistance,time:legTime,arrival:point});
-          }
-          legDistance=0;legTime=0;legPath=[];
+          points.push({
+            properties,
+            coordinates:geometry.coordinates,
+            legDistance:Math.max(0,Number(properties.distance)||0),
+            legTime:Math.max(0,Number(properties.time)||0)
+          });
         }
-      }
-      if(legPath.length>1 || legDistance>0 || legTime>0){
-        legs.push({path:legPath.slice(),distance:legDistance,time:legTime,arrival:null});
       }
       return {points,path,legs,totalDistance,totalTime};
     }
@@ -638,6 +709,19 @@
         if(byPosition.length===visits.length){ordered.splice(0,ordered.length,...byPosition)}
       }
       if(ordered.length!==visits.length) throw new Error('TMAP 응답에서 전체 방문 순서를 확인하지 못했습니다.');
+      const usedLegs=new Set();
+      ordered.forEach((visit,index)=>{
+        let legIndex=legs.findIndex((leg,candidateIndex)=>{
+          if(usedLegs.has(candidateIndex)) return false;
+          const id=String(leg.properties?.viaPointId ?? '').trim();
+          return id && id===visit.id;
+        });
+        if(legIndex<0 && index<legs.length && !usedLegs.has(index)) legIndex=index;
+        if(legIndex>=0){
+          usedLegs.add(legIndex);
+          ordered[index]={...visit,legDistance:legs[legIndex].distance,legTime:legs[legIndex].time};
+        }
+      });
       const summary=features.find(feature=>feature?.properties?.totalDistance!==undefined)?.properties || {};
       const summaryDistance=Number(summary.totalDistance);
       const summaryTime=Number(summary.totalTime);
@@ -650,14 +734,26 @@
       };
     }
 
+    function applyStoredLegMetrics(result){
+      if(!Array.isArray(result?.ordered) || !Array.isArray(result?.legs)) return result;
+      return {
+        ...result,
+        ordered:result.ordered.map((visit,index)=>{
+          const matchingIndex=result.legs.findIndex(leg=>String(leg.properties?.viaPointId ?? '').trim()===visit.id);
+          const leg=result.legs[matchingIndex>=0?matchingIndex:index];
+          return leg?{...visit,legDistance:Number(leg.distance),legTime:Number(leg.time)}:visit;
+        })
+      };
+    }
+
     function renderTable(result){
       const body=$('routeBody');
       body.innerHTML='';
       result.ordered.forEach((visit,index)=>{
         const row=document.createElement('tr');
-        row.innerHTML='<td><span class="order-num">'+(index+1)+'</span></td>'+
-          '<td><div class="visit-mainline"><span class="visit-name" title="'+escapeHtml(visit.name)+'">'+escapeHtml(visit.name)+'</span>'+ 
-          '<button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">N 네이버 내비</button></div>'+ 
+        row.innerHTML='<td><div class="order-actions"><span class="order-num">'+(index+1)+'</span>'+ 
+          '<button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">N 네이버 내비</button></div></td>'+ 
+          '<td><div class="visit-mainline"><span class="visit-name" title="'+escapeHtml(visit.name)+'">'+escapeHtml(visit.name)+'</span></div>'+ 
           '<div class="visit-subline"><span class="visit-address" title="'+escapeHtml(visit.address)+'">'+escapeHtml(visit.address)+'</span>'+ 
           (visit.phone?'<span class="visit-address visit-phone">'+escapeHtml(visit.phone)+'</span>':'')+'</div></td>'+ 
           '<td>'+escapeHtml(formatDistance(visit.legDistance))+'<br><span class="visit-address">'+escapeHtml(formatTime(visit.legTime))+'</span></td>';
@@ -695,6 +791,7 @@
       location.href=schemeUrl;
     }
     function showResult(result){
+      result=applyStoredLegMetrics(result);
       state.result=result;
       $('totalDistance').textContent=formatDistance(result.totalDistance);
       $('totalTime').textContent=formatTime(result.totalTime);
