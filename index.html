@@ -120,11 +120,11 @@
     table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
     th{padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
     td{padding:8px;border-top:1px solid #e5eaf1;vertical-align:middle;line-height:1.35;overflow-wrap:anywhere}
-    th:first-child,td:first-child{width:104px;padding-left:3px;padding-right:2px;text-align:left}
-    th:nth-child(2),td:nth-child(2){padding-left:3px;padding-right:3px}
-    th:nth-child(3),td:nth-child(3){width:38px;padding-left:1px;padding-right:1px;text-align:center;line-height:1.05;white-space:normal}
-    th:nth-child(4),td:nth-child(4){width:64px;padding-left:1px;padding-right:3px;text-align:right;white-space:nowrap}
-    .order-actions{display:flex;align-items:center;gap:3px;white-space:nowrap}
+    th:first-child,td:first-child{width:33px;padding-left:1px;padding-right:1px;text-align:center}
+    th:nth-child(2),td:nth-child(2){width:64px;padding-left:1px;padding-right:1px;text-align:center}
+    th:nth-child(3),td:nth-child(3){padding-left:2px;padding-right:0}
+    th:nth-child(4),td:nth-child(4){width:28px;padding-left:0;padding-right:0;text-align:center;line-height:1.05;white-space:normal}
+    th:nth-child(5),td:nth-child(5){width:60px;padding-left:0;padding-right:2px;text-align:right;white-space:nowrap}
     .order-num{display:inline-grid;flex:0 0 27px;place-items:center;width:27px;min-width:27px;height:27px;min-height:27px;aspect-ratio:1;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
     .visit-mainline{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
     .visit-name{display:block;min-width:0;overflow:hidden;color:#25334a;font-size:1.08rem;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
@@ -235,7 +235,7 @@
             <div class="section-head card-body" style="margin-bottom:0;padding-bottom:12px"><h2>방문순서 표</h2></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>순서</th><th>방문지·주소·전화번호</th><th>방문<br>체크</th><th>구간별</th></tr></thead>
+                <thead><tr><th>순서</th><th>네비</th><th>방문지·주소·전화번호</th><th>방문<br>체크</th><th>구간별</th></tr></thead>
                 <tbody id="routeBody"></tbody>
               </table>
             </div>
@@ -761,8 +761,8 @@
         const row=document.createElement('tr');
         const completed=Boolean(visit.visited);
         row.className='route-row'+(completed?' visit-complete':'');
-        row.innerHTML='<td><div class="order-actions"><span class="order-num">'+(index+1)+'</span>'+ 
-          '<button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">길찾기</button></div></td>'+ 
+        row.innerHTML='<td><span class="order-num">'+(index+1)+'</span></td>'+ 
+          '<td><button class="nav-button" type="button" aria-label="'+escapeHtml(visit.name)+' 네이버 내비게이션 실행">길찾기</button></td>'+ 
           '<td><div class="visit-mainline"><span class="visit-name" title="'+escapeHtml(visit.name)+'">'+escapeHtml(visit.name)+'</span>'+ 
           (visit.phone?'<span class="visit-phone">'+escapeHtml(visit.phone)+'</span>':'')+'</div>'+ 
           '<div class="visit-subline"><span class="visit-address" title="'+escapeHtml(visit.address)+'">'+escapeHtml(visit.address)+'</span></div></td>'+ 
