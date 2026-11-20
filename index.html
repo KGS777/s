@@ -43,6 +43,7 @@
     .section-head h2{margin:0;font-size:1rem;letter-spacing:-.015em}
     .visit-card{border:1.5px solid #98a2ae;box-shadow:0 5px 16px #46546618}
     .visit-card .section-head h2{font-size:1.32rem}
+    .visit-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap}
     .count{font-size:.8rem;color:var(--muted);font-weight:700}
     label{display:block;margin:0 0 4px;font-size:.81rem;font-weight:800;color:#344055}
     input,select{
@@ -59,6 +60,8 @@
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
     .btn-text{min-height:32px;border:1px solid #9f1d14;color:#fff;background:#d92d20;font-size:.8rem}
+    .photo-capture-button{min-height:32px;border:1px solid #17683f;border-radius:10px;padding:0 9px;color:#fff;background:#168653;font-size:.8rem;font-weight:850;box-shadow:0 3px 8px #17683f26;white-space:nowrap}
+    .photo-capture-button:active{background:#0f7044}
     .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:center}
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.53rem;text-shadow:0 1px 1px #a63c0040}
     .btn-primary:active{transform:translateY(1px)}
@@ -159,6 +162,45 @@
     .dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:17px}
     .dialog-actions .wide{grid-column:1/-1}
     .dialog-delete{color:var(--danger);background:#fff0ee}
+    .scan-dialog{width:min(calc(100% - 16px),720px);max-height:calc(100dvh - 16px)}
+    .scan-dialog .dialog-body{max-height:calc(100dvh - 16px);padding:16px;overflow-y:auto}
+    .scan-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .scan-dialog-head h2{margin:0 0 5px}
+    .scan-close{display:grid;flex:0 0 34px;place-items:center;width:34px;height:34px;border:1px solid #c8d0dc;border-radius:50%;color:#48566c;background:#fff;font-size:1.1rem;font-weight:900}
+    .scan-guide{margin:0 0 10px!important}
+    .scan-preview{display:grid;place-items:center;min-height:165px;border:1.5px dashed #9ba8b9;border-radius:12px;background:#eef2f6;overflow:hidden}
+    .scan-preview canvas{display:block;width:100%;max-height:42vh;object-fit:contain;background:#fff;cursor:crosshair;touch-action:manipulation}
+    .scan-preview-placeholder{padding:25px 16px;color:#748094;text-align:center;font-size:.82rem;line-height:1.55}
+    .scan-privacy{margin:8px 0 0;color:#4b5b70;font-size:.74rem;line-height:1.45}
+    .scan-progress{height:5px;margin:9px 0 5px;border-radius:999px;background:#e4e9ef;overflow:hidden}
+    .scan-progress span{display:block;width:0;height:100%;border-radius:inherit;background:#168653;transition:width .2s}
+    .scan-status{min-height:20px;margin:0;color:#4d5a6d;font-size:.78rem;line-height:1.45}
+    .scan-status.error{color:#a1261d}.scan-status.success{color:#116c3d}
+    .scan-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:8px;margin-top:10px}
+    .scan-actions button{min-height:43px;border-radius:11px;font-size:.87rem;font-weight:850}
+    .scan-secondary{border:1px solid #bdc7d4;color:#304057;background:#fff}
+    .scan-primary{border:1px solid #126c40;color:#fff;background:#168653}
+    .scan-primary:disabled,.scan-secondary:disabled{opacity:.5;cursor:wait}
+    .scan-review{margin-top:14px;border-top:1px solid #d5dde7;padding-top:12px}
+    .scan-review-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
+    .scan-review-head h3{margin:0;font-size:.95rem}.scan-review-head span{color:#5d697c;font-size:.76rem;font-weight:800}
+    .scan-review-warning{margin:0 0 8px!important;border-radius:9px;padding:7px 9px;background:#fff0d6!important;color:#734c00!important;font-size:.76rem!important;font-weight:750;line-height:1.45!important}
+    .scan-review-list{display:grid;gap:7px}
+    .scan-review-row{display:grid;grid-template-columns:28px minmax(0,1fr) 32px;gap:6px;align-items:start;border:1px solid #d7e0ea;border-radius:11px;padding:7px;background:#fbfcfe}
+    .scan-review-row.needs-review{border-color:#d7a43b;background:#fff9e9}
+    .scan-review-number{display:grid;place-items:center;width:27px;height:27px;margin-top:5px;border-radius:50%;color:#fff;background:#168653;font-size:.73rem;font-weight:900}
+    .scan-review-fields{display:grid;gap:5px;min-width:0}
+    .scan-review-fields input{min-height:38px;border-radius:9px;padding:6px 8px;font-size:.84rem}
+    .scan-review-delete{display:grid;place-items:center;width:32px;height:32px;margin-top:3px;border:0;border-radius:8px;color:#a5241b;background:#ffedeb;font-size:1rem;font-weight:900}
+    .scan-omitted{margin-top:9px;border:1px solid #ead3a1;border-radius:10px;padding:8px 10px;background:#fff8e8;color:#6c5420;font-size:.76rem;line-height:1.5}
+    .scan-omitted strong{display:block;margin-bottom:3px;color:#594316}
+    .scan-omitted ul{margin:0;padding-left:18px}
+    .scan-apply{width:100%;min-height:45px;margin-top:10px;border:1px solid #0e683c;border-radius:11px;color:#fff;background:#117a46;font-size:.93rem;font-weight:900}
+    .scan-apply:disabled{opacity:.5}
+    @media(max-width:420px){
+      .visit-card .section-head{align-items:flex-start}.visit-head-actions{gap:4px}.count{display:none}
+      .photo-capture-button,.btn-text{padding-left:8px;padding-right:8px}
+    }
     @media(min-width:620px){
       main{padding-top:12px}.brand h1{font-size:1.32rem}
     }
@@ -179,9 +221,14 @@
         <div class="card-body">
           <div class="section-head">
             <h2>방문지 주소입력</h2>
-            <div><span class="count" id="addressCount">0 / 20</span> <button class="btn btn-text" id="clearAddresses" type="button">초기화</button></div>
+            <div class="visit-head-actions">
+              <span class="count" id="addressCount">0 / 20</span>
+              <button class="photo-capture-button" id="openSchedulePhoto" type="button">사진촬영</button>
+              <button class="btn btn-text" id="clearAddresses" type="button">초기화</button>
+            </div>
           </div>
           <div class="visit-list" id="visitInputs"></div>
+          <input id="schedulePhotoInput" type="file" accept="image/*" capture="environment" hidden>
         </div>
       </section>
 
@@ -271,8 +318,39 @@
     </div>
   </dialog>
 
+  <dialog id="scanDialog" class="scan-dialog">
+    <div class="dialog-body">
+      <div class="scan-dialog-head">
+        <div>
+          <h2>일정표 사진 가져오기</h2>
+          <p class="scan-guide">가로로 촬영한 뒤 사진에서 <b>시설명</b> 제목, <b>주소1</b> 제목을 순서대로 한 번씩 누르세요.</p>
+        </div>
+        <button class="scan-close" id="closeScan" type="button" aria-label="사진 가져오기 닫기">×</button>
+      </div>
+      <div class="scan-preview">
+        <canvas id="scanCanvas" hidden></canvas>
+        <div class="scan-preview-placeholder" id="scanPlaceholder">촬영한 사진이 여기에 표시됩니다.<br>표의 위·아래 빈 공간은 가능한 한 적게 촬영하세요.</div>
+      </div>
+      <p class="scan-privacy">사진은 서버로 전송하지 않고 이 기기 안에서만 분석합니다. 최초 실행 시 한국어 인식 자료를 내려받느라 시간이 걸릴 수 있습니다.</p>
+      <div class="scan-progress" aria-hidden="true"><span id="scanProgressBar"></span></div>
+      <p class="scan-status" id="scanStatus" role="status" aria-live="polite">사진을 선택하면 분석할 수 있습니다.</p>
+      <div class="scan-actions">
+        <button class="scan-secondary" id="retakeSchedulePhoto" type="button">다시 촬영</button>
+        <button class="scan-primary" id="analyzeSchedulePhoto" type="button" disabled>시설명·주소 분석</button>
+      </div>
+      <section class="scan-review" id="scanReview" hidden>
+        <div class="scan-review-head"><h3>인식 결과 확인</h3><span id="scanReviewCount">0곳</span></div>
+        <p class="scan-review-warning">사진 인식은 시설명과 주소의 글자·숫자를 틀릴 수 있습니다. 원본 화면과 한 줄씩 대조한 뒤 적용하세요.</p>
+        <div class="scan-review-list" id="scanReviewList"></div>
+        <div class="scan-omitted" id="scanOmitted" hidden></div>
+        <button class="scan-apply" id="applyScannedRows" type="button">방문지 목록에 적용</button>
+      </section>
+    </div>
+  </dialog>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js"></script>
   <script>
     'use strict';
 
@@ -298,7 +376,13 @@
       runId: 0,
       result: null,
       inputRows:[],
-      nextInputId:1
+      nextInputId:1,
+      scanRows:[],
+      scanOmitted:[],
+      scanImageReady:false,
+      scanBusy:false,
+      scanSourceCanvas:null,
+      scanAnchors:{facility:null,address:null}
     };
 
     function readLocal(key){
@@ -461,6 +545,325 @@
       if(focusKey!==null){
         requestAnimationFrame(()=>host.querySelector('[data-key="'+focusKey+'"] input[data-field="name"]')?.focus());
       }
+    }
+
+    function setScanStatus(message,type='',progress=null){
+      const status=$('scanStatus');
+      status.textContent=message;
+      status.className='scan-status'+(type?' '+type:'');
+      if(progress!==null) $('scanProgressBar').style.width=Math.max(0,Math.min(100,progress))+'%';
+    }
+    function showScanDialog(){
+      const dialog=$('scanDialog');
+      if(dialog.open) return;
+      if(typeof dialog.showModal==='function') dialog.showModal();
+      else dialog.setAttribute('open','');
+    }
+    function closeScanDialog(){
+      if(state.scanBusy) return;
+      const dialog=$('scanDialog');
+      if(typeof dialog.close==='function') dialog.close();
+      else dialog.removeAttribute('open');
+    }
+    function requestSchedulePhoto(){
+      if(state.scanBusy) return;
+      $('schedulePhotoInput').value='';
+      $('schedulePhotoInput').click();
+    }
+    function loadImageElement(file){
+      return new Promise((resolve,reject)=>{
+        const url=URL.createObjectURL(file);
+        const image=new Image();
+        image.onload=()=>{URL.revokeObjectURL(url);resolve(image)};
+        image.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('사진을 열 수 없습니다.'))};
+        image.src=url;
+      });
+    }
+    async function loadSchedulePhoto(file){
+      showScanDialog();
+      state.scanRows=[];state.scanOmitted=[];state.scanImageReady=false;
+      state.scanAnchors={facility:null,address:null};state.scanSourceCanvas=null;
+      $('scanReview').hidden=true;
+      $('analyzeSchedulePhoto').disabled=true;
+      setScanStatus('사진을 준비하고 있습니다.','',4);
+      try{
+        let source;
+        if('createImageBitmap' in window){
+          try{source=await createImageBitmap(file,{imageOrientation:'from-image'})}
+          catch{source=await createImageBitmap(file)}
+        }else source=await loadImageElement(file);
+        const originalWidth=source.width||source.naturalWidth;
+        const originalHeight=source.height||source.naturalHeight;
+        if(!originalWidth||!originalHeight) throw new Error('사진 크기를 확인할 수 없습니다.');
+        const maxDimension=3200;
+        const scale=Math.min(1,maxDimension/Math.max(originalWidth,originalHeight));
+        const width=Math.max(1,Math.round(originalWidth*scale)),height=Math.max(1,Math.round(originalHeight*scale));
+        const sourceCanvas=document.createElement('canvas');
+        sourceCanvas.width=width;sourceCanvas.height=height;
+        const sourceContext=sourceCanvas.getContext('2d',{willReadFrequently:true});
+        sourceContext.fillStyle='#fff';sourceContext.fillRect(0,0,width,height);
+        sourceContext.imageSmoothingEnabled=true;sourceContext.imageSmoothingQuality='high';
+        sourceContext.drawImage(source,0,0,width,height);
+        state.scanSourceCanvas=sourceCanvas;
+        const canvas=$('scanCanvas');canvas.width=width;canvas.height=height;
+        drawScanAnchorOverlay();
+        if(typeof source.close==='function') source.close();
+        canvas.hidden=false;$('scanPlaceholder').hidden=true;
+        state.scanImageReady=true;
+        $('analyzeSchedulePhoto').disabled=true;
+        setScanStatus('사진에서 시설명 제목을 먼저 누르세요.','',0);
+      }catch(error){
+        setScanStatus('사진 준비 실패: '+error.message,'error',0);
+      }
+    }
+    function scanColumnBounds(){
+      const canvas=state.scanSourceCanvas;
+      if(!canvas||!state.scanAnchors.facility||!state.scanAnchors.address) return null;
+      const facilityHalf=canvas.width*.05,addressHalf=canvas.width*.14;
+      return {
+        facility:{left:Math.max(0,state.scanAnchors.facility.x-facilityHalf),right:Math.min(canvas.width,state.scanAnchors.facility.x+facilityHalf)},
+        address:{left:Math.max(0,state.scanAnchors.address.x-addressHalf),right:Math.min(canvas.width,state.scanAnchors.address.x+addressHalf)}
+      };
+    }
+    function drawScanAnchorOverlay(){
+      const source=state.scanSourceCanvas,canvas=$('scanCanvas');
+      if(!source) return;
+      const context=canvas.getContext('2d');
+      context.clearRect(0,0,canvas.width,canvas.height);context.drawImage(source,0,0);
+      const bounds=scanColumnBounds();
+      const drawAnchor=(anchor,color,label,area)=>{
+        if(!anchor) return;
+        if(area){context.fillStyle=color+'22';context.fillRect(area.left,anchor.y,area.right-area.left,canvas.height-anchor.y)}
+        context.strokeStyle=color;context.lineWidth=Math.max(3,canvas.width/900);context.setLineDash([12,8]);
+        context.beginPath();context.moveTo(0,anchor.y);context.lineTo(canvas.width,anchor.y);context.stroke();context.setLineDash([]);
+        context.fillStyle=color;context.beginPath();context.arc(anchor.x,anchor.y,Math.max(12,canvas.width/160),0,Math.PI*2);context.fill();
+        context.font='bold '+Math.max(22,canvas.width/105)+'px sans-serif';context.textAlign='center';context.textBaseline='bottom';
+        const textY=Math.max(34,anchor.y-Math.max(18,canvas.width/140));
+        context.lineWidth=5;context.strokeStyle='#fff';context.strokeText(label,anchor.x,textY);context.fillText(label,anchor.x,textY);
+      };
+      drawAnchor(state.scanAnchors.facility,'#0b8a51','시설명',bounds?.facility);
+      drawAnchor(state.scanAnchors.address,'#1266d6','주소1',bounds?.address);
+    }
+    function selectScanAnchor(event){
+      if(!state.scanImageReady||state.scanBusy) return;
+      const canvas=$('scanCanvas'),rect=canvas.getBoundingClientRect();
+      const point={x:(event.clientX-rect.left)*canvas.width/rect.width,y:(event.clientY-rect.top)*canvas.height/rect.height};
+      if(!state.scanAnchors.facility||state.scanAnchors.address){
+        state.scanAnchors={facility:point,address:null};
+        setScanStatus('이제 주소1 제목을 누르세요.','',0);
+      }else{
+        if(Math.abs(point.x-state.scanAnchors.facility.x)<canvas.width*.12){
+          setScanStatus('주소1은 시설명보다 오른쪽에 있습니다. 주소1 제목을 다시 누르세요.','error',0);return;
+        }
+        state.scanAnchors.address=point;
+        $('analyzeSchedulePhoto').disabled=false;
+        setScanStatus('두 열이 표시되었습니다. 초록색은 시설명, 파란색은 주소1 영역입니다.','success',0);
+      }
+      drawScanAnchorOverlay();
+    }
+    function median(values){
+      const sorted=values.filter(Number.isFinite).sort((a,b)=>a-b);
+      if(!sorted.length) return 0;
+      const middle=Math.floor(sorted.length/2);
+      return sorted.length%2?sorted[middle]:(sorted[middle-1]+sorted[middle])/2;
+    }
+    function cleanRecognizedText(value,type){
+      let text=String(value||'').normalize('NFKC').replace(/[\r\n\t]+/g,' ').replace(/\s{2,}/g,' ').trim();
+      text=text.replace(/\s*([(),])\s*/g,'$1').replace(/\s*-\s*/g,'-');
+      if(type==='address'){
+        text=text.replace(/경기\s+도/g,'경기도').replace(/([가-힣])\s+(시|군|구|읍|면|동|리)(?=\s|\d|$)/g,'$1$2');
+        text=text.replace(/번\s+길/g,'번길').replace(/\s+(로|길)(?=\s|\d|$)/g,'$1');
+      }
+      return text.replace(/^[|:;,.]+|[|:;,.]+$/g,'').trim();
+    }
+    function looksLikeAddress(value){
+      const text=String(value||'').replace(/\s/g,'');
+      return text.length>=6&&/[가-힣]/.test(text)&&/(시|군|구|읍|면|동|리|로|길)/.test(text)&&/\d/.test(text);
+    }
+    function hasAddressSignal(value){
+      const text=String(value||'').replace(/\s/g,'');
+      return text.length>=5&&/[가-힣]/.test(text)&&/(시|군|구|읍|면|동|리|로|길)/.test(text);
+    }
+    function ocrProgressMessage(message){
+      const labels={
+        'loading tesseract core':'문자 인식 엔진을 불러오는 중',
+        'initializing tesseract':'문자 인식 엔진을 준비하는 중',
+        'loading language traineddata':'한국어 인식 자료를 불러오는 중',
+        'initializing api':'한국어 인식 기능을 초기화하는 중',
+        'recognizing text':'시설명과 주소를 읽는 중'
+      };
+      return labels[message.status]||'사진을 분석하는 중';
+    }
+    function detectScheduleRowBoundaries(){
+      const canvas=state.scanSourceCanvas,bounds=scanColumnBounds();
+      if(!canvas||!bounds) throw new Error('시설명과 주소1 제목 위치를 먼저 지정하세요.');
+      if(bounds.facility.right>=bounds.address.left) throw new Error('시설명과 주소1 영역이 겹칩니다. 제목 위치를 다시 지정하세요.');
+      const context=canvas.getContext('2d',{willReadFrequently:true});
+      const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
+      const findForColumn=(range,headerY)=>{
+        const startY=Math.max(1,Math.round(headerY+Math.max(22,canvas.height*.018)));
+        const endY=canvas.height-2,scores=[];
+        for(let y=startY;y<=endY;y++){
+          let dark=0,total=0;
+          for(let x=Math.round(range.left);x<Math.round(range.right);x+=3){
+            const offset=(y*canvas.width+x)*4;
+            const luminance=pixels[offset]*.299+pixels[offset+1]*.587+pixels[offset+2]*.114;
+            if(luminance<145) dark++;
+            total++;
+          }
+          scores.push(dark/Math.max(1,total));
+        }
+        const smoothed=scores.map((score,index)=>Math.max(...scores.slice(Math.max(0,index-2),Math.min(scores.length,index+3))));
+        const baseline=median(smoothed),highest=Math.max(...smoothed);
+        if(!Number.isFinite(highest)||highest-baseline<.05) return [];
+        const threshold=baseline+(highest-baseline)*.46,peaks=[];
+        let index=0;
+        while(index<smoothed.length){
+          if(smoothed[index]<threshold){index++;continue}
+          let best=index;
+          while(index+1<smoothed.length&&smoothed[index+1]>=threshold){index++;if(smoothed[index]>smoothed[best]) best=index}
+          peaks.push({y:startY+best,score:smoothed[best]});index++;
+        }
+        const minGap=Math.max(20,canvas.height*.018),candidates=[];
+        for(const peak of peaks){
+          const previous=candidates[candidates.length-1];
+          if(!previous||peak.y-previous.y>=minGap) candidates.push(peak);
+          else if(peak.score>previous.score) candidates[candidates.length-1]=peak;
+        }
+        if(candidates.length<2) return [];
+        const usefulGaps=[];
+        for(let i=1;i<candidates.length;i++){
+          const gap=candidates[i].y-candidates[i-1].y;
+          if(gap>=minGap&&gap<=canvas.height*.09) usefulGaps.push(gap);
+        }
+        let expected=median(usefulGaps)||canvas.height*.045;
+        const boundaries=[candidates[0].y];
+        for(let i=1;i<candidates.length&&boundaries.length<MAX_VISITS+1;i++){
+          const previous=boundaries[boundaries.length-1],gap=candidates[i].y-previous;
+          if(gap<expected*.55) continue;
+          if(gap>expected*2.35) break;
+          if(gap>expected*1.55&&Math.abs(gap-expected*2)<expected*.35) boundaries.push(Math.round(previous+gap/2));
+          boundaries.push(candidates[i].y);
+          const recent=boundaries.slice(1).map((value,boundaryIndex)=>value-boundaries[boundaryIndex]).filter(value=>value>expected*.55&&value<expected*1.55);
+          if(recent.length) expected=median(recent.slice(-6));
+        }
+        return boundaries;
+      };
+      const facilityBoundaries=findForColumn(bounds.facility,state.scanAnchors.facility.y);
+      const addressBoundaries=findForColumn(bounds.address,state.scanAnchors.address.y);
+      if(facilityBoundaries.length<2||addressBoundaries.length<2) throw new Error('표의 가로줄을 찾지 못했습니다. 표를 정면에서 더 크게 촬영하세요.');
+      return {bounds,facilityBoundaries,addressBoundaries};
+    }
+    function createOcrCellCanvas(source,bounds,top,bottom){
+      const xInset=Math.max(4,source.width*.0015),yInset=Math.max(3,(bottom-top)*.09);
+      const left=Math.max(0,Math.round(bounds.left+xInset)),right=Math.min(source.width,Math.round(bounds.right-xInset));
+      const cropTop=Math.max(0,Math.round(top+yInset)),cropBottom=Math.min(source.height,Math.round(bottom-yInset));
+      const width=Math.max(1,right-left),height=Math.max(1,cropBottom-cropTop),scale=2;
+      const canvas=document.createElement('canvas');canvas.width=Math.round(width*scale);canvas.height=Math.round(height*scale);
+      const context=canvas.getContext('2d');context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);
+      context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
+      context.filter='grayscale(1) contrast(1.3) brightness(1.04)';
+      context.drawImage(source,left,cropTop,width,height,0,0,width*scale,height*scale);context.filter='none';
+      return canvas;
+    }
+    function cleanCellText(value,type){
+      let text=cleanRecognizedText(value,type).replace(/^[|ㅣIl!\s]+|[|ㅣIl!\s]+$/g,'').trim();
+      if(type==='address'){
+        const administrative=text.search(/서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주/);
+        if(administrative>0) text=text.slice(administrative);
+        text=text.replace(/(?:\s+[ㄱ-ㅎㅏ-ㅣ|Il&]+)+$/g,'').trim();
+      }
+      return text;
+    }
+    async function analyzeSchedulePhoto(){
+      if(!state.scanImageReady||state.scanBusy) return;
+      if(typeof Tesseract==='undefined'){
+        setScanStatus('문자 인식 기능을 불러오지 못했습니다. 인터넷 연결 후 다시 시도하세요.','error',0);return;
+      }
+      state.scanBusy=true;
+      $('analyzeSchedulePhoto').disabled=true;$('retakeSchedulePhoto').disabled=true;$('closeScan').disabled=true;
+      $('scanReview').hidden=true;
+      let worker;
+      try{
+        const layout=detectScheduleRowBoundaries();
+        const rowCount=Math.min(MAX_VISITS,layout.facilityBoundaries.length-1,layout.addressBoundaries.length-1);
+        setScanStatus('한국어 인식 기능을 준비하고 있습니다.','',5);
+        worker=await Tesseract.createWorker(['kor','eng'],1,{
+          logger:message=>{
+            if(message.status!=='recognizing text') setScanStatus(ocrProgressMessage(message)+' '+Math.round((message.progress||0)*100)+'%','',8+(message.progress||0)*25);
+          }
+        });
+        await worker.setParameters({tessedit_pageseg_mode:'7',preserve_interword_spaces:'1'});
+        const rows=[],omitted=[];
+        for(let rowIndex=0;rowIndex<rowCount;rowIndex++){
+          setScanStatus('일정표 '+(rowIndex+1)+' / '+rowCount+'행을 읽고 있습니다.','',35+Math.round(rowIndex/Math.max(1,rowCount)*60));
+          const nameImage=createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.facility,layout.facilityBoundaries[rowIndex],layout.facilityBoundaries[rowIndex+1]);
+          const addressImage=createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.address,layout.addressBoundaries[rowIndex],layout.addressBoundaries[rowIndex+1]);
+          const nameResult=await worker.recognize(nameImage);
+          const addressResult=await worker.recognize(addressImage);
+          const name=cleanCellText(nameResult.data.text,'name'),address=cleanCellText(addressResult.data.text,'address');
+          if(!name&&!address) continue;
+          if(!address||!hasAddressSignal(address)){
+            omitted.push({name:name||'시설명 인식 실패',reason:address?'주소1 인식 불확실: '+address:'주소1이 비어 있어 제외'});
+            continue;
+          }
+          rows.push({name,address,needsReview:!name||!looksLikeAddress(address)});
+        }
+        if(!rows.length) throw new Error('주소1이 확인된 행을 찾지 못했습니다. 열 위치와 촬영 상태를 확인하세요.');
+        state.scanRows=rows;state.scanOmitted=omitted;
+        renderScanReview();
+        setScanStatus(state.scanRows.length+'곳을 찾았습니다. 내용을 확인하고 잘못 읽은 글자를 수정하세요.','success',100);
+      }catch(error){
+        setScanStatus('분석 실패: '+error.message,'error',0);
+      }finally{
+        if(worker) await worker.terminate().catch(()=>{});
+        state.scanBusy=false;
+        $('analyzeSchedulePhoto').disabled=!state.scanImageReady||!state.scanAnchors.facility||!state.scanAnchors.address;
+        $('retakeSchedulePhoto').disabled=false;$('closeScan').disabled=false;
+      }
+    }
+    function renderScanReview(){
+      const host=$('scanReviewList');host.innerHTML='';
+      state.scanRows.forEach((row,index)=>{
+        row.needsReview=!row.name.trim()||!looksLikeAddress(row.address);
+        const entry=document.createElement('div');
+        entry.className='scan-review-row'+(row.needsReview?' needs-review':'');
+        entry.innerHTML='<span class="scan-review-number">'+(index+1)+'</span><div class="scan-review-fields">'+
+          '<input data-field="name" aria-label="인식된 '+(index+1)+'번 시설명" placeholder="시설명" value="'+escapeHtml(row.name)+'">'+
+          '<input data-field="address" aria-label="인식된 '+(index+1)+'번 주소1" placeholder="주소1" value="'+escapeHtml(row.address)+'"></div>'+ 
+          '<button class="scan-review-delete" type="button" aria-label="이 인식 결과 제외">−</button>';
+        for(const input of entry.querySelectorAll('input')) input.addEventListener('input',()=>{
+          row[input.dataset.field]=input.value;
+          row.needsReview=!row.name.trim()||!looksLikeAddress(row.address);
+          entry.classList.toggle('needs-review',row.needsReview);
+        });
+        entry.querySelector('.scan-review-delete').addEventListener('click',()=>{state.scanRows.splice(index,1);renderScanReview()});
+        host.appendChild(entry);
+      });
+      $('scanReviewCount').textContent=state.scanRows.length+'곳';
+      $('applyScannedRows').disabled=!state.scanRows.length;
+      const omitted=$('scanOmitted');
+      if(state.scanOmitted.length){
+        omitted.hidden=false;
+        omitted.innerHTML='<strong>자동 제외 '+state.scanOmitted.length+'건</strong><ul>'+state.scanOmitted.map(item=>'<li>'+escapeHtml(item.name)+' — '+escapeHtml(item.reason)+'</li>').join('')+'</ul>';
+      }else{omitted.hidden=true;omitted.innerHTML=''}
+      $('scanReview').hidden=false;
+    }
+    async function applyScannedRows(){
+      const valid=state.scanRows.filter(row=>row.name.trim()&&looksLikeAddress(row.address));
+      const invalidCount=state.scanRows.length-valid.length;
+      if(!valid.length){setScanStatus('적용할 수 있는 시설명과 주소가 없습니다. 노란 행을 수정하세요.','error',100);return}
+      if(invalidCount&&!confirm('확인이 필요한 '+invalidCount+'개 행은 제외하고 나머지 '+valid.length+'곳만 적용할까요?')) return;
+      const hasExisting=state.inputRows.some(row=>row.name.trim()||row.address.trim()||row.phone.trim());
+      if(hasExisting&&!confirm('현재 방문지 목록을 촬영한 '+valid.length+'곳으로 교체할까요?')) return;
+      ++state.runId;
+      state.inputRows=valid.slice(0,MAX_VISITS).map(row=>({key:state.nextInputId++,name:row.name.trim(),address:row.address.trim(),phone:''}));
+      renderInputRows();
+      state.result=null;$('results').hidden=true;$('resultPlaceholder').hidden=false;clearMap();
+      await deleteRouteSnapshot();
+      closeScanDialog();
+      setStatus('사진에서 방문지 '+state.inputRows.length+'곳을 입력했습니다. 주소를 확인한 뒤 경로를 계산하세요.','success');
+      document.querySelector('.visit-card')?.scrollIntoView({behavior:'smooth',block:'start'});
     }
     function parseVisits(){
       if(state.inputRows.length>MAX_VISITS) throw new Error('방문지는 최대 '+MAX_VISITS+'곳까지 입력할 수 있습니다.');
@@ -937,6 +1340,19 @@
       ++state.runId;state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];renderInputRows();$('results').hidden=true;$('resultPlaceholder').hidden=false;state.result=null;clearMap();
       await deleteRouteSnapshot();
       setStatus('방문지 주소를 초기화했습니다.');
+    });
+    $('openSchedulePhoto').addEventListener('click',requestSchedulePhoto);
+    $('retakeSchedulePhoto').addEventListener('click',requestSchedulePhoto);
+    $('schedulePhotoInput').addEventListener('change',event=>{
+      const file=event.target.files?.[0];
+      if(file) loadSchedulePhoto(file);
+    });
+    $('scanCanvas').addEventListener('click',selectScanAnchor);
+    $('analyzeSchedulePhoto').addEventListener('click',analyzeSchedulePhoto);
+    $('applyScannedRows').addEventListener('click',applyScannedRows);
+    $('closeScan').addEventListener('click',closeScanDialog);
+    $('scanDialog').addEventListener('click',event=>{
+      if(event.target===$('scanDialog')) closeScanDialog();
     });
     $('endMode').addEventListener('change',()=>{$('endField').hidden=$('endMode').value==='return'});
     $('calculate').addEventListener('click',calculateRoute);
