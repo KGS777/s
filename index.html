@@ -58,7 +58,7 @@
     .custom-end{grid-column:1/-1}
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
-    .btn-text{min-height:32px;border:1px solid #9da6b1;color:var(--danger);background:#fff2f0;font-size:.8rem}
+    .btn-text{min-height:32px;border:1px solid #9f1d14;color:#fff;background:#d92d20;font-size:.8rem}
     .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:center}
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.53rem;text-shadow:0 1px 1px #a63c0040}
     .btn-primary:active{transform:translateY(1px)}
@@ -87,7 +87,8 @@
     .result-placeholder[hidden]{display:none}
     .results[hidden]{display:none}
     #captureArea{display:flow-root;outline:1px solid #111;outline-offset:-1px;border-radius:15px}
-    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+    .route-summary-body{padding-bottom:3px}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:0;border:1px solid #c7cdd4;border-radius:10px;padding:4px;background:#eef1f4}
     .metric{padding:5px 4px;border:1px dashed #6f829a;border-radius:8px;background:#dbe8f6;text-align:center}
     .metric span{display:block;color:#111;font-size:.88rem;font-weight:800;line-height:1.15}
     .metric strong{display:block;margin-top:2px;color:#114d99;font-size:.86rem;line-height:1.2;white-space:nowrap}
@@ -118,8 +119,8 @@
     .save-image-button{min-height:30px;border:1px solid #111;border-radius:8px;padding:0 9px;color:#17120a;background:#f6c945;font-size:.83rem;font-weight:900}
     .table-wrap{overflow-x:auto}
     table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:.83rem}
-    th{padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
-    td{padding:8px;border-top:1px solid #e5eaf1;vertical-align:middle;line-height:1.35;overflow-wrap:anywhere}
+    th{border-bottom:1px solid #111;padding:10px 8px;color:#46536a;background:#f0f4f9;text-align:left;font-size:.76rem}
+    td{padding:8px;border-top:1px solid #111;vertical-align:middle;line-height:1.35;overflow-wrap:anywhere}
     th:first-child,td:first-child{width:33px;padding-left:1px;padding-right:1px;text-align:center}
     th:nth-child(2),td:nth-child(2){width:64px;padding-left:1px;padding-right:1px;text-align:center}
     th:nth-child(3),td:nth-child(3){padding-left:2px;padding-right:0}
@@ -140,7 +141,7 @@
     .route-row.visit-complete .visit-name,.route-row.visit-complete .visit-address,.route-row.visit-complete .visit-phone{color:#6b7280}
     .route-row.visit-complete .order-num{background:#7b8490}
     .route-row.visit-complete .nav-button{border-color:#8d969f;color:#626b73;background:#f0f1f2}
-    .legal-note{padding:12px 14px;border-top:1px solid var(--line);color:#707b8f;font-size:.72rem;line-height:1.5}
+    .legal-note{padding:12px 14px;border-top:1px solid #111;color:#707b8f;font-size:.72rem;line-height:1.5}
     dialog{width:min(calc(100% - 28px),430px);border:0;border-radius:18px;padding:0;box-shadow:0 25px 80px #081a3860}
     dialog::backdrop{background:#0e1b30a8;backdrop-filter:blur(2px)}
     .dialog-body{padding:20px}
@@ -220,7 +221,7 @@
       <section class="results" id="results" hidden>
         <div id="captureArea">
           <section class="card">
-            <div class="card-body">
+            <div class="card-body route-summary-body">
               <div class="section-head route-result-head"><h2>최적경로</h2><button class="save-image-button" id="saveImage" type="button" data-html2canvas-ignore="true">저장</button></div>
               <div class="summary">
                 <div class="metric"><span>총 거리</span><strong id="totalDistance">—</strong></div>
