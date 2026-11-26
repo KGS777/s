@@ -162,6 +162,17 @@
     .dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:17px}
     .dialog-actions .wide{grid-column:1/-1}
     .dialog-delete{color:var(--danger);background:#fff0ee}
+    input[aria-invalid="true"]{border-color:var(--danger);background:#fff2ef}
+    input[aria-invalid="true"]:focus{box-shadow:0 0 0 3px #b4231826}
+    input[aria-invalid="true"]{scroll-margin-top:65px}
+    .address-dialog .dialog-body{max-height:calc(100dvh - 30px);overflow:auto}
+    .address-issues{display:grid;gap:8px;padding:0;margin:0;list-style:none}
+    .address-issues li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px;border:1px solid #edc5be;border-radius:10px;background:#fff6f4}
+    .address-issues strong,.address-issues span{display:block;overflow-wrap:anywhere}
+    .address-issues span{margin-top:3px;font-size:.86rem}
+    .address-issues .address-issue-reason{color:#97291f;font-size:.8rem}
+    .address-issues button{min-height:42px;color:#8f2017;background:#fff;border:1px solid #d8a39b}
+    .address-dialog .close-address-issues{width:100%;margin-top:12px}
     .scan-dialog{width:min(calc(100% - 16px),720px);max-height:calc(100dvh - 16px)}
     .scan-dialog .dialog-body{max-height:calc(100dvh - 16px);padding:16px;overflow-y:auto}
     .scan-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
@@ -169,17 +180,22 @@
     .scan-close{display:grid;flex:0 0 34px;place-items:center;width:34px;height:34px;border:1px solid #c8d0dc;border-radius:50%;color:#48566c;background:#fff;font-size:1.1rem;font-weight:900}
     .scan-guide{margin:0 0 10px!important}
     .scan-preview{display:grid;place-items:center;min-height:165px;border:1.5px dashed #9ba8b9;border-radius:12px;background:#eef2f6;overflow:hidden}
-    .scan-preview canvas{display:block;width:100%;max-height:42vh;object-fit:contain;background:#fff;cursor:crosshair;touch-action:manipulation}
+    .scan-preview canvas{display:block;width:100%;height:auto;background:#fff;cursor:crosshair;touch-action:none;user-select:none;-webkit-user-select:none}
+    .scan-preview canvas[hidden]{display:none}
     .scan-preview-placeholder{padding:25px 16px;color:#748094;text-align:center;font-size:.82rem;line-height:1.55}
+    .scan-legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:7px;color:#536177;font-size:.73rem;font-weight:750}
+    .scan-legend span{display:inline-flex;align-items:center;gap:5px}
+    .scan-legend i{display:inline-block;width:14px;height:10px;border:2px solid;border-radius:2px;background:#ffffff80}
+    .scan-legend .facility i{border-color:#0b8a51;background:#0b8a5126}.scan-legend .address i{border-color:#1266d6;background:#1266d626}
     .scan-privacy{margin:8px 0 0;color:#4b5b70;font-size:.74rem;line-height:1.45}
     .scan-progress{height:5px;margin:9px 0 5px;border-radius:999px;background:#e4e9ef;overflow:hidden}
     .scan-progress span{display:block;width:0;height:100%;border-radius:inherit;background:#168653;transition:width .2s}
     .scan-status{min-height:20px;margin:0;color:#4d5a6d;font-size:.78rem;line-height:1.45}
     .scan-status.error{color:#a1261d}.scan-status.success{color:#116c3d}
-    .scan-actions{display:grid;grid-template-columns:1fr 1.35fr;gap:8px;margin-top:10px}
+    .scan-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
     .scan-actions button{min-height:43px;border-radius:11px;font-size:.87rem;font-weight:850}
     .scan-secondary{border:1px solid #bdc7d4;color:#304057;background:#fff}
-    .scan-primary{border:1px solid #126c40;color:#fff;background:#168653}
+    .scan-primary{grid-column:1/-1;border:1px solid #126c40;color:#fff;background:#168653}
     .scan-primary:disabled,.scan-secondary:disabled{opacity:.5;cursor:wait}
     .scan-review{margin-top:14px;border-top:1px solid #d5dde7;padding-top:12px}
     .scan-review-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
@@ -192,9 +208,6 @@
     .scan-review-fields{display:grid;gap:5px;min-width:0}
     .scan-review-fields input{min-height:38px;border-radius:9px;padding:6px 8px;font-size:.84rem}
     .scan-review-delete{display:grid;place-items:center;width:32px;height:32px;margin-top:3px;border:0;border-radius:8px;color:#a5241b;background:#ffedeb;font-size:1rem;font-weight:900}
-    .scan-omitted{margin-top:9px;border:1px solid #ead3a1;border-radius:10px;padding:8px 10px;background:#fff8e8;color:#6c5420;font-size:.76rem;line-height:1.5}
-    .scan-omitted strong{display:block;margin-bottom:3px;color:#594316}
-    .scan-omitted ul{margin:0;padding-left:18px}
     .scan-apply{width:100%;min-height:45px;margin-top:10px;border:1px solid #0e683c;border-radius:11px;color:#fff;background:#117a46;font-size:.93rem;font-weight:900}
     .scan-apply:disabled{opacity:.5}
     @media(max-width:420px){
@@ -318,31 +331,41 @@
     </div>
   </dialog>
 
+  <dialog id="addressIssueDialog" class="address-dialog" aria-labelledby="addressIssueTitle">
+    <div class="dialog-body">
+      <h2 id="addressIssueTitle">확인이 필요한 주소</h2>
+      <p id="addressIssueMessage">수정 버튼을 누르면 해당 입력칸으로 이동합니다.</p>
+      <ul class="address-issues" id="addressIssueList"></ul>
+      <form method="dialog"><button class="btn btn-secondary close-address-issues" type="submit">닫기</button></form>
+    </div>
+  </dialog>
+
   <dialog id="scanDialog" class="scan-dialog">
     <div class="dialog-body">
       <div class="scan-dialog-head">
         <div>
           <h2>일정표 사진 가져오기</h2>
-          <p class="scan-guide">가로로 촬영한 뒤 사진에서 <b>시설명</b> 제목, <b>주소1</b> 제목을 순서대로 한 번씩 누르세요.</p>
+          <p class="scan-guide">제목이 아닌 <b>시설명 데이터 열</b>을 첫 행부터 마지막 행까지 사각형으로 드래그하세요. 이어서 같은 방법으로 <b>주소1 열</b>의 좌우 폭을 지정합니다.</p>
         </div>
         <button class="scan-close" id="closeScan" type="button" aria-label="사진 가져오기 닫기">×</button>
       </div>
       <div class="scan-preview">
-        <canvas id="scanCanvas" hidden></canvas>
+        <canvas id="scanCanvas" role="img" aria-label="시설명과 주소1 영역을 드래그해 지정하는 일정표 사진" hidden></canvas>
         <div class="scan-preview-placeholder" id="scanPlaceholder">촬영한 사진이 여기에 표시됩니다.<br>표의 위·아래 빈 공간은 가능한 한 적게 촬영하세요.</div>
       </div>
+      <div class="scan-legend" aria-hidden="true"><span class="facility"><i></i>시설명 영역</span><span class="address"><i></i>주소1 영역</span></div>
       <p class="scan-privacy">사진은 서버로 전송하지 않고 이 기기 안에서만 분석합니다. 최초 실행 시 한국어 인식 자료를 내려받느라 시간이 걸릴 수 있습니다.</p>
       <div class="scan-progress" aria-hidden="true"><span id="scanProgressBar"></span></div>
       <p class="scan-status" id="scanStatus" role="status" aria-live="polite">사진을 선택하면 분석할 수 있습니다.</p>
       <div class="scan-actions">
         <button class="scan-secondary" id="retakeSchedulePhoto" type="button">다시 촬영</button>
-        <button class="scan-primary" id="analyzeSchedulePhoto" type="button" disabled>시설명·주소 분석</button>
+        <button class="scan-secondary" id="resetScanAreas" type="button" disabled>영역 다시 지정</button>
+        <button class="scan-primary" id="analyzeSchedulePhoto" type="button" disabled>선택 영역 분석</button>
       </div>
       <section class="scan-review" id="scanReview" hidden>
         <div class="scan-review-head"><h3>인식 결과 확인</h3><span id="scanReviewCount">0곳</span></div>
         <p class="scan-review-warning">사진 인식은 시설명과 주소의 글자·숫자를 틀릴 수 있습니다. 원본 화면과 한 줄씩 대조한 뒤 적용하세요.</p>
         <div class="scan-review-list" id="scanReviewList"></div>
-        <div class="scan-omitted" id="scanOmitted" hidden></div>
         <button class="scan-apply" id="applyScannedRows" type="button">방문지 목록에 적용</button>
       </section>
     </div>
@@ -373,16 +396,18 @@
       labelRaf: 0,
       routeLine: null,
       geocodeCache: new Map(),
+      addressIssues: new Set(),
+      routeController: null,
       runId: 0,
       result: null,
       inputRows:[],
       nextInputId:1,
       scanRows:[],
-      scanOmitted:[],
       scanImageReady:false,
       scanBusy:false,
       scanSourceCanvas:null,
-      scanAnchors:{facility:null,address:null}
+      scanAreas:{facility:null,address:null},
+      scanDrag:null
     };
 
     function readLocal(key){
@@ -515,12 +540,15 @@
 
     function addInputRow(afterId=null){
       if(state.inputRows.length>=MAX_VISITS){setStatus('방문지는 최대 '+MAX_VISITS+'곳까지 추가할 수 있습니다.','error');return}
+      routeInputsChanged();
       const row={key:state.nextInputId++,name:'',address:'',phone:''};
       const index=afterId===null?state.inputRows.length:state.inputRows.findIndex(item=>item.key===afterId)+1;
       state.inputRows.splice(index<0?state.inputRows.length:index,0,row);
       renderInputRows(row.key);
     }
     function removeInputRow(key){
+      routeInputsChanged();
+      state.addressIssues.delete(key);
       if(state.inputRows.length===1){
         state.inputRows[0]={...state.inputRows[0],name:'',address:'',phone:''};
       }else state.inputRows=state.inputRows.filter(item=>item.key!==key);
@@ -536,7 +564,13 @@
           '<div class="visit-buttons"><button class="visit-add" type="button" aria-label="아래에 방문지 추가">+</button><button class="visit-delete" type="button" aria-label="이 방문지 삭제">−</button></div></div>'+
           '<div class="visit-bottom"><input data-field="address" autocomplete="street-address" aria-label="'+(index+1)+'번 주소" placeholder="주소" value="'+escapeHtml(row.address)+'">'+
           '<input data-field="phone" inputmode="tel" autocomplete="tel" aria-label="'+(index+1)+'번 전화번호" placeholder="전화번호" value="'+escapeHtml(row.phone)+'"></div>';
-        for(const input of entry.querySelectorAll('input')) input.addEventListener('input',()=>{row[input.dataset.field]=input.value});
+        const addressInput=entry.querySelector('[data-field="address"]');
+        if(state.addressIssues.has(row.key)) addressInput.setAttribute('aria-invalid','true');
+        for(const input of entry.querySelectorAll('input')) input.addEventListener('input',()=>{
+          row[input.dataset.field]=input.value;
+          if(input===addressInput) clearAddressIssue(row.key,input);
+          routeInputsChanged();
+        });
         entry.querySelector('.visit-add').addEventListener('click',()=>addInputRow(row.key));
         entry.querySelector('.visit-delete').addEventListener('click',()=>removeInputRow(row.key));
         host.appendChild(entry);
@@ -545,6 +579,62 @@
       if(focusKey!==null){
         requestAnimationFrame(()=>host.querySelector('[data-key="'+focusKey+'"] input[data-field="name"]')?.focus());
       }
+    }
+    function addressIssueInput(key){
+      if(key==='start') return $('startAddress');
+      if(key==='end') return $('endAddress');
+      return $('visitInputs').querySelector('[data-key="'+key+'"] input[data-field="address"]');
+    }
+    function clearAddressIssue(key,input=addressIssueInput(key)){
+      state.addressIssues.delete(key);
+      input?.removeAttribute('aria-invalid');
+    }
+    function clearAddressIssues(){
+      for(const key of state.addressIssues.keys()) clearAddressIssue(key);
+    }
+    function cancelRouteCalculation(){
+      ++state.runId;
+      state.routeController?.abort();
+      state.routeController=null;
+      $('calculate').disabled=false;
+    }
+    function routeInputsChanged(){
+      if(!$('calculate').disabled) return;
+      cancelRouteCalculation();
+      setStatus('입력 내용이 변경되었습니다. 최적경로 계산을 다시 눌러 주세요.');
+    }
+    function showAddressIssues(issues,serviceError=null){
+      const dialog=$('addressIssueDialog'),list=$('addressIssueList');
+      list.replaceChildren();
+      $('addressIssueMessage').textContent=serviceError
+        ? '주소 확인을 중단했습니다. '+serviceError.message+' 아래 목록은 중단 전까지 확인한 항목입니다.'
+        : '주소를 수정한 뒤 최적경로 계산을 다시 누르세요.';
+      for(const issue of issues){
+        state.addressIssues.add(issue.key);
+        addressIssueInput(issue.key)?.setAttribute('aria-invalid','true');
+        const item=document.createElement('li');
+        const detail=document.createElement('div');
+        const label=document.createElement('strong');
+        const address=document.createElement('span');
+        const reason=document.createElement('span');
+        label.textContent=issue.label;
+        address.textContent=issue.address||'입력한 주소 없음';
+        reason.textContent=issue.reason;
+        reason.className='address-issue-reason';
+        detail.append(label,address,reason);
+        const edit=document.createElement('button');
+        edit.type='button';edit.className='btn';edit.textContent='수정';
+        edit.setAttribute('aria-label',issue.label+' 주소 수정');
+        edit.addEventListener('click',()=>{
+          dialog.close();
+          const input=addressIssueInput(issue.key);
+          input?.focus({preventScroll:true});
+          input?.scrollIntoView({block:'center'});
+        });
+        item.append(detail,edit);list.appendChild(item);
+      }
+      setStatus(issues.length+'개 주소를 확인해 주세요.','error',0);
+      if(!dialog.open) dialog.showModal();
     }
 
     function setScanStatus(message,type='',progress=null){
@@ -581,10 +671,12 @@
     }
     async function loadSchedulePhoto(file){
       showScanDialog();
-      state.scanRows=[];state.scanOmitted=[];state.scanImageReady=false;
-      state.scanAnchors={facility:null,address:null};state.scanSourceCanvas=null;
+      state.scanRows=[];state.scanImageReady=false;
+      state.scanAreas={facility:null,address:null};state.scanDrag=null;state.scanSourceCanvas=null;
+      $('scanCanvas').hidden=true;$('scanPlaceholder').hidden=false;
       $('scanReview').hidden=true;
       $('analyzeSchedulePhoto').disabled=true;
+      $('resetScanAreas').disabled=true;
       setScanStatus('사진을 준비하고 있습니다.','',4);
       try{
         let source;
@@ -606,60 +698,116 @@
         sourceContext.drawImage(source,0,0,width,height);
         state.scanSourceCanvas=sourceCanvas;
         const canvas=$('scanCanvas');canvas.width=width;canvas.height=height;
-        drawScanAnchorOverlay();
+        drawScanAreaOverlay();
         if(typeof source.close==='function') source.close();
         canvas.hidden=false;$('scanPlaceholder').hidden=true;
         state.scanImageReady=true;
         $('analyzeSchedulePhoto').disabled=true;
-        setScanStatus('사진에서 시설명 제목을 먼저 누르세요.','',0);
+        $('resetScanAreas').disabled=false;
+        setScanStatus('시설명 데이터 열을 첫 행 위쪽부터 마지막 행 아래쪽까지 드래그하세요.','',0);
       }catch(error){
         setScanStatus('사진 준비 실패: '+error.message,'error',0);
       }
     }
-    function scanColumnBounds(){
-      const canvas=state.scanSourceCanvas;
-      if(!canvas||!state.scanAnchors.facility||!state.scanAnchors.address) return null;
-      const facilityHalf=canvas.width*.05,addressHalf=canvas.width*.14;
+    function resetScanAreas(announce=true){
+      if(state.scanBusy) return;
+      state.scanAreas={facility:null,address:null};state.scanDrag=null;
+      state.scanRows=[];
+      $('scanReview').hidden=true;$('analyzeSchedulePhoto').disabled=true;
+      drawScanAreaOverlay();
+      if(announce&&state.scanImageReady) setScanStatus('시설명 데이터 열을 첫 행 위쪽부터 마지막 행 아래쪽까지 드래그하세요.','',0);
+    }
+    function scanCanvasPoint(event,rect){
+      const canvas=$('scanCanvas');
       return {
-        facility:{left:Math.max(0,state.scanAnchors.facility.x-facilityHalf),right:Math.min(canvas.width,state.scanAnchors.facility.x+facilityHalf)},
-        address:{left:Math.max(0,state.scanAnchors.address.x-addressHalf),right:Math.min(canvas.width,state.scanAnchors.address.x+addressHalf)}
+        x:Math.max(0,Math.min(canvas.width,(event.clientX-rect.left)*canvas.width/Math.max(1,rect.width))),
+        y:Math.max(0,Math.min(canvas.height,(event.clientY-rect.top)*canvas.height/Math.max(1,rect.height)))
       };
     }
-    function drawScanAnchorOverlay(){
+    function normalizeScanRect(start,end){
+      return {left:Math.min(start.x,end.x),right:Math.max(start.x,end.x),top:Math.min(start.y,end.y),bottom:Math.max(start.y,end.y)};
+    }
+    function scanDragRect(){
+      const drag=state.scanDrag;
+      if(!drag) return null;
+      const rect=normalizeScanRect(drag.start,drag.current);
+      if(drag.field==='address'&&state.scanAreas.facility){
+        rect.top=state.scanAreas.facility.top;rect.bottom=state.scanAreas.facility.bottom;
+      }
+      return rect;
+    }
+    function drawScanAreaOverlay(){
       const source=state.scanSourceCanvas,canvas=$('scanCanvas');
       if(!source) return;
       const context=canvas.getContext('2d');
       context.clearRect(0,0,canvas.width,canvas.height);context.drawImage(source,0,0);
-      const bounds=scanColumnBounds();
-      const drawAnchor=(anchor,color,label,area)=>{
-        if(!anchor) return;
-        if(area){context.fillStyle=color+'22';context.fillRect(area.left,anchor.y,area.right-area.left,canvas.height-anchor.y)}
-        context.strokeStyle=color;context.lineWidth=Math.max(3,canvas.width/900);context.setLineDash([12,8]);
-        context.beginPath();context.moveTo(0,anchor.y);context.lineTo(canvas.width,anchor.y);context.stroke();context.setLineDash([]);
-        context.fillStyle=color;context.beginPath();context.arc(anchor.x,anchor.y,Math.max(12,canvas.width/160),0,Math.PI*2);context.fill();
-        context.font='bold '+Math.max(22,canvas.width/105)+'px sans-serif';context.textAlign='center';context.textBaseline='bottom';
-        const textY=Math.max(34,anchor.y-Math.max(18,canvas.width/140));
-        context.lineWidth=5;context.strokeStyle='#fff';context.strokeText(label,anchor.x,textY);context.fillText(label,anchor.x,textY);
-      };
-      drawAnchor(state.scanAnchors.facility,'#0b8a51','시설명',bounds?.facility);
-      drawAnchor(state.scanAnchors.address,'#1266d6','주소1',bounds?.address);
-    }
-    function selectScanAnchor(event){
-      if(!state.scanImageReady||state.scanBusy) return;
-      const canvas=$('scanCanvas'),rect=canvas.getBoundingClientRect();
-      const point={x:(event.clientX-rect.left)*canvas.width/rect.width,y:(event.clientY-rect.top)*canvas.height/rect.height};
-      if(!state.scanAnchors.facility||state.scanAnchors.address){
-        state.scanAnchors={facility:point,address:null};
-        setScanStatus('이제 주소1 제목을 누르세요.','',0);
-      }else{
-        if(Math.abs(point.x-state.scanAnchors.facility.x)<canvas.width*.12){
-          setScanStatus('주소1은 시설명보다 오른쪽에 있습니다. 주소1 제목을 다시 누르세요.','error',0);return;
+      const active=scanDragRect();
+      const drawArea=(area,color,label)=>{
+        if(!area) return;
+        const width=area.right-area.left,height=area.bottom-area.top,lineWidth=Math.max(4,canvas.width/700),handle=Math.max(9,canvas.width/240);
+        context.fillStyle=color+'2b';context.fillRect(area.left,area.top,width,height);
+        context.strokeStyle=color;context.lineWidth=lineWidth;context.setLineDash([]);context.strokeRect(area.left,area.top,width,height);
+        for(const [x,y] of [[area.left,area.top],[area.right,area.top],[area.left,area.bottom],[area.right,area.bottom]]){
+          context.fillStyle='#fff';context.beginPath();context.arc(x,y,handle,0,Math.PI*2);context.fill();context.strokeStyle=color;context.lineWidth=lineWidth*.7;context.stroke();
         }
-        state.scanAnchors.address=point;
-        $('analyzeSchedulePhoto').disabled=false;
-        setScanStatus('두 열이 표시되었습니다. 초록색은 시설명, 파란색은 주소1 영역입니다.','success',0);
+        const fontSize=Math.max(22,canvas.width/105),padding=Math.max(8,canvas.width/360);
+        context.font='900 '+fontSize+'px sans-serif';context.textAlign='left';context.textBaseline='middle';
+        const labelWidth=context.measureText(label).width+padding*2,labelHeight=fontSize+padding;
+        const labelX=Math.max(0,Math.min(canvas.width-labelWidth,area.left)),labelY=Math.max(labelHeight/2,area.top-labelHeight/2);
+        context.fillStyle=color;context.fillRect(labelX,labelY-labelHeight/2,labelWidth,labelHeight);
+        context.fillStyle='#fff';context.fillText(label,labelX+padding,labelY);
+      };
+      const facility=state.scanAreas.facility||(state.scanDrag?.field==='facility'?active:null);
+      const address=state.scanAreas.address||(state.scanDrag?.field==='address'?active:null);
+      if(facility&&address){
+        const left=Math.min(facility.left,address.left),right=Math.max(facility.right,address.right);
+        context.strokeStyle='#26364d';context.lineWidth=Math.max(2,canvas.width/1200);context.setLineDash([14,10]);
+        for(const y of [facility.top,facility.bottom]){context.beginPath();context.moveTo(left,y);context.lineTo(right,y);context.stroke()}
+        context.setLineDash([]);
       }
-      drawScanAnchorOverlay();
+      drawArea(facility,'#0b8a51','시설명');drawArea(address,'#1266d6','주소1');
+    }
+    function beginScanArea(event){
+      if(!state.scanImageReady||state.scanBusy||state.scanDrag||state.scanAreas.address||event.button!==0) return;
+      const canvas=$('scanCanvas'),viewport=canvas.getBoundingClientRect();
+      const field=state.scanAreas.facility?'address':'facility',point=scanCanvasPoint(event,viewport);
+      state.scanDrag={field,start:point,current:point,pointerId:event.pointerId,viewport};
+      $('analyzeSchedulePhoto').disabled=true;
+      try{canvas.setPointerCapture(event.pointerId)}catch{}
+      drawScanAreaOverlay();event.preventDefault();
+    }
+    function updateScanArea(event){
+      if(!state.scanDrag||state.scanDrag.pointerId!==event.pointerId) return;
+      state.scanDrag.current=scanCanvasPoint(event,state.scanDrag.viewport);drawScanAreaOverlay();event.preventDefault();
+    }
+    function finishScanArea(event){
+      const drag=state.scanDrag;
+      if(!drag||drag.pointerId!==event.pointerId) return;
+      drag.current=scanCanvasPoint(event,drag.viewport);
+      const rect=scanDragRect(),canvas=$('scanCanvas');
+      state.scanDrag=null;
+      try{canvas.releasePointerCapture(event.pointerId)}catch{}
+      const minWidth=canvas.width*(drag.field==='facility'?.025:.04),minHeight=canvas.height*.055;
+      if(!rect||rect.right-rect.left<minWidth||(drag.field==='facility'&&rect.bottom-rect.top<minHeight)){
+        setScanStatus(drag.field==='facility'?'시설명 열의 첫 행부터 마지막 행까지 더 크게 드래그하세요.':'주소1 열의 좌우 폭을 더 넓게 드래그하세요.','error',0);
+        drawScanAreaOverlay();return;
+      }
+      if(drag.field==='facility'){
+        state.scanAreas.facility=rect;
+        setScanStatus('이제 주소1 데이터 열의 좌우 폭을 드래그하세요. 위·아래 범위는 자동으로 맞춰집니다.','',0);
+      }else{
+        if(rect.left<=state.scanAreas.facility.right+canvas.width*.008){
+          setScanStatus('주소1 영역은 시설명 영역보다 오른쪽에 있어야 합니다. 다시 드래그하세요.','error',0);drawScanAreaOverlay();return;
+        }
+        state.scanAreas.address=rect;$('analyzeSchedulePhoto').disabled=false;
+        setScanStatus('두 영역이 지정되었습니다. 테두리가 데이터 셀 전체를 감싸는지 확인하세요.','success',0);
+      }
+      drawScanAreaOverlay();event.preventDefault();
+    }
+    function cancelScanArea(event){
+      if(!state.scanDrag||state.scanDrag.pointerId!==event.pointerId) return;
+      state.scanDrag=null;drawScanAreaOverlay();
+      setScanStatus(state.scanAreas.facility?'주소1 영역을 다시 드래그하세요.':'시설명 영역을 다시 드래그하세요.','',0);
     }
     function median(values){
       const sorted=values.filter(Number.isFinite).sort((a,b)=>a-b);
@@ -695,75 +843,127 @@
       return labels[message.status]||'사진을 분석하는 중';
     }
     function detectScheduleRowBoundaries(){
-      const canvas=state.scanSourceCanvas,bounds=scanColumnBounds();
-      if(!canvas||!bounds) throw new Error('시설명과 주소1 제목 위치를 먼저 지정하세요.');
-      if(bounds.facility.right>=bounds.address.left) throw new Error('시설명과 주소1 영역이 겹칩니다. 제목 위치를 다시 지정하세요.');
+      const canvas=state.scanSourceCanvas,bounds=state.scanAreas;
+      if(!canvas||!bounds.facility||!bounds.address) throw new Error('시설명과 주소1 데이터 영역을 먼저 지정하세요.');
+      if(bounds.facility.right>=bounds.address.left) throw new Error('두 선택 영역이 겹칩니다. 영역을 다시 지정하세요.');
       const context=canvas.getContext('2d',{willReadFrequently:true});
       const pixels=context.getImageData(0,0,canvas.width,canvas.height).data;
-      const findForColumn=(range,headerY)=>{
-        const startY=Math.max(1,Math.round(headerY+Math.max(22,canvas.height*.018)));
-        const endY=canvas.height-2,scores=[];
-        for(let y=startY;y<=endY;y++){
-          let dark=0,total=0;
-          for(let x=Math.round(range.left);x<Math.round(range.right);x+=3){
-            const offset=(y*canvas.width+x)*4;
-            const luminance=pixels[offset]*.299+pixels[offset+1]*.587+pixels[offset+2]*.114;
-            if(luminance<145) dark++;
-            total++;
-          }
-          scores.push(dark/Math.max(1,total));
+      const selectedTop=bounds.facility.top,selectedBottom=bounds.facility.bottom,selectedHeight=selectedBottom-selectedTop;
+      const searchMargin=Math.max(10,selectedHeight*.035),startY=Math.max(2,Math.round(selectedTop-searchMargin)),endY=Math.min(canvas.height-3,Math.round(selectedBottom+searchMargin));
+      const startX=Math.max(0,Math.round(bounds.facility.left)),endX=Math.min(canvas.width-1,Math.round(bounds.address.right));
+      const xStep=Math.max(2,Math.floor((endX-startX)/900)),scores=[];
+      const luminance=offset=>pixels[offset]*.299+pixels[offset+1]*.587+pixels[offset+2]*.114;
+      for(let y=startY;y<=endY;y++){
+        let dark=0,total=0,currentRun=0,longestRun=0;
+        for(let x=startX;x<=endX;x+=xStep){
+          const current=luminance((y*canvas.width+x)*4);
+          if(current<145){dark++;currentRun++;longestRun=Math.max(longestRun,currentRun)}else currentRun=0;
+          total++;
         }
-        const smoothed=scores.map((score,index)=>Math.max(...scores.slice(Math.max(0,index-2),Math.min(scores.length,index+3))));
-        const baseline=median(smoothed),highest=Math.max(...smoothed);
-        if(!Number.isFinite(highest)||highest-baseline<.05) return [];
-        const threshold=baseline+(highest-baseline)*.46,peaks=[];
-        let index=0;
-        while(index<smoothed.length){
-          if(smoothed[index]<threshold){index++;continue}
-          let best=index;
-          while(index+1<smoothed.length&&smoothed[index+1]>=threshold){index++;if(smoothed[index]>smoothed[best]) best=index}
-          peaks.push({y:startY+best,score:smoothed[best]});index++;
+        scores.push((longestRun/Math.max(1,total))*.84+(dark/Math.max(1,total))*.16);
+      }
+      const smoothed=scores.map((score,index)=>Math.max(...scores.slice(Math.max(0,index-2),Math.min(scores.length,index+3))));
+      const baseline=median(smoothed),highest=Math.max(...smoothed);
+      if(!Number.isFinite(highest)||highest-baseline<.025) throw new Error('선택 영역에서 표의 가로줄을 찾지 못했습니다. 사각형의 위·아래를 행 경계선에 맞춰 다시 지정하세요.');
+      const strengthRange=highest-baseline;
+      const strongestNear=(target,distance)=>{
+        const from=Math.max(startY,Math.round(target-distance)),to=Math.min(endY,Math.round(target+distance));
+        let bestY=Math.round(target),bestScore=-Infinity;
+        for(let y=from;y<=to;y++){
+          const score=smoothed[y-startY];
+          if(score>bestScore){bestScore=score;bestY=y}
         }
-        const minGap=Math.max(20,canvas.height*.018),candidates=[];
-        for(const peak of peaks){
-          const previous=candidates[candidates.length-1];
-          if(!previous||peak.y-previous.y>=minGap) candidates.push(peak);
-          else if(peak.score>previous.score) candidates[candidates.length-1]=peak;
-        }
-        if(candidates.length<2) return [];
-        const usefulGaps=[];
-        for(let i=1;i<candidates.length;i++){
-          const gap=candidates[i].y-candidates[i-1].y;
-          if(gap>=minGap&&gap<=canvas.height*.09) usefulGaps.push(gap);
-        }
-        let expected=median(usefulGaps)||canvas.height*.045;
-        const boundaries=[candidates[0].y];
-        for(let i=1;i<candidates.length&&boundaries.length<MAX_VISITS+1;i++){
-          const previous=boundaries[boundaries.length-1],gap=candidates[i].y-previous;
-          if(gap<expected*.55) continue;
-          if(gap>expected*2.35) break;
-          if(gap>expected*1.55&&Math.abs(gap-expected*2)<expected*.35) boundaries.push(Math.round(previous+gap/2));
-          boundaries.push(candidates[i].y);
-          const recent=boundaries.slice(1).map((value,boundaryIndex)=>value-boundaries[boundaryIndex]).filter(value=>value>expected*.55&&value<expected*1.55);
-          if(recent.length) expected=median(recent.slice(-6));
-        }
-        return boundaries;
+        return {y:bestY,score:bestScore};
       };
-      const facilityBoundaries=findForColumn(bounds.facility,state.scanAnchors.facility.y);
-      const addressBoundaries=findForColumn(bounds.address,state.scanAnchors.address.y);
-      if(facilityBoundaries.length<2||addressBoundaries.length<2) throw new Error('표의 가로줄을 찾지 못했습니다. 표를 정면에서 더 크게 촬영하세요.');
-      return {bounds,facilityBoundaries,addressBoundaries};
+      const outerSnap=Math.max(10,Math.min(selectedHeight*.04,canvas.height*.025));
+      const outerTop=strongestNear(selectedTop,outerSnap).y,outerBottom=strongestNear(selectedBottom,outerSnap).y;
+      const totalHeight=outerBottom-outerTop,minRowHeight=Math.max(34,canvas.height*.028);
+      if(totalHeight<minRowHeight) throw new Error('선택 영역의 높이가 너무 작습니다. 첫 행부터 마지막 행까지 다시 지정하세요.');
+      const maxRows=Math.min(MAX_VISITS,Math.max(1,Math.floor(totalHeight/minRowHeight)));
+      let best={score:.11,boundaries:[outerTop,outerBottom]};
+      for(let rowCount=2;rowCount<=maxRows;rowCount++){
+        const expectedGap=totalHeight/rowCount;
+        if(expectedGap<minRowHeight) continue;
+        const tolerance=Math.max(10,Math.min(expectedGap*.28,canvas.height*.03));
+        const trial=[outerTop],evidence=[],offsets=[];let valid=true;
+        for(let row=1;row<rowCount;row++){
+          const expected=outerTop+expectedGap*row,candidate=strongestNear(expected,tolerance);
+          const normalized=Math.max(0,(candidate.score-baseline)/strengthRange);
+          if(normalized<.025){valid=false;break}
+          trial.push(candidate.y);evidence.push(normalized);offsets.push(Math.abs(candidate.y-expected)/tolerance);
+        }
+        if(!valid) continue;
+        trial.push(outerBottom);trial.sort((a,b)=>a-b);
+        const gaps=trial.slice(1).map((value,gapIndex)=>value-trial[gapIndex]);
+        if(gaps.some(gap=>gap<minRowHeight*.62)) continue;
+        const deviation=gaps.reduce((sum,gap)=>sum+Math.abs(gap-expectedGap)/expectedGap,0)/gaps.length;
+        const averageEvidence=evidence.reduce((sum,value)=>sum+value,0)/evidence.length;
+        const averageOffset=offsets.reduce((sum,value)=>sum+value,0)/offsets.length;
+        const score=averageEvidence-deviation*.42-averageOffset*.28-rowCount*.012;
+        if(score>best.score) best={score,boundaries:trial};
+      }
+      return {bounds,boundaries:best.boundaries};
     }
-    function createOcrCellCanvas(source,bounds,top,bottom){
-      const xInset=Math.max(4,source.width*.0015),yInset=Math.max(3,(bottom-top)*.09);
+    function scanSummedPixels(values,width,height){
+      const stride=width+1;
+      const summed=new Float32Array(stride*(height+1));
+      for(let y=0;y<height;y++){
+        let rowSum=0;
+        for(let x=0;x<width;x++){
+          rowSum+=values[y*width+x];
+          summed[(y+1)*stride+x+1]=summed[y*stride+x+1]+rowSum;
+        }
+      }
+      return summed;
+    }
+    function scanLocalMean(summed,width,height,x,y,radius){
+      const stride=width+1;
+      const left=Math.max(0,x-radius),right=Math.min(width,x+radius+1);
+      const top=Math.max(0,y-radius),bottom=Math.min(height,y+radius+1);
+      const sum=summed[bottom*stride+right]-summed[top*stride+right]-summed[bottom*stride+left]+summed[top*stride+left];
+      return sum/((right-left)*(bottom-top));
+    }
+    function createOcrCellCanvas(source,bounds,top,bottom,retry=false){
+      const xInset=Math.max(4,(bounds.right-bounds.left)*.012),yInset=Math.max(3,(bottom-top)*.11);
       const left=Math.max(0,Math.round(bounds.left+xInset)),right=Math.min(source.width,Math.round(bounds.right-xInset));
       const cropTop=Math.max(0,Math.round(top+yInset)),cropBottom=Math.min(source.height,Math.round(bottom-yInset));
-      const width=Math.max(1,right-left),height=Math.max(1,cropBottom-cropTop),scale=2;
-      const canvas=document.createElement('canvas');canvas.width=Math.round(width*scale);canvas.height=Math.round(height*scale);
-      const context=canvas.getContext('2d');context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);
-      context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';
-      context.filter='grayscale(1) contrast(1.3) brightness(1.04)';
-      context.drawImage(source,left,cropTop,width,height,0,0,width*scale,height*scale);context.filter='none';
+      const width=Math.max(1,right-left),height=Math.max(1,cropBottom-cropTop);
+      const crop=document.createElement('canvas');
+      crop.width=width;crop.height=height;
+      const cropContext=crop.getContext('2d',{willReadFrequently:true});
+      cropContext.drawImage(source,left,cropTop,width,height,0,0,width,height);
+      const image=cropContext.getImageData(0,0,width,height);
+      const grayscale=new Uint8Array(width*height);
+      for(let i=0;i<grayscale.length;i++){
+        const offset=i*4;
+        grayscale[i]=(image.data[offset]*77+image.data[offset+1]*150+image.data[offset+2]*29)>>8;
+      }
+      // Average the monitor pixel grid before thresholding. Keep the radius small on lower-resolution photos.
+      const sourceSum=scanSummedPixels(grayscale,width,height);
+      const radius=Math.min(retry?6:4,Math.round(height/(retry?28:44)));
+      const softened=new Float32Array(grayscale.length);
+      for(let y=0;y<height;y++){
+        for(let x=0;x<width;x++) softened[y*width+x]=scanLocalMean(sourceSum,width,height,x,y,radius);
+      }
+      const smoothSum=scanSummedPixels(softened,width,height);
+      const backgroundRadius=Math.max(5,Math.round(height*.18));
+      for(let y=0;y<height;y++){
+        for(let x=0;x<width;x++){
+          const i=y*width+x,background=scanLocalMean(smoothSum,width,height,x,y,backgroundRadius);
+          const darkness=background-softened[i];
+          const value=retry?(darkness>15?0:255):255-Math.max(0,darkness-9)*5;
+          image.data[i*4]=image.data[i*4+1]=image.data[i*4+2]=value;
+        }
+      }
+      cropContext.putImageData(image,0,0);
+      const scale=Math.min(2.5,112/height,1800/width);
+      const outputWidth=Math.max(1,Math.round(width*scale)),outputHeight=Math.max(1,Math.round(height*scale));
+      const padding=10,canvas=document.createElement('canvas');
+      canvas.width=outputWidth+padding*2;canvas.height=outputHeight+padding*2;
+      const context=canvas.getContext('2d');
+      context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);
+      context.imageSmoothingQuality='high';
+      context.drawImage(crop,padding,padding,outputWidth,outputHeight);
       return canvas;
     }
     function cleanCellText(value,type){
@@ -775,57 +975,86 @@
       }
       return text;
     }
+    function recognizedTextScore(value,type){
+      const text=String(value||'').trim();
+      const hangul=(text.match(/[가-힣]/g)||[]).length;
+      let score=Math.min(30,text.length);
+      if(/[가-힣]/.test(text)) score+=15;
+      if(type==='address'){
+        if(hasAddressSignal(text)) score+=24;
+        score+=Math.min(18,hangul);
+        if(!scanAddressLooksUncertain(text)) score+=14;
+        if(/\d/.test(text)) score+=8;
+      }
+      return score;
+    }
+    function scanAddressLooksUncertain(address){
+      return !looksLikeAddress(address)
+        || /(?:^|\s)[A-Z]{2,}(?=\s|$)/.test(address)
+        || !/[가-힣](?:대로|번길|로|길|동|리|읍|가|면)\s*(?:산\s*)?\d/.test(address);
+    }
+    function updateScanReviewRow(row){
+      row.needsReview=!row.name.trim()||scanAddressLooksUncertain(row.address)
+        || (row.addressConfidence!=null&&row.addressConfidence<85);
+    }
     async function analyzeSchedulePhoto(){
       if(!state.scanImageReady||state.scanBusy) return;
       if(typeof Tesseract==='undefined'){
         setScanStatus('문자 인식 기능을 불러오지 못했습니다. 인터넷 연결 후 다시 시도하세요.','error',0);return;
       }
       state.scanBusy=true;
-      $('analyzeSchedulePhoto').disabled=true;$('retakeSchedulePhoto').disabled=true;$('closeScan').disabled=true;
+      $('analyzeSchedulePhoto').disabled=true;$('retakeSchedulePhoto').disabled=true;$('resetScanAreas').disabled=true;$('closeScan').disabled=true;
       $('scanReview').hidden=true;
       let worker;
       try{
         const layout=detectScheduleRowBoundaries();
-        const rowCount=Math.min(MAX_VISITS,layout.facilityBoundaries.length-1,layout.addressBoundaries.length-1);
+        const rowCount=Math.min(MAX_VISITS,layout.boundaries.length-1);
         setScanStatus('한국어 인식 기능을 준비하고 있습니다.','',5);
-        worker=await Tesseract.createWorker(['kor','eng'],1,{
+        worker=await Tesseract.createWorker('kor',1,{
           logger:message=>{
             if(message.status!=='recognizing text') setScanStatus(ocrProgressMessage(message)+' '+Math.round((message.progress||0)*100)+'%','',8+(message.progress||0)*25);
           }
         });
         await worker.setParameters({tessedit_pageseg_mode:'7',preserve_interword_spaces:'1'});
-        const rows=[],omitted=[];
+        const rows=[];
         for(let rowIndex=0;rowIndex<rowCount;rowIndex++){
           setScanStatus('일정표 '+(rowIndex+1)+' / '+rowCount+'행을 읽고 있습니다.','',35+Math.round(rowIndex/Math.max(1,rowCount)*60));
-          const nameImage=createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.facility,layout.facilityBoundaries[rowIndex],layout.facilityBoundaries[rowIndex+1]);
-          const addressImage=createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.address,layout.addressBoundaries[rowIndex],layout.addressBoundaries[rowIndex+1]);
-          const nameResult=await worker.recognize(nameImage);
-          const addressResult=await worker.recognize(addressImage);
-          const name=cleanCellText(nameResult.data.text,'name'),address=cleanCellText(addressResult.data.text,'address');
-          if(!name&&!address) continue;
-          if(!address||!hasAddressSignal(address)){
-            omitted.push({name:name||'시설명 인식 실패',reason:address?'주소1 인식 불확실: '+address:'주소1이 비어 있어 제외'});
-            continue;
+          const top=layout.boundaries[rowIndex],bottom=layout.boundaries[rowIndex+1];
+          const nameImage=createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.facility,top,bottom);
+          const addressImage=createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.address,top,bottom);
+          let name=cleanCellText((await worker.recognize(nameImage)).data.text,'name');
+          let {data:addressResult}=await worker.recognize(addressImage);
+          let address=cleanCellText(addressResult.text,'address');
+          if(!/[가-힣]/.test(name)){
+            const retry=cleanCellText((await worker.recognize(createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.facility,top,bottom,true))).data.text,'name');
+            if(recognizedTextScore(retry,'name')>recognizedTextScore(name,'name')) name=retry;
           }
-          rows.push({name,address,needsReview:!name||!looksLikeAddress(address)});
+          if(scanAddressLooksUncertain(address)||addressResult.confidence<85){
+            const {data:retryResult}=await worker.recognize(createOcrCellCanvas(state.scanSourceCanvas,layout.bounds.address,top,bottom,true));
+            const retry=cleanCellText(retryResult.text,'address');
+            const score=(value,result)=>recognizedTextScore(value,'address')+(result.confidence||0)*.35;
+            if(score(retry,retryResult)>score(address,addressResult)){address=retry;addressResult=retryResult}
+          }
+          rows.push({name,address,addressConfidence:addressResult.confidence});
         }
-        if(!rows.length) throw new Error('주소1이 확인된 행을 찾지 못했습니다. 열 위치와 촬영 상태를 확인하세요.');
-        state.scanRows=rows;state.scanOmitted=omitted;
+        state.scanRows=rows;
         renderScanReview();
-        setScanStatus(state.scanRows.length+'곳을 찾았습니다. 내용을 확인하고 잘못 읽은 글자를 수정하세요.','success',100);
+        const reviewCount=rows.filter(row=>row.needsReview).length;
+        if(rows.some(row=>row.address)) setScanStatus(rowCount+'개 행을 읽었습니다. '+(reviewCount?'노란색 '+reviewCount+'개 행을 먼저 확인하세요.':'모든 행의 내용을 원본과 대조하세요.'),reviewCount?'':'success',100);
+        else setScanStatus('행 구분은 완료했지만 주소를 확실히 읽지 못했습니다. 결과 칸을 수정하거나 영역을 다시 지정하세요.','error',100);
       }catch(error){
         setScanStatus('분석 실패: '+error.message,'error',0);
       }finally{
         if(worker) await worker.terminate().catch(()=>{});
         state.scanBusy=false;
-        $('analyzeSchedulePhoto').disabled=!state.scanImageReady||!state.scanAnchors.facility||!state.scanAnchors.address;
-        $('retakeSchedulePhoto').disabled=false;$('closeScan').disabled=false;
+        $('analyzeSchedulePhoto').disabled=!state.scanImageReady||!state.scanAreas.facility||!state.scanAreas.address;
+        $('retakeSchedulePhoto').disabled=false;$('resetScanAreas').disabled=false;$('closeScan').disabled=false;
       }
     }
     function renderScanReview(){
       const host=$('scanReviewList');host.innerHTML='';
       state.scanRows.forEach((row,index)=>{
-        row.needsReview=!row.name.trim()||!looksLikeAddress(row.address);
+        updateScanReviewRow(row);
         const entry=document.createElement('div');
         entry.className='scan-review-row'+(row.needsReview?' needs-review':'');
         entry.innerHTML='<span class="scan-review-number">'+(index+1)+'</span><div class="scan-review-fields">'+
@@ -834,7 +1063,8 @@
           '<button class="scan-review-delete" type="button" aria-label="이 인식 결과 제외">−</button>';
         for(const input of entry.querySelectorAll('input')) input.addEventListener('input',()=>{
           row[input.dataset.field]=input.value;
-          row.needsReview=!row.name.trim()||!looksLikeAddress(row.address);
+          if(input.dataset.field==='address') row.addressConfidence=null;
+          updateScanReviewRow(row);
           entry.classList.toggle('needs-review',row.needsReview);
         });
         entry.querySelector('.scan-review-delete').addEventListener('click',()=>{state.scanRows.splice(index,1);renderScanReview()});
@@ -842,11 +1072,6 @@
       });
       $('scanReviewCount').textContent=state.scanRows.length+'곳';
       $('applyScannedRows').disabled=!state.scanRows.length;
-      const omitted=$('scanOmitted');
-      if(state.scanOmitted.length){
-        omitted.hidden=false;
-        omitted.innerHTML='<strong>자동 제외 '+state.scanOmitted.length+'건</strong><ul>'+state.scanOmitted.map(item=>'<li>'+escapeHtml(item.name)+' — '+escapeHtml(item.reason)+'</li>').join('')+'</ul>';
-      }else{omitted.hidden=true;omitted.innerHTML=''}
       $('scanReview').hidden=false;
     }
     async function applyScannedRows(){
@@ -856,7 +1081,8 @@
       if(invalidCount&&!confirm('확인이 필요한 '+invalidCount+'개 행은 제외하고 나머지 '+valid.length+'곳만 적용할까요?')) return;
       const hasExisting=state.inputRows.some(row=>row.name.trim()||row.address.trim()||row.phone.trim());
       if(hasExisting&&!confirm('현재 방문지 목록을 촬영한 '+valid.length+'곳으로 교체할까요?')) return;
-      ++state.runId;
+      cancelRouteCalculation();
+      clearAddressIssues();
       state.inputRows=valid.slice(0,MAX_VISITS).map(row=>({key:state.nextInputId++,name:row.name.trim(),address:row.address.trim(),phone:''}));
       renderInputRows();
       state.result=null;$('results').hidden=true;$('resultPlaceholder').hidden=false;clearMap();
@@ -865,14 +1091,19 @@
       setStatus('사진에서 방문지 '+state.inputRows.length+'곳을 입력했습니다. 주소를 확인한 뒤 경로를 계산하세요.','success');
       document.querySelector('.visit-card')?.scrollIntoView({behavior:'smooth',block:'start'});
     }
-    function parseVisits(){
-      if(state.inputRows.length>MAX_VISITS) throw new Error('방문지는 최대 '+MAX_VISITS+'곳까지 입력할 수 있습니다.');
+    function routeAddressInputs(){
+      const startAddress=$('startAddress').value.trim(),endMode=$('endMode').value;
+      const endAddress=endMode==='return'?startAddress:$('endAddress').value.trim();
       const visits=state.inputRows.map((row,index)=>({
-        id:'visit-'+(index+1),name:row.name.trim()||'방문지 '+(index+1),address:row.address.trim(),phone:row.phone.trim()
+        key:row.key,id:'visit-'+(index+1),name:row.name.trim()||'방문지 '+(index+1),address:row.address.trim(),phone:row.phone.trim()
       }));
-      const empty=visits.findIndex(visit=>!visit.address);
-      if(empty>=0) throw new Error((empty+1)+'번 방문지의 주소를 입력하세요.');
-      return visits;
+      const entries=[{key:'start',label:'출발지',address:startAddress}];
+      if(endMode!=='return') entries.push({key:'end',label:'도착지',address:endAddress});
+      visits.forEach((visit,index)=>{
+        const label=(index+1)+'번 방문지'+(visit.name==='방문지 '+(index+1)?'':' · '+visit.name);
+        entries.push({key:visit.key,label,address:visit.address});
+      });
+      return {startAddress,endAddress,endMode,visits,entries};
     }
 
     function openKeyDialog(){
@@ -1014,33 +1245,55 @@
       scheduleMarkerLabels();
     }
 
+    class TmapRequestError extends Error{
+      constructor(message,status,code){
+        super(message);
+        this.status=status;
+        this.code=String(code??'');
+      }
+    }
     async function fetchJson(url,options={}){
       let response;
       try{response = await fetch(url,{...options,cache:'no-store'})}
-      catch{
+      catch(error){
+        if(options.signal?.aborted) throw error;
         throw new Error('TMAP 직접 연결이 차단되었습니다. 네트워크 또는 브라우저 CORS 정책을 확인하세요.');
       }
-      let data;
+      if(response.status===204) return null;
+      let data=null;
       try{data = await response.json()}
-      catch{throw new Error('TMAP에서 올바르지 않은 응답을 받았습니다.');}
-      if(!response.ok){
+      catch{if(response.ok) throw new Error('TMAP에서 올바르지 않은 응답을 받았습니다.')}
+      if(!response.ok||data?.error){
         const apiMessage = data?.error?.message || data?.errorMessage || data?.message || data?.resultMessage;
-        throw new Error(apiMessage || 'TMAP API 오류 (HTTP '+response.status+')');
+        let message=apiMessage||'TMAP API 오류 (HTTP '+response.status+')';
+        if(response.status===401||response.status===403) message='TMAP API 키와 사용 권한을 확인하세요.';
+        if(response.status===429) message='TMAP 요청 한도에 도달했습니다. 사용량을 확인하고 다시 시도하세요.';
+        throw new TmapRequestError(message,response.status,data?.error?.code);
       }
+      if(data===null||typeof data!=='object') throw new Error('TMAP에서 올바르지 않은 응답을 받았습니다.');
       return data;
     }
 
-    async function geocode(address,runId){
+    async function geocode(address,runId,apiKey,signal){
       const cacheKey = address.trim();
       if(state.geocodeCache.has(cacheKey)) return state.geocodeCache.get(cacheKey);
       const query = new URLSearchParams({
         version:'1',format:'json',addressFlag:'F00',coordType:'WGS84GEO',
         fullAddr:cacheKey,page:'1',count:'3'
       });
-      const data = await fetchJson(TMAP_BASE+'/tmap/geo/fullAddrGeo?'+query,{
-        headers:{Accept:'application/json',appKey:state.apiKey}
-      });
+      let data;
+      try{
+        data=await fetchJson(TMAP_BASE+'/tmap/geo/fullAddrGeo?'+query,{
+          headers:{Accept:'application/json',appKey:apiKey},signal
+        });
+      }catch(error){
+        // This request varies only by address. TMAP can reject an individual lookup with a data error.
+        if(error instanceof TmapRequestError&&error.status===400&&['1100','2200','2300','2301'].includes(error.code)) return null;
+        throw error;
+      }
       if(runId !== state.runId) throw new Error('새 계산으로 취소되었습니다.');
+      if(data===null) return null;
+      if(!data?.coordinateInfo||typeof data.coordinateInfo!=='object') throw new Error('TMAP 주소 조회 응답 형식을 확인할 수 없습니다.');
       const raw = data?.coordinateInfo?.coordinate;
       const list = Array.isArray(raw) ? raw : raw ? [raw] : [];
       const coordinateFields = [
@@ -1048,14 +1301,14 @@
       ];
       for(const item of list){
         for(const [latKey,lonKey] of coordinateFields){
-          const point = {lat:Number(item[latKey]),lon:Number(item[lonKey])};
+          const point = {lat:Number(item?.[latKey]),lon:Number(item?.[lonKey])};
           if(isCoordinate(point)){
             state.geocodeCache.set(cacheKey,point);
             return point;
           }
         }
       }
-      throw new Error('주소 좌표를 찾을 수 없습니다: '+address);
+      return null;
     }
 
     function collectRoute(features){
@@ -1248,34 +1501,42 @@
     }
 
     async function calculateRoute(){
-      if(!state.apiKey){
-        setStatus('먼저 상단의 키 설정에서 TMAP API 키를 입력하세요.','error');
-        openKeyDialog();
+      if($('calculate').disabled) return;
+      clearAddressIssues();
+      const {startAddress,endAddress,endMode,visits,entries}=routeAddressInputs();
+      if(!visits.length||visits.length>MAX_VISITS){
+        setStatus('방문지를 1곳 이상 '+MAX_VISITS+'곳 이하로 입력하세요.','error');
         return;
       }
-      let visits;
-      try{visits=parseVisits()}catch(error){setStatus(error.message,'error');return}
-      const startAddress=$('startAddress').value.trim();
-      const endMode=$('endMode').value;
-      const endAddress=endMode==='return'?startAddress:$('endAddress').value.trim();
-      if(!visits.length){setStatus('방문지 주소를 한 곳 이상 입력하세요.','error');return}
-      if(!startAddress){setStatus('출발지 주소를 입력하세요.','error');return}
-      if(!endAddress){setStatus('최종 도착지 주소를 입력하세요.','error');return}
-
-      const runId=++state.runId;
-      $('calculate').disabled=true;
-      $('results').hidden=true;
-      $('resultPlaceholder').hidden=false;
-      clearMap();
-      try{
-        setStatus('출발지 주소를 확인하고 있습니다.','info',5);
-        const start=await geocode(startAddress,runId);
-        const end=endMode==='return'?start:await geocode(endAddress,runId);
-        for(let index=0;index<visits.length;index++){
-          if(runId!==state.runId) return;
-          setStatus('방문지 주소 확인 '+(index+1)+' / '+visits.length,'info',10+Math.round((index+1)/visits.length*60));
-          Object.assign(visits[index],await geocode(visits[index].address,runId));
+      const problems=new Map(entries.filter(entry=>!entry.address).map(entry=>[entry.key,'주소를 입력하세요.']));
+      const addressIssues=()=>entries.flatMap(entry=>problems.has(entry.key)?[{...entry,reason:problems.get(entry.key)}]:[]);
+      if(!state.apiKey){
+        if(problems.size) showAddressIssues(addressIssues());
+        else{
+          setStatus('먼저 키 설정에서 TMAP API 키를 입력하세요.','error');
+          openKeyDialog();
         }
+        return;
+      }
+
+      const runId=++state.runId,apiKey=state.apiKey;
+      const controller=new AbortController();
+      state.routeController=controller;
+      $('calculate').disabled=true;
+      try{
+        const lookedUp=new Map();
+        for(const [index,entry] of entries.entries()){
+          if(!entry.address) continue;
+          setStatus('주소 확인 '+(index+1)+' / '+entries.length+' · '+entry.label,'info',5+Math.round((index+1)/entries.length*68));
+          if(!lookedUp.has(entry.address)){
+            lookedUp.set(entry.address,await geocode(entry.address,runId,apiKey,controller.signal));
+            if(runId!==state.runId) return;
+          }
+          if(!lookedUp.get(entry.address)) problems.set(entry.key,'TMAP에서 이 주소의 위치를 찾지 못했습니다.');
+        }
+        if(problems.size){showAddressIssues(addressIssues());return}
+        const start=lookedUp.get(startAddress),end=lookedUp.get(endAddress);
+        for(const visit of visits) Object.assign(visit,lookedUp.get(visit.address));
         setStatus('도로 기준 최적 방문 순서를 계산하고 있습니다.','info',82);
         const payload={
           reqCoordType:'WGS84GEO',resCoordType:'WGS84GEO',
@@ -1288,20 +1549,23 @@
         };
         const data=await fetchJson(TMAP_BASE+'/tmap/routes/routeOptimization20?version=1',{
           method:'POST',
-          headers:{Accept:'application/json','Content-Type':'application/json;charset=UTF-8',appKey:state.apiKey},
-          body:JSON.stringify(payload)
+          headers:{Accept:'application/json','Content-Type':'application/json;charset=UTF-8',appKey:apiKey},
+          body:JSON.stringify(payload),signal:controller.signal
         });
         if(runId!==state.runId) return;
         const route=parseRoute(data,visits);
         const result={...route,start,end,startAddress,endAddress,endMode};
         showResult(result);
         const stored=await saveRouteSnapshot(createRouteSnapshot(result));
+        if(runId!==state.runId) return;
         setStatus(stored?'최적 방문 순서를 계산하고 휴대폰에 저장했습니다.':'최적경로는 계산했지만 브라우저 저장소 사용이 차단되어 자동 저장하지 못했습니다.',stored?'success':'error',100);
         writeLocal(START_STORAGE,startAddress);
       }catch(error){
-        if(runId===state.runId) setStatus('계산 실패: '+error.message,'error',0);
+        if(runId!==state.runId) return;
+        if(problems.size) showAddressIssues(addressIssues(),error);
+        else setStatus('계산 실패: '+error.message,'error',0);
       }finally{
-        if(runId===state.runId) $('calculate').disabled=false;
+        if(runId===state.runId){state.routeController=null;$('calculate').disabled=false}
       }
     }
 
@@ -1337,7 +1601,8 @@
     $('clearAddresses').addEventListener('click',async()=>{
       const hasInput=state.inputRows.some(row=>row.name.trim()||row.address.trim()||row.phone.trim());
       if((hasInput||state.result) && !confirm('입력한 방문지와 저장된 계산결과를 모두 지우시겠습니까?')) return;
-      ++state.runId;state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];renderInputRows();$('results').hidden=true;$('resultPlaceholder').hidden=false;state.result=null;clearMap();
+      cancelRouteCalculation();clearAddressIssues();
+      state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];renderInputRows();$('results').hidden=true;$('resultPlaceholder').hidden=false;state.result=null;clearMap();
       await deleteRouteSnapshot();
       setStatus('방문지 주소를 초기화했습니다.');
     });
@@ -1347,14 +1612,23 @@
       const file=event.target.files?.[0];
       if(file) loadSchedulePhoto(file);
     });
-    $('scanCanvas').addEventListener('click',selectScanAnchor);
+    $('scanCanvas').addEventListener('pointerdown',beginScanArea);
+    $('scanCanvas').addEventListener('pointermove',updateScanArea);
+    $('scanCanvas').addEventListener('pointerup',finishScanArea);
+    $('scanCanvas').addEventListener('pointercancel',cancelScanArea);
+    $('resetScanAreas').addEventListener('click',()=>resetScanAreas(true));
     $('analyzeSchedulePhoto').addEventListener('click',analyzeSchedulePhoto);
     $('applyScannedRows').addEventListener('click',applyScannedRows);
     $('closeScan').addEventListener('click',closeScanDialog);
     $('scanDialog').addEventListener('click',event=>{
       if(event.target===$('scanDialog')) closeScanDialog();
     });
-    $('endMode').addEventListener('change',()=>{$('endField').hidden=$('endMode').value==='return'});
+    $('startAddress').addEventListener('input',()=>{clearAddressIssue('start');routeInputsChanged()});
+    $('endAddress').addEventListener('input',()=>{clearAddressIssue('end');routeInputsChanged()});
+    $('endMode').addEventListener('change',()=>{
+      $('endField').hidden=$('endMode').value==='return';
+      clearAddressIssue('end');routeInputsChanged();
+    });
     $('calculate').addEventListener('click',calculateRoute);
     $('saveImage').addEventListener('click',saveResultImage);
     $('openKey').addEventListener('click',openKeyDialog);
@@ -1362,11 +1636,13 @@
     $('saveKey').addEventListener('click',()=>{
       const key=$('apiKey').value.trim();
       if(key.length<8){$('apiKey').focus();return}
+      if(key!==state.apiKey&&state.routeController) cancelRouteCalculation();
       state.apiKey=key;
       writeLocal(KEY_STORAGE,$('rememberKey').checked?key:'');
       setKeyState();closeKeyDialog();setStatus('API 키를 적용했습니다.');
     });
     $('deleteKey').addEventListener('click',()=>{
+      if(state.routeController) cancelRouteCalculation();
       state.apiKey='';$('apiKey').value='';$('rememberKey').checked=false;writeLocal(KEY_STORAGE,'');setKeyState();
       setStatus('저장된 API 키를 삭제했습니다.');closeKeyDialog();
     });
