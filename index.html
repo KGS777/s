@@ -43,7 +43,6 @@
     .section-head h2{margin:0;font-size:1rem;letter-spacing:-.015em}
     .visit-card{border:1.5px solid #98a2ae;box-shadow:0 5px 16px #46546618}
     .visit-card .section-head h2{font-size:1.32rem}
-    .visit-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:5px;white-space:nowrap}
     .count{font-size:.8rem;color:var(--muted);font-weight:700}
     label{display:block;margin:0 0 4px;font-size:.81rem;font-weight:800;color:#344055}
     input,select{
@@ -60,10 +59,10 @@
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
     .btn-text{min-height:32px;border:1px solid #9f1d14;color:#fff;background:#d92d20;font-size:.8rem}
-    .photo-capture-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:7px}
-    .photo-capture-button{min-height:38px;border:1px solid #17683f;border-radius:10px;padding:0 9px;color:#fff;background:#168653;font-size:.86rem;font-weight:850;white-space:nowrap}
-    .photo-capture-button:active{background:#0f7044}
-    .photo-capture-button.address{border-color:#1b5ab1;background:#2264b7}
+    .photo-capture-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:7px}
+    .photo-capture-actions button{min-height:38px;padding:0 4px;white-space:nowrap}
+    .photo-capture-button{border:1px solid #171717;border-radius:10px;color:#171717;background:#f1f1f1;font-size:.83rem;font-weight:750}
+    .photo-capture-button:active{background:#dedede}
     .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:center}
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.53rem;text-shadow:0 1px 1px #a63c0040}
     .btn-primary:active{transform:translateY(1px)}
@@ -122,7 +121,9 @@
     .pos-top-left .map-connector{left:5px;top:5px;width:13px;height:1.5px;transform:rotate(-135deg);transform-origin:left center}
     .pos-bottom-left .map-label{right:34px;top:34px}
     .pos-bottom-left .map-connector{left:5px;top:25px;width:13px;height:1.5px;transform:rotate(135deg);transform-origin:left center}
-    .route-result-head{margin-bottom:0}
+    .route-result-head{margin-bottom:0;justify-content:flex-start;gap:10px}
+    .route-result-head h2{flex:none}
+    .route-basis{color:#4c5668;font-size:.78rem;font-weight:700;line-height:1.25}
     .route-map-title-body{padding-bottom:6px}
     .route-table-summary{padding:7px 8px 4px}
     .route-table-title{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:0;padding:7px 8px}
@@ -181,9 +182,21 @@
     .scan-dialog-head h2{margin:0 0 5px}
     .scan-close{display:grid;flex:0 0 34px;place-items:center;width:34px;height:34px;border:1px solid #c8d0dc;border-radius:50%;color:#48566c;background:#fff;font-size:1.1rem;font-weight:900}
     .scan-guide{margin:0 0 10px!important}
-    .scan-preview{display:grid;grid-template-columns:minmax(0,1fr);place-items:center;min-height:165px;border:1.5px dashed #9ba8b9;border-radius:12px;background:#eef2f6;overflow:hidden}
-    .scan-preview canvas{display:block;width:auto;height:auto;max-width:100%;max-height:min(53dvh,620px);background:#fff;cursor:crosshair;touch-action:none;user-select:none;-webkit-user-select:none}
+    .scan-preview{position:relative;display:grid;place-items:center;min-height:165px;border:1.5px solid #9ba8b9;border-radius:12px;background:#e9edf2;overflow:hidden}
+    .scan-preview.has-photo{height:clamp(260px,60dvh,670px)}
+    .scan-photo-stage{position:absolute;inset:0;overflow:hidden}
+    .has-photo .scan-photo-stage{top:55px}
+    .scan-preview canvas{position:absolute;left:0;top:0;display:block;background:#fff;cursor:crosshair;touch-action:none;user-select:none;-webkit-user-select:none}
     .scan-preview canvas[hidden]{display:none}
+    .scan-preview.is-panning canvas{cursor:grab}
+    .scan-preview.is-panning canvas:active{cursor:grabbing}
+    .scan-zoom:not([hidden]){position:absolute;top:7px;left:7px;display:flex;align-items:center;gap:3px;padding:3px;border:1px solid #9aa3ad;border-radius:9px;background:#fff;box-shadow:0 2px 6px #17203330}
+    .scan-zoom button,.scan-pan{min-height:42px;border:1px solid #bbc3cc;border-radius:6px;color:#1c2534;background:#f7f8fa;font-weight:800}
+    .scan-zoom button{min-width:42px;padding:0 6px;font-size:1rem}
+    .scan-zoom .scan-zoom-level{font-size:.76rem}
+    .scan-pan{position:absolute;right:7px;bottom:7px;padding:0 10px;font-size:.81rem;box-shadow:0 2px 6px #17203330}
+    .scan-pan[aria-pressed="true"]{border-color:#163b64;color:#fff;background:#245780}
+    .scan-zoom button:disabled,.scan-pan:disabled{color:#677184;background:#eceff2}
     .scan-preview-placeholder{padding:25px 16px;color:#748094;text-align:center;font-size:.82rem;line-height:1.55}
     .scan-row-option:not([hidden]){display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:9px}
     .scan-row-option label{margin:0}
@@ -213,8 +226,7 @@
     .scan-apply{width:100%;min-height:45px;margin-top:10px;border:1px solid #0e683c;border-radius:11px;color:#fff;background:#117a46;font-size:.93rem;font-weight:900}
     .scan-apply:disabled{opacity:.5}
     @media(max-width:420px){
-      .visit-card .section-head{align-items:flex-start}.visit-head-actions{gap:4px}.count{display:none}
-      .photo-capture-button,.btn-text{padding-left:8px;padding-right:8px}
+      .visit-card .section-head{align-items:flex-start}.count{display:none}
     }
     @media(min-width:620px){
       main{padding-top:12px}.brand h1{font-size:1.32rem}
@@ -236,14 +248,12 @@
         <div class="card-body">
           <div class="section-head">
             <h2>방문지 주소입력</h2>
-            <div class="visit-head-actions">
-              <span class="count" id="addressCount">0 / 20</span>
-              <button class="btn btn-text" id="clearAddresses" type="button">초기화</button>
-            </div>
+            <span class="count" id="addressCount">0 / 20</span>
           </div>
           <div class="photo-capture-actions">
             <button class="photo-capture-button" id="captureFacilityPhoto" type="button">시설명 촬영</button>
-            <button class="photo-capture-button address" id="captureAddressPhoto" type="button">주소 촬영</button>
+            <button class="photo-capture-button" id="captureAddressPhoto" type="button">주소 촬영</button>
+            <button class="btn btn-text" id="clearAddresses" type="button">초기화</button>
           </div>
           <div class="visit-list" id="visitInputs"></div>
           <input id="schedulePhotoInput" type="file" accept="image/*" capture="environment" hidden>
@@ -294,7 +304,7 @@
         <div id="captureArea">
           <section class="card">
             <div class="card-body route-map-title-body">
-              <div class="section-head route-result-head"><h2>최적경로</h2></div>
+              <div class="section-head route-result-head"><h2>최적경로</h2><span class="route-basis">계산 시점 기준 · 최단시간 경로</span></div>
             </div>
             <div id="map" aria-label="최적 방문경로 지도"></div>
           </section>
@@ -354,9 +364,17 @@
         </div>
         <button class="scan-close" id="closeScan" type="button" aria-label="사진 가져오기 닫기">×</button>
       </div>
-      <div class="scan-preview">
-        <canvas id="scanCanvas" role="img" aria-label="촬영한 열과 조절 가능한 인식 영역" hidden></canvas>
+      <div class="scan-preview" id="scanPreview">
+        <div class="scan-photo-stage" id="scanPhotoStage">
+          <canvas id="scanCanvas" role="img" aria-label="촬영한 열과 조절 가능한 인식 영역" hidden></canvas>
+        </div>
         <div class="scan-preview-placeholder" id="scanPlaceholder">촬영한 사진이 여기에 표시됩니다.</div>
+        <div class="scan-zoom" id="scanZoom" role="group" aria-label="사진 확대와 축소" hidden>
+          <button id="scanZoomOut" type="button" aria-label="사진 축소">−</button>
+          <button class="scan-zoom-level" id="scanZoomFit" type="button" aria-label="사진을 화면 크기에 맞춤">100%</button>
+          <button id="scanZoomIn" type="button" aria-label="사진 확대">+</button>
+        </div>
+        <button class="scan-pan" id="scanPan" type="button" aria-pressed="false" hidden>사진 이동</button>
       </div>
       <div class="scan-row-option" id="scanRowOption" hidden>
         <label for="scanRowCount">표의 행 수</label>
@@ -418,7 +436,8 @@
       scanSourceCanvas:null,
       scanArea:null,
       scanBoundaries:[],
-      scanDrag:null
+      scanDrag:null,
+      scanView:{zoom:1,x:.5,y:.5,pan:false}
     };
 
     function readLocal(key){
@@ -689,14 +708,16 @@
       state.scanTargetKeys=singleEmptyRow?[]:existing.map(row=>row.key);
       const isAddress=state.scanField==='address',label=isAddress?'주소':'시설명';
       $('scanTitle').textContent=label+' 사진 가져오기';
-      $('scanGuide').textContent=(isAddress?'시설명 목록과 같은 첫 행부터 마지막 행까지 주소 열을 선택하세요. 빈 주소 행도 포함하세요.':'제목을 빼고 첫 시설명 행부터 마지막 행까지 사각형으로 선택하세요.')+' 영역 안쪽을 끌면 이동하고 흰 손잡이를 끌면 크기가 바뀝니다.';
+      $('scanGuide').textContent=(isAddress?'시설명 목록과 같은 첫 행부터 마지막 행까지 주소 열을 선택하세요. 빈 주소 행도 포함하세요.':'제목을 빼고 첫 시설명 행부터 마지막 행까지 사각형으로 선택하세요.')+' 흰 손잡이로 범위를 조절하고, 확대 후에는 사진 이동을 눌러 사진을 끌 수 있습니다.';
       const rowCount=$('scanRowCount');
       rowCount.value=state.scanTargetKeys.length||'';
       rowCount.readOnly=Boolean(state.scanTargetKeys.length);
       $('scanRowHint').textContent=state.scanTargetKeys.length?'현재 방문지 목록 기준':'자동 감지가 다르면 행 수 입력';
       showScanDialog();
       state.scanRows=[];state.scanBoundaries=[];state.scanArea=null;state.scanDrag=null;state.scanSourceCanvas=null;
+      state.scanView={zoom:1,x:.5,y:.5,pan:false};
       $('scanCanvas').hidden=true;$('scanPlaceholder').hidden=false;
+      updateScanView();
       $('scanReview').hidden=true;$('scanRowOption').hidden=true;
       $('analyzeSchedulePhoto').disabled=true;
       $('resetScanArea').disabled=true;
@@ -725,6 +746,7 @@
         if(typeof source.close==='function') source.close();
         canvas.hidden=false;$('scanPlaceholder').hidden=true;
         $('scanRowOption').hidden=false;
+        updateScanView();
         drawScanAreaOverlay();
         setScanStatus(label+' 열을 첫 행 윗선에서 마지막 행 아랫선까지 드래그하세요.','',0);
       }catch(error){
@@ -732,7 +754,47 @@
       }finally{
         state.scanBusy=false;
         $('retakeSchedulePhoto').disabled=false;$('closeScan').disabled=false;
+        updateScanViewControls();
       }
+    }
+    const scanMaxZoom=5;
+    function updateScanViewControls(){
+      const view=state.scanView,ready=Boolean(state.scanSourceCanvas),busy=state.scanBusy;
+      $('scanZoom').hidden=!ready;$('scanPan').hidden=!ready;
+      $('scanZoomOut').disabled=busy||view.zoom<=1;
+      $('scanZoomFit').disabled=busy||view.zoom===1;
+      $('scanZoomIn').disabled=busy||view.zoom>=scanMaxZoom;
+      $('scanZoomFit').textContent=Math.round(view.zoom*100)+'%';
+      const pan=$('scanPan');
+      pan.disabled=busy||view.zoom<=1;
+      pan.setAttribute('aria-pressed',String(view.pan));
+      $('scanPreview').classList.toggle('is-panning',view.pan);
+    }
+    function updateScanView(){
+      const canvas=$('scanCanvas'),stage=$('scanPhotoStage'),view=state.scanView;
+      $('scanPreview').classList.toggle('has-photo',Boolean(state.scanSourceCanvas));
+      updateScanViewControls();
+      if(!state.scanSourceCanvas||!stage.clientWidth||!stage.clientHeight) return;
+      const w=stage.clientWidth,h=stage.clientHeight;
+      const scale=Math.min(w/canvas.width,h/canvas.height)*view.zoom;
+      const photoW=canvas.width*scale,photoH=canvas.height*scale;
+      const offset=(size,photo,center)=>photo<=size?(size-photo)/2:Math.max(size-photo,Math.min(0,size/2-center*photo));
+      const left=offset(w,photoW,view.x),top=offset(h,photoH,view.y);
+      view.x=(w/2-left)/photoW;view.y=(h/2-top)/photoH;
+      canvas.style.width=photoW+'px';canvas.style.height=photoH+'px';
+      canvas.style.transform='translate('+left+'px,'+top+'px)';
+    }
+    function zoomScan(direction){
+      if(!state.scanSourceCanvas||state.scanBusy||state.scanDrag) return;
+      const view=state.scanView;
+      view.zoom=direction?Math.max(1,Math.min(scanMaxZoom,view.zoom*1.4**direction)):1;
+      if(view.zoom<=1.00001){view.zoom=1;view.x=view.y=.5;view.pan=false}
+      updateScanView();drawScanAreaOverlay();
+    }
+    function toggleScanPan(){
+      if(!state.scanSourceCanvas||state.scanBusy||state.scanDrag||state.scanView.zoom<=1) return;
+      state.scanView.pan=!state.scanView.pan;
+      updateScanViewControls();
     }
     function invalidateScanReview(){
       state.scanRows=[];state.scanBoundaries=[];
@@ -759,7 +821,7 @@
     }
     function scanDragRect(){
       const drag=state.scanDrag;
-      if(!drag) return state.scanArea;
+      if(!drag||drag.mode==='pan') return state.scanArea;
       if(drag.mode==='draw') return normalizeScanRect(drag.start,drag.current);
       const canvas=$('scanCanvas'),rect={...drag.original};
       const dx=drag.current.x-drag.start.x,dy=drag.current.y-drag.start.y;
@@ -819,22 +881,43 @@
     function beginScanArea(event){
       if(!state.scanSourceCanvas||state.scanBusy||state.scanDrag||event.button!==0) return;
       const canvas=$('scanCanvas'),viewport=canvas.getBoundingClientRect();
-      const point=scanCanvasPoint(event,viewport),scale=canvas.width/viewport.width;
-      state.scanDrag={
-        mode:scanAreaHit(point,state.scanArea,scale),original:state.scanArea,
-        start:point,current:point,pointerId:event.pointerId,viewport,
-        minWidth:Math.min(18*scale,canvas.width*.20),minHeight:Math.min(18*scale,canvas.height*.20)
-      };
+      if(state.scanView.pan){
+        state.scanDrag={mode:'pan',pointerId:event.pointerId,viewport,
+          start:{x:event.clientX,y:event.clientY},original:{x:state.scanView.x,y:state.scanView.y}};
+      }else{
+        const point=scanCanvasPoint(event,viewport),scale=canvas.width/viewport.width;
+        state.scanDrag={
+          mode:scanAreaHit(point,state.scanArea,scale),original:state.scanArea,
+          start:point,current:point,pointerId:event.pointerId,viewport,
+          minWidth:Math.max(10,Math.min(18*scale,canvas.width*.20)),
+          minHeight:Math.max(10,Math.min(18*scale,canvas.height*.20))
+        };
+        drawScanAreaOverlay();
+      }
       try{canvas.setPointerCapture(event.pointerId)}catch{}
-      drawScanAreaOverlay();event.preventDefault();
+      event.preventDefault();
     }
     function updateScanArea(event){
-      if(!state.scanDrag||state.scanDrag.pointerId!==event.pointerId) return;
-      state.scanDrag.current=scanCanvasPoint(event,state.scanDrag.viewport);drawScanAreaOverlay();event.preventDefault();
+      const drag=state.scanDrag;
+      if(!drag||drag.pointerId!==event.pointerId) return;
+      if(drag.mode==='pan'){
+        state.scanView.x=drag.original.x-(event.clientX-drag.start.x)/drag.viewport.width;
+        state.scanView.y=drag.original.y-(event.clientY-drag.start.y)/drag.viewport.height;
+        updateScanView();
+      }else{
+        drag.current=scanCanvasPoint(event,drag.viewport);
+        drawScanAreaOverlay();
+      }
+      event.preventDefault();
     }
     function finishScanArea(event){
       const drag=state.scanDrag;
       if(!drag||drag.pointerId!==event.pointerId) return;
+      if(drag.mode==='pan'){
+        updateScanArea(event);
+        state.scanDrag=null;
+        return;
+      }
       drag.current=scanCanvasPoint(event,drag.viewport);
       const rect=scanDragRect(),canvas=$('scanCanvas');
       state.scanDrag=null;
@@ -995,8 +1078,10 @@
       const sum=summed[bottom*stride+right]-summed[top*stride+right]-summed[bottom*stride+left]+summed[top*stride+left];
       return sum/((right-left)*(bottom-top));
     }
-    function createOcrCellCanvas(source,bounds,top,bottom,retry=false){
-      const xInset=Math.max(4,(bounds.right-bounds.left)*.012),yInset=Math.max(3,(bottom-top)*.11);
+    function createOcrCellCanvas(source,bounds,top,bottom,variant='standard'){
+      const expanded=variant==='detail',binary=variant==='binary';
+      const xInset=Math.max(4,(bounds.right-bounds.left)*.012);
+      const yInset=expanded?Math.max(2,(bottom-top)*.08):Math.max(3,(bottom-top)*.11);
       const left=Math.max(0,Math.round(bounds.left+xInset)),right=Math.min(source.width,Math.round(bounds.right-xInset));
       const cropTop=Math.max(0,Math.round(top+yInset)),cropBottom=Math.min(source.height,Math.round(bottom-yInset));
       const width=Math.max(1,right-left),height=Math.max(1,cropBottom-cropTop);
@@ -1012,7 +1097,7 @@
       }
       // Average the monitor pixel grid before thresholding. Keep the radius small on lower-resolution photos.
       const sourceSum=scanSummedPixels(grayscale,width,height);
-      const radius=Math.min(retry?6:4,Math.round(height/(retry?28:44)));
+      const radius=expanded?Math.min(3,Math.round(height/42)):Math.min(binary?6:4,Math.round(height/(binary?28:44)));
       const softened=new Float32Array(grayscale.length);
       for(let y=0;y<height;y++){
         for(let x=0;x<width;x++) softened[y*width+x]=scanLocalMean(sourceSum,width,height,x,y,radius);
@@ -1025,7 +1110,7 @@
           const i=y*width+x,background=scanLocalMean(smoothSum,width,height,x,y,backgroundRadius);
           const darkness=background-softened[i];
           if(darkness>18) ink++;
-          const value=retry?(darkness>15?0:255):255-Math.max(0,darkness-9)*5;
+          const value=binary?(darkness>15?0:255):255-Math.max(0,darkness-9)*5;
           image.data[i*4]=image.data[i*4+1]=image.data[i*4+2]=value;
         }
       }
@@ -1041,7 +1126,7 @@
       return {canvas,hasInk:ink>=Math.max(6,width*height*.0018)};
     }
     function cleanCellText(value,type){
-      let text=cleanRecognizedText(value,type).replace(/^[|ㅣIl!\s]+|[|ㅣIl!\s]+$/g,'').trim();
+      let text=cleanRecognizedText(value,type).replace(/^[|!\s]+|[|!_~\s]+$/g,'').trim();
       if(type==='address'){
         const administrative=text.search(/서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주/);
         if(administrative>0) text=text.slice(administrative);
@@ -1049,33 +1134,21 @@
       }
       return text;
     }
-    function recognizedTextScore(value,type){
-      const text=String(value||'').trim();
-      const hangul=(text.match(/[가-힣]/g)||[]).length;
-      let score=Math.min(30,text.length);
-      if(/[가-힣]/.test(text)) score+=15;
-      if(type==='address'){
-        if(hasAddressSignal(text)) score+=24;
-        score+=Math.min(18,hangul);
-        if(!scanAddressLooksUncertain(text)) score+=14;
-        if(/\d/.test(text)) score+=8;
-      }
-      return score;
-    }
     function scanAddressLooksUncertain(address){
       return !looksLikeAddress(address)
         || /(?:^|\s)[A-Z]{2,}(?=\s|$)/.test(address)
         || !/[가-힣](?:대로|번길|로|길|동|리|읍|가|면)\s*(?:산\s*)?\d/.test(address);
     }
-    function scanValueNeedsReview(value,confidence,field){
+    function scanValueNeedsReview(value,confidence,field,numberConflict=false){
       return !value.trim()||(confidence!=null&&confidence<(field==='address'?85:68))
-        || (field==='address'&&scanAddressLooksUncertain(value));
+        || (field==='address'&&(numberConflict||scanAddressLooksUncertain(value)));
     }
     function setScanBusy(busy){
       state.scanBusy=busy;
       $('analyzeSchedulePhoto').disabled=busy||!state.scanArea;
       $('resetScanArea').disabled=busy||!state.scanArea;
       $('retakeSchedulePhoto').disabled=busy;$('closeScan').disabled=busy;$('scanRowCount').disabled=busy;
+      updateScanViewControls();
     }
     async function readScanCell(worker,top,bottom,field){
       const source=state.scanSourceCanvas,area=state.scanArea;
@@ -1088,9 +1161,24 @@
       };
       const first=await recognize(cell.canvas);
       if(!scanValueNeedsReview(first.value,first.confidence,field)) return first;
-      const retry=await recognize(createOcrCellCanvas(source,area,top,bottom,true).canvas);
-      const score=result=>result.value?recognizedTextScore(result.value,field)+(result.confidence||0)*.35:0;
-      return score(retry)>score(first)?retry:first;
+      const isAddress=field==='address';
+      const variant=isAddress?'detail':'binary';
+      const retry=await recognize(createOcrCellCanvas(source,area,top,bottom,variant).canvas);
+      const score=result=>{
+        if(!result.value) return -Infinity;
+        if(!isAddress) return Math.min(30,result.value.length)+(/[가-힣]/.test(result.value)?15:0)+(result.confidence||0)*.35;
+        return (result.confidence||0)-(scanAddressLooksUncertain(result.value)?22:0);
+      };
+      let selected=score(retry)>score(first)?retry:first;
+      if(isAddress&&!hasAddressSignal(selected.value)){
+        const binary=await recognize(createOcrCellCanvas(source,area,top,bottom,'binary').canvas);
+        if(score(binary)>score(selected)) selected=binary;
+      }
+      if(isAddress&&[first,retry].every(result=>result.confidence>=55&&looksLikeAddress(result.value))){
+        const numbers=result=>(result.value.match(/\d+(?:-\d+)?/g)||[]).join(',');
+        return {...selected,numberConflict:numbers(first)!==numbers(retry)};
+      }
+      return selected;
     }
     async function analyzeSchedulePhoto(){
       if(!state.scanArea||state.scanDrag||state.scanBusy) return;
@@ -1126,7 +1214,7 @@
         }
         state.scanRows=rows;
         renderScanReview();
-        const reviewCount=rows.filter(row=>scanValueNeedsReview(row.value,row.confidence,field)).length;
+        const reviewCount=rows.filter(row=>scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict)).length;
         const message=layout.estimated?'가로줄이 희미합니다. 사진 위 행 번호와 첫·마지막 행을 확인하세요.'
           :reviewCount?'빈칸과 노란 행을 원본에서 확인하세요.':'결과를 원본과 대조하세요.';
         setScanStatus(rowCount+'개 행을 나눴습니다. '+message,reviewCount||layout.estimated?'':'success',100);
@@ -1147,7 +1235,7 @@
       state.scanRows.forEach((row,index)=>{
         const entry=document.createElement('div');
         entry.className='scan-review-row';
-        const flagRow=()=>entry.classList.toggle('needs-review',scanValueNeedsReview(row.value,row.confidence,field));
+        const flagRow=()=>entry.classList.toggle('needs-review',scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict));
         const number=document.createElement('span');
         number.className='scan-review-number';number.textContent=index+1;
         const fields=document.createElement('div');
@@ -1163,10 +1251,17 @@
         input.setAttribute('aria-label',(index+1)+'번 '+label);
         input.placeholder=label+' 빈칸';
         input.value=row.value;
+        if(row.numberConflict) input.setAttribute('aria-describedby','scanNumberWarning'+index);
+        const numberWarning=document.createElement('span');
+        numberWarning.id='scanNumberWarning'+index;
+        numberWarning.className='scan-review-context';
+        numberWarning.textContent='주소 숫자를 사진과 대조하세요.';
+        numberWarning.hidden=!row.numberConflict;
         input.addEventListener('input',()=>{
-          row.value=input.value;row.confidence=null;flagRow();
+          row.value=input.value;row.confidence=null;row.numberConflict=false;
+          numberWarning.hidden=true;input.removeAttribute('aria-describedby');flagRow();
         });
-        fields.append(input);entry.append(number,fields);
+        fields.append(input,numberWarning);entry.append(number,fields);
         flagRow();host.append(entry);
       });
       $('scanReviewCount').textContent=state.scanRows.length+'행';
@@ -1733,6 +1828,25 @@
     $('scanCanvas').addEventListener('pointerup',finishScanArea);
     $('scanCanvas').addEventListener('pointercancel',cancelScanArea);
     $('scanCanvas').addEventListener('lostpointercapture',cancelScanArea);
+    $('scanZoomOut').addEventListener('click',()=>zoomScan(-1));
+    $('scanZoomIn').addEventListener('click',()=>zoomScan(1));
+    $('scanZoomFit').addEventListener('click',()=>zoomScan(0));
+    $('scanPan').addEventListener('click',toggleScanPan);
+    $('scanPan').addEventListener('keydown',event=>{
+      if(!state.scanView.pan||state.scanBusy||state.scanDrag) return;
+      const direction={ArrowLeft:[-1,0],ArrowUp:[0,-1],ArrowRight:[1,0],ArrowDown:[0,1]}[event.key];
+      if(!Array.isArray(direction)) return;
+      const rect=$('scanCanvas').getBoundingClientRect();
+      state.scanView.x+=40*direction[0]/rect.width;state.scanView.y+=40*direction[1]/rect.height;
+      updateScanView();
+      event.preventDefault();
+    });
+    if(typeof ResizeObserver==='function'){
+      new ResizeObserver(()=>{
+        if(!state.scanSourceCanvas||state.scanDrag) return;
+        updateScanView();drawScanAreaOverlay();
+      }).observe($('scanPhotoStage'));
+    }
     $('resetScanArea').addEventListener('click',resetScanArea);
     $('scanRowCount').addEventListener('input',()=>{
       invalidateScanReview();
@@ -1747,6 +1861,7 @@
       if($('scanDialog').open) return;
       state.scanSourceCanvas=null;state.scanArea=null;state.scanDrag=null;state.scanRows=[];state.scanBoundaries=[];
       const canvas=$('scanCanvas');canvas.width=1;canvas.height=1;
+      updateScanView();
     });
     $('scanDialog').addEventListener('click',event=>{
       if(event.target===$('scanDialog')) closeScanDialog();
