@@ -381,7 +381,7 @@
         <input id="scanRowCount" type="number" min="1" max="20" step="1" inputmode="numeric" placeholder="자동" aria-describedby="scanRowHint">
         <span id="scanRowHint"></span>
       </div>
-      <p class="scan-privacy">사진은 서버로 전송하지 않고 이 기기 안에서만 분석합니다. 최초 실행 시 한국어 인식 자료를 내려받느라 시간이 걸릴 수 있습니다.</p>
+      <p class="scan-privacy">사진은 이 기기 안에서 분석합니다. 처음 사용할 때는 문자 인식 자료를 내려받느라 시간이 걸릴 수 있습니다.</p>
       <div class="scan-progress" aria-hidden="true"><span id="scanProgressBar"></span></div>
       <p class="scan-status" id="scanStatus" role="status" aria-live="polite">사진을 선택하면 분석할 수 있습니다.</p>
       <div class="scan-actions">
@@ -964,8 +964,8 @@
       const labels={
         'loading tesseract core':'문자 인식 엔진을 불러오는 중',
         'initializing tesseract':'문자 인식 엔진을 준비하는 중',
-        'loading language traineddata':'한국어 인식 자료를 불러오는 중',
-        'initializing api':'한국어 인식 기능을 초기화하는 중',
+        'loading language traineddata':'문자 인식 자료를 불러오는 중',
+        'initializing api':'문자 인식 기능을 초기화하는 중',
         'recognizing text':'선택한 열을 읽는 중'
       };
       return labels[message.status]||'사진을 분석하는 중';
@@ -1078,8 +1078,64 @@
       const sum=summed[bottom*stride+right]-summed[top*stride+right]-summed[bottom*stride+left]+summed[top*stride+left];
       return sum/((right-left)*(bottom-top));
     }
+    function scanMonitorAxis(gray,width,height,horizontal){
+      const length=horizontal?width:height,cross=horizontal?height:width;
+      if(length<32||cross<14) return null;
+      const profile=new Float32Array(length),samples=new Uint8Array(13);
+      for(let i=0;i<length;i++){
+        for(let k=0;k<samples.length;k++){
+          const at=Math.min(cross-1,Math.floor((k+.5)*cross/samples.length));
+          samples[k]=horizontal?gray[at*width+i]:gray[i*width+at];
+        }
+        samples.sort();
+        // The brighter samples are less likely to belong to printed strokes.
+        profile[i]=(samples[9]+samples[10]+samples[11])/3;
+      }
+      const residual=new Float32Array(length);
+      let energy=0;
+      for(let i=0;i<length;i++){
+        const first=Math.max(0,i-8),last=Math.min(length-1,i+8);
+        let local=0;
+        for(let j=first;j<=last;j++) local+=profile[j];
+        residual[i]=profile[i]-local/(last-first+1);
+        energy+=residual[i]**2;
+      }
+      if(Math.sqrt(energy/length)<2.2) return null;
+      let period=0,best=.44;
+      for(let lag=2;lag<=Math.min(14,Math.floor(length/5));lag++){
+        let sum=0,firstEnergy=0,secondEnergy=0;
+        for(let i=5;i<length-lag-5;i++){
+          const a=residual[i],b=residual[i+lag];
+          sum+=a*b;firstEnergy+=a*a;secondEnergy+=b*b;
+        }
+        const confidence=sum/Math.max(1,Math.sqrt(firstEnergy*secondEnergy))-lag*.016;
+        if(confidence>best){best=confidence;period=lag}
+      }
+      return period?{period,residual}:null;
+    }
+    function reduceScanMonitorGrid(gray,width,height){
+      let current=gray;
+      for(const horizontal of [true,false]){
+        const pattern=scanMonitorAxis(current,width,height,horizontal);
+        if(!pattern) continue;
+        const pitch=Math.max(1,Math.round(pattern.period/2)),step=horizontal?1:width;
+        const edge=horizontal?width-1:height-1;
+        const next=new Uint8ClampedArray(current.length);
+        for(let y=0;y<height;y++){
+          for(let x=0;x<width;x++){
+            const i=y*width+x,axis=horizontal?x:y;
+            const left=i-(axis-Math.max(0,axis-pitch))*step;
+            const right=i+(Math.min(edge,axis+pitch)-axis)*step;
+            const stripe=Math.max(-20,Math.min(20,pattern.residual[axis]));
+            next[i]=.72*current[i]+.14*(current[left]+current[right])-.45*stripe;
+          }
+        }
+        current=next;
+      }
+      return current;
+    }
     function createOcrCellCanvas(source,bounds,top,bottom,variant='standard'){
-      const expanded=variant==='detail',binary=variant==='binary';
+      const moire=variant==='monitor',expanded=variant==='detail',binary=variant==='binary';
       const xInset=Math.max(4,(bounds.right-bounds.left)*.012);
       const yInset=expanded?Math.max(2,(bottom-top)*.08):Math.max(3,(bottom-top)*.11);
       const left=Math.max(0,Math.round(bounds.left+xInset)),right=Math.min(source.width,Math.round(bounds.right-xInset));
@@ -1091,27 +1147,41 @@
       cropContext.drawImage(source,left,cropTop,width,height,0,0,width,height);
       const image=cropContext.getImageData(0,0,width,height);
       const grayscale=new Uint8Array(width*height);
+      let bright=0,middle=0,ink=0;
       for(let i=0;i<grayscale.length;i++){
         const offset=i*4;
-        grayscale[i]=(image.data[offset]*77+image.data[offset+1]*150+image.data[offset+2]*29)>>8;
+        const value=(image.data[offset]*77+image.data[offset+1]*150+image.data[offset+2]*29)>>8;
+        grayscale[i]=value;
+        if(value>=240) bright++;
+        else if(value>75) middle++;
       }
       // Average the monitor pixel grid before thresholding. Keep the radius small on lower-resolution photos.
-      const sourceSum=scanSummedPixels(grayscale,width,height);
-      const radius=expanded?Math.min(3,Math.round(height/42)):Math.min(binary?6:4,Math.round(height/(binary?28:44)));
-      const softened=new Float32Array(grayscale.length);
-      for(let y=0;y<height;y++){
-        for(let x=0;x<width;x++) softened[y*width+x]=scanLocalMean(sourceSum,width,height,x,y,radius);
-      }
-      const smoothSum=scanSummedPixels(softened,width,height);
-      const backgroundRadius=Math.max(5,Math.round(height*.18));
-      let ink=0;
-      for(let y=0;y<height;y++){
-        for(let x=0;x<width;x++){
-          const i=y*width+x,background=scanLocalMean(smoothSum,width,height,x,y,backgroundRadius);
-          const darkness=background-softened[i];
-          if(darkness>18) ink++;
-          const value=binary?(darkness>15?0:255):255-Math.max(0,darkness-9)*5;
+      const cleaned=moire?reduceScanMonitorGrid(grayscale,width,height):grayscale;
+      const clearBackground=variant==='standard'&&bright>=grayscale.length*.72&&middle<=grayscale.length*.055;
+      if(clearBackground){
+        for(let i=0;i<grayscale.length;i++){
+          const value=grayscale[i];
+          if(value<180) ink++;
           image.data[i*4]=image.data[i*4+1]=image.data[i*4+2]=value;
+        }
+      }else{
+        const sourceSum=scanSummedPixels(cleaned,width,height);
+        let radius=expanded?Math.min(3,Math.round(height/42)):Math.min(binary?6:4,Math.round(height/(binary?28:44)));
+        if(cleaned!==grayscale) radius=Math.min(radius,2);
+        const softened=new Float32Array(grayscale.length);
+        for(let y=0;y<height;y++){
+          for(let x=0;x<width;x++) softened[y*width+x]=scanLocalMean(sourceSum,width,height,x,y,radius);
+        }
+        const smoothSum=scanSummedPixels(softened,width,height);
+        const backgroundRadius=Math.max(5,Math.round(height*.18));
+        for(let y=0;y<height;y++){
+          for(let x=0;x<width;x++){
+            const i=y*width+x,background=scanLocalMean(smoothSum,width,height,x,y,backgroundRadius);
+            const darkness=background-softened[i];
+            if(darkness>18) ink++;
+            const value=binary?(darkness>15?0:255):255-Math.max(0,darkness-9)*5;
+            image.data[i*4]=image.data[i*4+1]=image.data[i*4+2]=value;
+          }
         }
       }
       cropContext.putImageData(image,0,0);
@@ -1123,10 +1193,14 @@
       context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);
       context.imageSmoothingQuality='high';
       context.drawImage(crop,padding,padding,outputWidth,outputHeight);
-      return {canvas,hasInk:ink>=Math.max(6,width*height*.0018)};
+      return {
+        canvas,hasInk:ink>=Math.max(6,width*height*.0018),monitorFiltered:cleaned!==grayscale,
+        sourceX:left,scaleX:outputWidth/width,padding
+      };
     }
     function cleanCellText(value,type){
       let text=cleanRecognizedText(value,type).replace(/^[|!\s]+|[|!_~\s]+$/g,'').trim();
+      if(type==='name'&&!/['’‘]$/.test(text)) text=text.replace(/^['’‘]+\s*(?=[가-힣])/,'');
       if(type==='address'){
         const administrative=text.search(/서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주/);
         if(administrative>0) text=text.slice(administrative);
@@ -1139,9 +1213,13 @@
         || /(?:^|\s)[A-Z]{2,}(?=\s|$)/.test(address)
         || !/[가-힣](?:대로|번길|로|길|동|리|읍|가|면)\s*(?:산\s*)?\d/.test(address);
     }
-    function scanValueNeedsReview(value,confidence,field,numberConflict=false){
+    function scanNameLooksUncertain(value){
+      return /[\\□�×^]/u.test(value)||/[\s][.,'’](?=\s|$)/u.test(value)
+        || [['(',')'],['「','」'],['『','』'],['“','”']].some(([left,right])=>value.includes(left)!==value.includes(right));
+    }
+    function scanValueNeedsReview(value,confidence,field,numberConflict=false,characterConflict=false){
       return !value.trim()||(confidence!=null&&confidence<(field==='address'?85:68))
-        || (field==='address'&&(numberConflict||scanAddressLooksUncertain(value)));
+        || (field==='address'?(numberConflict||scanAddressLooksUncertain(value)):(characterConflict||scanNameLooksUncertain(value)));
     }
     function setScanBusy(busy){
       state.scanBusy=busy;
@@ -1150,10 +1228,85 @@
       $('retakeSchedulePhoto').disabled=busy;$('closeScan').disabled=busy;$('scanRowCount').disabled=busy;
       updateScanViewControls();
     }
+    function scanMixedGlyph(words,value){
+      if(!/[가-힣]/.test(value)) return null;
+      for(const word of words){
+        if(!/^[A-Z0-9]{2,5}$/.test(word.text)||!value.endsWith(word.text)) continue;
+        const symbols=word.symbols||[];
+        const previous=symbols.at(-2)?.bbox,last=symbols.at(-1)?.bbox;
+        if(!previous||!last||last.x0<previous.x1) continue;
+        const letterHeight=previous.y1-previous.y0;
+        if(letterHeight>8&&last.x1-last.x0>(previous.x1-previous.x0)*1.48&&last.y1-last.y0>letterHeight*1.10){
+          return {previous,last,token:word.text};
+        }
+      }
+      return null;
+    }
+    async function retryScanMixedGlyph(worker,prepared,glyph,top,bottom){
+      const toSource=x=>prepared.sourceX+(x-prepared.padding)/prepared.scaleX;
+      const left=toSource(glyph.previous.x1+1),right=Math.min(state.scanArea.right,toSource(glyph.last.x1)+7);
+      if(right-left<13) return '';
+      const crop=createOcrCellCanvas(state.scanSourceCanvas,{left,right},top,bottom,'binary');
+      await worker.setParameters({tessedit_pageseg_mode:'10'});
+      try{
+        const {data}=await worker.recognize(crop.canvas);
+        const value=data.text.trim();
+        return data.confidence>=80&&/^[가-힣]$/.test(value)?value:'';
+      }finally{
+        await worker.setParameters({tessedit_pageseg_mode:'7'});
+      }
+    }
+    async function readScanName(worker,initial,top,bottom){
+      const source=state.scanSourceCanvas,area=state.scanArea;
+      const recognize=async prepared=>{
+        const {data}=await worker.recognize(prepared.canvas,{}, {blocks:true});
+        const value=cleanCellText(data.text,'name');
+        const words=(data.blocks||[]).flatMap(block=>block.paragraphs.flatMap(p=>p.lines.flatMap(line=>line.words)));
+        return {value:/[\p{L}\p{N}]/u.test(value)?value:'',confidence:data.confidence,words,prepared};
+      };
+      const first=await recognize(initial);
+      const firstGlyph=scanMixedGlyph(first.words,first.value);
+      if(firstGlyph){
+        const syllable=await retryScanMixedGlyph(worker,first.prepared,firstGlyph,top,bottom);
+        if(syllable) return {value:first.value.slice(0,-1)+syllable,confidence:first.confidence,characterConflict:true};
+      }
+      let detail=null;
+      if(scanNameLooksUncertain(first.value)){
+        detail=await recognize(createOcrCellCanvas(source,area,top,bottom,'detail'));
+        const glyph=scanMixedGlyph(detail.words,detail.value);
+        if(glyph){
+          const syllable=await retryScanMixedGlyph(worker,detail.prepared,glyph,top,bottom);
+          if(syllable) return {value:detail.value.slice(0,-1)+syllable,confidence:detail.confidence,characterConflict:true};
+        }
+      }
+      const firstMixed=/[가-힣]/.test(first.value)&&/[A-Za-z0-9]/.test(first.value);
+      let selected=first,characterConflict=false;
+      if(firstMixed||first.confidence<80||scanValueNeedsReview(first.value,first.confidence,'name')){
+        const corrected=createOcrCellCanvas(source,area,top,bottom,'monitor');
+        const retry=corrected.monitorFiltered?await recognize(corrected)
+          :detail||await recognize(createOcrCellCanvas(source,area,top,bottom,'detail'));
+        const score=result=>result.value?(result.confidence||0)-(scanNameLooksUncertain(result.value)?24:0):-Infinity;
+        const code=result=>(result.value.match(/[A-Za-z0-9]+/g)||[]).join('|');
+        const minimumGain=firstMixed&&code(first)===code(retry)?8:2;
+        if(score(retry)>score(first)+minimumGain) selected=retry;
+        if(detail&&score(detail)>score(selected)+2) selected=detail;
+        characterConflict=Boolean(first.value&&retry.value&&code(first)!==code(retry));
+        if(detail?.value&&first.value&&code(first)!==code(detail)) characterConflict=true;
+      }
+      let value=selected.value;
+      const mixed=selected===first?firstGlyph:scanMixedGlyph(selected.words,value);
+      if(mixed){
+        const syllable=selected===first||selected===detail?'':await retryScanMixedGlyph(worker,selected.prepared,mixed,top,bottom);
+        if(syllable) value=value.slice(0,-1)+syllable;
+        characterConflict=true;
+      }
+      return {value,confidence:selected.confidence,characterConflict};
+    }
     async function readScanCell(worker,top,bottom,field){
       const source=state.scanSourceCanvas,area=state.scanArea;
       const cell=createOcrCellCanvas(source,area,top,bottom);
       if(!cell.hasInk) return {value:'',confidence:null};
+      if(field==='name') return readScanName(worker,cell,top,bottom);
       const recognize=async canvas=>{
         const {data}=await worker.recognize(canvas);
         const value=cleanCellText(data.text,field);
@@ -1161,20 +1314,24 @@
       };
       const first=await recognize(cell.canvas);
       if(!scanValueNeedsReview(first.value,first.confidence,field)) return first;
-      const isAddress=field==='address';
-      const variant=isAddress?'detail':'binary';
-      const retry=await recognize(createOcrCellCanvas(source,area,top,bottom,variant).canvas);
+      const retry=await recognize(createOcrCellCanvas(source,area,top,bottom,'detail').canvas);
       const score=result=>{
         if(!result.value) return -Infinity;
-        if(!isAddress) return Math.min(30,result.value.length)+(/[가-힣]/.test(result.value)?15:0)+(result.confidence||0)*.35;
         return (result.confidence||0)-(scanAddressLooksUncertain(result.value)?22:0);
       };
       let selected=score(retry)>score(first)?retry:first;
-      if(isAddress&&!hasAddressSignal(selected.value)){
-        const binary=await recognize(createOcrCellCanvas(source,area,top,bottom,'binary').canvas);
-        if(score(binary)>score(selected)) selected=binary;
+      if(!hasAddressSignal(selected.value)){
+        const corrected=createOcrCellCanvas(source,area,top,bottom,'monitor');
+        if(corrected.monitorFiltered){
+          const monitor=await recognize(corrected.canvas);
+          if(score(monitor)>score(selected)) selected=monitor;
+        }
+        if(!hasAddressSignal(selected.value)){
+          const binary=await recognize(createOcrCellCanvas(source,area,top,bottom,'binary').canvas);
+          if(score(binary)>score(selected)) selected=binary;
+        }
       }
-      if(isAddress&&[first,retry].every(result=>result.confidence>=55&&looksLikeAddress(result.value))){
+      if([first,retry].every(result=>result.confidence>=55&&looksLikeAddress(result.value))){
         const numbers=result=>(result.value.match(/\d+(?:-\d+)?/g)||[]).join(',');
         return {...selected,numberConflict:numbers(first)!==numbers(retry)};
       }
@@ -1199,8 +1356,8 @@
         state.scanBoundaries=layout.boundaries;
         drawScanAreaOverlay();
         const rowCount=layout.boundaries.length-1;
-        setScanStatus('한국어 인식 기능을 준비하고 있습니다.','',5);
-        worker=await Tesseract.createWorker('kor',1,{
+        setScanStatus('문자 인식 기능을 준비하고 있습니다.','',5);
+        worker=await Tesseract.createWorker(field==='name'?['kor','eng']:'kor',1,{
           logger:message=>{
             if(message.status!=='recognizing text') setScanStatus(ocrProgressMessage(message)+' '+Math.round((message.progress||0)*100)+'%','',8+(message.progress||0)*25);
           }
@@ -1214,7 +1371,7 @@
         }
         state.scanRows=rows;
         renderScanReview();
-        const reviewCount=rows.filter(row=>scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict)).length;
+        const reviewCount=rows.filter(row=>scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict,row.characterConflict)).length;
         const message=layout.estimated?'가로줄이 희미합니다. 사진 위 행 번호와 첫·마지막 행을 확인하세요.'
           :reviewCount?'빈칸과 노란 행을 원본에서 확인하세요.':'결과를 원본과 대조하세요.';
         setScanStatus(rowCount+'개 행을 나눴습니다. '+message,reviewCount||layout.estimated?'':'success',100);
@@ -1235,7 +1392,7 @@
       state.scanRows.forEach((row,index)=>{
         const entry=document.createElement('div');
         entry.className='scan-review-row';
-        const flagRow=()=>entry.classList.toggle('needs-review',scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict));
+        const flagRow=()=>entry.classList.toggle('needs-review',scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict,row.characterConflict));
         const number=document.createElement('span');
         number.className='scan-review-number';number.textContent=index+1;
         const fields=document.createElement('div');
@@ -1251,14 +1408,14 @@
         input.setAttribute('aria-label',(index+1)+'번 '+label);
         input.placeholder=label+' 빈칸';
         input.value=row.value;
-        if(row.numberConflict) input.setAttribute('aria-describedby','scanNumberWarning'+index);
+        if(row.numberConflict||row.characterConflict) input.setAttribute('aria-describedby','scanNumberWarning'+index);
         const numberWarning=document.createElement('span');
         numberWarning.id='scanNumberWarning'+index;
         numberWarning.className='scan-review-context';
-        numberWarning.textContent='주소 숫자를 사진과 대조하세요.';
-        numberWarning.hidden=!row.numberConflict;
+        numberWarning.textContent=isAddress?'주소 숫자를 사진과 대조하세요.':'섞여 있는 영문·숫자와 한글을 사진과 대조하세요.';
+        numberWarning.hidden=!(row.numberConflict||row.characterConflict);
         input.addEventListener('input',()=>{
-          row.value=input.value;row.confidence=null;row.numberConflict=false;
+          row.value=input.value;row.confidence=null;row.numberConflict=false;row.characterConflict=false;
           numberWarning.hidden=true;input.removeAttribute('aria-describedby');flagRow();
         });
         fields.append(input,numberWarning);entry.append(number,fields);
