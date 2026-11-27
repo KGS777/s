@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     :root{
+      --fluorescent:#caff2e;
+      --accent-green:#009e3d;
       color-scheme:light;
       --blue:#0b5bd3;
       --blue-dark:#0847a5;
@@ -45,7 +47,7 @@
     .step-card{border:1px solid #111}
     .step-head{min-height:28px}
     .step-head h2{display:flex;align-items:center;gap:8px;font-size:1.25rem;font-weight:800;line-height:1.2}
-    .step-icon{width:28px;height:28px;flex:none;padding:5px;border-radius:8px;color:#126a46;background:#e9f6ef;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .step-icon{width:28px;height:28px;flex:none;padding:4px;border:1px solid var(--accent-green);border-radius:8px;color:#086832;background:var(--fluorescent);fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .count{font-size:.8rem;color:var(--muted);font-weight:700}
     label{display:block;margin:0 0 4px;font-size:.81rem;font-weight:800;color:#344055}
     input,select{
@@ -61,22 +63,22 @@
     .custom-end{grid-column:1/-1}
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
-    .btn-text{min-height:32px;border:1px solid #9f1d14;color:#fff;background:#d92d20;font-size:.8rem}
+    .btn-text{min-height:32px;border:1px solid var(--accent-green);color:#15351e;background:var(--fluorescent);font-size:.8rem}
     .photo-capture-actions{display:grid;grid-template-columns:minmax(min-content,1.2fr) minmax(min-content,1fr) minmax(min-content,.8fr);gap:6px;margin-bottom:7px}
     .photo-capture-actions button{min-height:38px;padding:0 4px;white-space:nowrap}
     .photo-capture-actions .btn-text{font-size:1.04rem}
     .photo-capture-button{border:1px solid #171717;border-radius:10px;color:#171717;background:#f1f1f1;font-size:1.079rem;font-weight:750}
     .photo-capture-button:active{background:#dedede}
-    .route-actions{display:grid;grid-template-columns:minmax(0,1.68fr) minmax(100px,1fr);grid-template-rows:auto auto;gap:3px 6px;align-items:end;max-width:410px}
+    .route-actions{display:grid;grid-template-columns:minmax(0,1.68fr) minmax(100px,1fr);grid-template-rows:auto max-content;gap:3px 6px;align-items:end;max-width:410px}
     .route-actions .step-head{grid-area:1/1;margin:0}
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.53rem;text-shadow:0 1px 1px #a63c0040}
     #calculate{grid-area:2/1;min-height:43px;padding:0 5px;font-size:1.071rem;white-space:nowrap}
     .btn-primary:active{transform:translateY(1px)}
     .btn-secondary{color:var(--blue-dark);background:#eaf2ff}
-    .api-key-group{grid-area:1/2/3;min-width:0;margin:0;border:1px solid #535861;border-radius:9px;padding:2px 2px 4px}
+    .api-key-group{grid-area:1/2/3;min-width:0;margin:0;border:1px solid #535861;border-radius:9px;padding:2px 2px 5px}
     .api-key-group legend{margin-inline:auto;padding:0 5px;color:#2d3239;font-size:.7rem;line-height:1;font-weight:800}
-    .api-key-button{display:flex;width:100%;align-items:center;justify-content:center;gap:3px;height:25px;border:1px solid #c5d3e6;border-radius:999px;padding:0 1px;color:#28466d;background:#f1f5fa;font-size:.67rem;font-weight:850;white-space:nowrap}
-    .api-key-button+.api-key-button{margin-top:3px}
+    .api-key-button{display:flex;width:100%;align-items:center;justify-content:flex-start;text-align:left;gap:3px;height:25px;border:1px solid #c5d3e6;border-radius:999px;padding:0 1px 0 3px;color:#28466d;background:#f1f5fa;font-size:.67rem;font-weight:850;white-space:nowrap}
+    .api-key-button+.api-key-button{margin-top:4.5px}
     .api-key-button .key-dot{width:6px;height:6px;flex:none;background:#f59e0b;box-shadow:0 0 0 3px #f59e0b20}
     .api-key-button .key-dot.ready{background:#17a05d;box-shadow:0 0 0 3px #17a05d20}
     .visit-list{display:grid;gap:7px}
@@ -95,10 +97,9 @@
     .status.success{position:absolute;width:1px;height:1px;margin:0;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
     .progress{height:3px;margin-top:6px;border-radius:999px;background:#e8edf5;overflow:hidden}
     .progress>span{display:block;width:0;height:100%;border-radius:inherit;background:#1872e8;transition:width .25s}
-    .result-placeholder{display:grid;place-items:center;min-height:145px;margin-bottom:9px;border:1.5px solid #aeb7c3;border-radius:14px;background:#fafbfc;padding:22px;text-align:center}
+    .result-placeholder{display:grid;place-items:center;min-height:189px;margin-bottom:9px;border:1.5px solid #aeb7c3;border-radius:14px;background:#fafbfc;padding:22px;text-align:center}
     .result-placeholder p{margin:0;color:#a6aeb8;font-size:.88rem;font-weight:700;line-height:1.5}
-    .result-placeholder[hidden]{display:none}
-    .results[hidden]{display:none}
+    .result-placeholder[hidden],.results[hidden]{display:none}
     #captureArea{display:flow-root;outline:1px solid #111;outline-offset:-1px;border-radius:15px}
     .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:0;border:1px solid #c7cdd4;border-radius:10px;padding:4px;background:#eef1f4}
     .metric{padding:5px 4px;border:1px dashed #6f829a;border-radius:8px;background:#dbe8f6;text-align:center}
@@ -247,6 +248,7 @@
     @media(max-width:360px){
       .step-head h2{font-size:1.08rem;gap:6px}
       .step-icon{width:24px;height:24px}
+      .api-key-button{font-size:.65rem;letter-spacing:-.02em}
     }
     @media(min-width:620px){
       main{padding-top:12px}.brand h1{font-size:1.32rem}
@@ -259,7 +261,7 @@
     <header class="topbar">
       <div class="brand">
         <h1>방문경로 최적화</h1>
-        <span class="version">2026 V6 KJS</span>
+        <span class="version">2026 V29 KJS</span>
       </div>
     </header>
 
