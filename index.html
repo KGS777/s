@@ -151,11 +151,11 @@
     th:nth-child(3),.route-detail-cell{padding-left:2px;padding-right:0}
     th:nth-child(4),.route-check-cell{width:28px;padding-left:0;padding-right:0;text-align:center;line-height:1.05;white-space:normal}
     th:nth-child(5),.route-leg-cell{width:60px;padding-left:0;padding-right:2px;text-align:right;white-space:nowrap}
+    .route-order-cell,.route-nav-cell{vertical-align:top;padding-top:4px;padding-bottom:3px}
+    .route-address-cell{border-top:0;padding:0 4px 7px;color:#59657a;font-size:1.08rem;white-space:normal}
     .order-num{display:inline-grid;flex:0 0 27px;place-items:center;width:27px;min-width:27px;height:27px;min-height:27px;aspect-ratio:1;border-radius:50%;color:#fff;background:#1469dd;font-size:.77rem;font-weight:900}
     .visit-mainline{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
     .visit-name{display:block;min-width:0;overflow:hidden;color:#25334a;font-size:1.08rem;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
-    .visit-subline{display:flex;align-items:center;gap:6px;min-width:0;margin-top:4px;font-size:1.08rem;white-space:nowrap}
-    .visit-subline .visit-address:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
     .visit-phone{flex:none;margin-left:auto;color:#59657a;font-size:.97rem;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
     .visit-address{color:#59657a}
     .nav-button{display:inline-flex;flex:none;align-items:center;justify-content:center;min-height:30px;margin:0;border:1px solid #18a05e;border-radius:8px;padding:0 4px;color:#087642;background:#edfff5;font-size:1.08rem;font-weight:900;line-height:1;white-space:nowrap}
@@ -1593,7 +1593,17 @@
       body.replaceChildren();
       result.ordered.forEach((stop,index)=>{
         const {members}=stop, number=index+1;
-        let sharedCells=[];
+        const addressRow=document.createElement('tr');
+        const addressCell=addressRow.insertCell();
+        addressCell.className='route-address-cell route-shared';
+        addressCell.colSpan=5;
+        addressCell.textContent=stop.address;
+        const sharedCells=[addressCell];
+        const updateSharedCells=()=>{
+          const complete=members.every(member=>member.visited);
+          sharedCells.forEach(cell=>cell.classList.toggle('visit-complete',complete));
+          return complete;
+        };
         for(const [memberIndex,member] of members.entries()){
           const first=memberIndex===0;
           const span=members.length;
@@ -1604,27 +1614,25 @@
               '<td class="route-nav-cell route-shared" rowspan="'+span+'"><button class="nav-button" type="button" aria-label="'+number+'번 주소 네이버 내비게이션 실행">길찾기</button></td>'
             : '')+
             '<td class="route-detail-cell"><div class="visit-mainline"><span class="visit-name" title="'+escapeHtml(member.name)+'">'+escapeHtml(member.name)+'</span>'+
-            (member.phone?'<span class="visit-phone">'+escapeHtml(member.phone)+'</span>':'')+'</div>'+
-            (first?'<div class="visit-subline"><span class="visit-address" title="'+escapeHtml(stop.address)+'">'+escapeHtml(stop.address)+'</span></div>':'')+'</td>'+
+            (member.phone?'<span class="visit-phone">'+escapeHtml(member.phone)+'</span>':'')+'</div></td>'+
             '<td class="route-check-cell"><input class="visit-check" type="checkbox" aria-label="'+number+'번 주소 '+(memberIndex+1)+'번째 시설 '+escapeHtml(member.name)+' 방문 완료"'+(member.visited?' checked':'')+'></td>'+
             (first?'<td class="route-leg-cell route-shared" rowspan="'+span+'">'+escapeHtml(formatDistance(stop.legDistance))+
               '<br><span class="visit-address">'+escapeHtml(formatTime(stop.legTime))+'</span></td>':'');
           if(first){
-            sharedCells=row.querySelectorAll('.route-shared');
-            sharedCells.forEach(cell=>cell.classList.toggle('visit-complete',members.every(item=>item.visited)));
+            sharedCells.push(...row.querySelectorAll('.route-shared'));
             row.querySelector('.nav-button').addEventListener('click',()=>openNaverNavigation(stop));
           }
           row.querySelector('.visit-check').addEventListener('change',async event=>{
             member.visited=event.currentTarget.checked;
             row.classList.toggle('visit-complete',member.visited);
-            const complete=members.every(item=>item.visited);
-            sharedCells.forEach(cell=>cell.classList.toggle('visit-complete',complete));
-            updateVisitMarkerState(index,complete);
+            updateVisitMarkerState(index,updateSharedCells());
             const stored=await saveRouteSnapshot(createRouteSnapshot(state.result));
             if(!stored) setStatus('방문 체크 상태를 휴대폰에 저장하지 못했습니다.','error');
           });
           body.appendChild(row);
         }
+        updateSharedCells();
+        body.appendChild(addressRow);
       });
     }
     function openNaverNavigation(visit){
