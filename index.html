@@ -64,7 +64,7 @@
     .custom-end{grid-column:1/-1}
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
-    .btn-text{min-height:32px;border:1px solid #e8995c;color:#4a2816;background:#ffd2a9;font-size:.8rem}
+    .btn-text{min-height:32px;border:1px solid #b9091f;border-radius:5px;color:#fff;background:#d90824;font-size:.8rem}
     .photo-capture-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1.1fr)) minmax(min-content,.8fr);gap:6px;margin-bottom:7px}
     .photo-capture-actions button{min-height:38px;padding:0 4px;white-space:nowrap}
     .photo-capture-actions .photo-capture-button{padding-inline:1px}
@@ -286,7 +286,7 @@
 
       <section class="card step-card">
         <div class="card-body">
-          <div class="section-head step-head"><h2><svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6h8a3 3 0 0 1 0 6H8a3 3 0 0 0 0 6h9"/></svg><span><span class="step-number">2단계 :</span> 출발 도착 설정</span></h2></div>
+          <div class="section-head step-head"><h2><svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 20V5m0 1h7L8 9l2 3H3"/><path d="M21 10c0 3-4 7-4 7s-4-4-4-7a4 4 0 1 1 8 0Z"/><circle cx="17" cy="10" r="1"/></svg><span><span class="step-number">2단계 :</span> 출발 도착 설정</span></h2></div>
           <div class="inline-grid">
             <div class="field">
               <label for="startAddress">출발지 주소</label>
@@ -310,7 +310,7 @@
       <section class="card step-card">
         <div class="card-body">
           <div class="route-actions">
-            <div class="section-head step-head"><h2><svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8m-7 5h.1m5.9 0h.1M9 16h.1m5.9 0h.1"/></svg><span><span class="step-number">3단계 :</span> 경로계산</span></h2></div>
+            <div class="section-head step-head"><h2><svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6h8a3 3 0 0 1 0 6H8a3 3 0 0 0 0 6h9"/></svg><span><span class="step-number">3단계 :</span> 경로계산</span></h2></div>
             <button class="btn btn-primary" id="calculate" type="button">최적 경로계산</button>
             <fieldset class="api-key-group">
               <legend>API입력</legend>
