@@ -447,7 +447,7 @@
     const TMAP_BASE = 'https://apis.openapi.sk.com';
     const KEY_STORAGE = 'mobileRoutePlanner.tmapKey.v1';
     const GEMINI_KEY_STORAGE = 'mobileRoutePlanner.geminiKey.v1';
-    const GEMINI_MODEL = 'gemini-4-hydrogen';
+    const GEMINI_MODEL = 'gemini-3.5-flash-lite';
     const START_STORAGE = 'mobileRoutePlanner.startAddress.v1';
     const ROUTE_STORAGE = 'mobileRoutePlanner.activeRoute.v1';
     const ROUTE_DB_NAME = 'mobileRoutePlanner';
@@ -1070,7 +1070,7 @@
           credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',cache:'no-store',signal:controller.signal,
           body:JSON.stringify({
             contents:[{parts:[{text:prompt},{inlineData:{mimeType:'image/jpeg',data:image.slice(image.indexOf(',')+1)}}]}],
-            generationConfig:{responseMimeType:'application/json',responseJsonSchema:schema,maxOutputTokens:4096}
+            generationConfig:{responseMimeType:'application/json',responseJsonSchema:schema,maxOutputTokens:4096,thinkingConfig:{thinkingLevel:'MINIMAL'}}
           })
         });
         const data=await response.json().catch(()=>null);
