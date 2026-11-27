@@ -28,7 +28,7 @@
     .app{width:min(100%,760px);min-height:100vh;margin:0 auto;background:#f8fafe}
     .topbar{
       position:sticky;top:0;z-index:1000;display:flex;align-items:center;
-      padding:11px max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left));
+      padding:6px max(14px,env(safe-area-inset-right)) 6px max(14px,env(safe-area-inset-left));
       color:#fff;background:linear-gradient(135deg,#0b6f46,#18a568);box-shadow:0 5px 18px #116f4a30;
     }
     .brand{display:flex;align-items:baseline;justify-content:space-between;width:100%;gap:12px;white-space:nowrap}
@@ -42,7 +42,10 @@
     .section-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}
     .section-head h2{margin:0;font-size:1rem;letter-spacing:-.015em}
     .visit-card{border:1.5px solid #98a2ae;box-shadow:0 5px 16px #46546618}
-    .visit-card .section-head h2{font-size:1.32rem}
+    .step-card{border:1px solid #111}
+    .step-head{min-height:28px}
+    .step-head h2{display:flex;align-items:center;gap:8px;font-size:1.25rem;font-weight:800;line-height:1.2}
+    .step-icon{width:28px;height:28px;flex:none;padding:5px;border-radius:8px;color:#126a46;background:#e9f6ef;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
     .count{font-size:.8rem;color:var(--muted);font-weight:700}
     label{display:block;margin:0 0 4px;font-size:.81rem;font-weight:800;color:#344055}
     input,select{
@@ -64,14 +67,12 @@
     .photo-capture-actions .btn-text{font-size:1.04rem}
     .photo-capture-button{border:1px solid #171717;border-radius:10px;color:#171717;background:#f1f1f1;font-size:1.079rem;font-weight:750}
     .photo-capture-button:active{background:#dedede}
-    .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:center}
+    .route-actions{display:grid;grid-template-columns:minmax(min-content,.9fr) minmax(min-content,1fr) minmax(min-content,1.1fr);gap:6px;align-items:center;max-width:410px}
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.53rem;text-shadow:0 1px 1px #a63c0040}
-    #calculate{width:70%;min-width:max-content;min-height:36.4px;padding:0 3px;font-size:1.071rem;white-space:nowrap;justify-self:center}
-    .route-key-actions{display:grid;gap:4px;min-width:0}
+    #calculate{min-height:36.4px;padding:0 5px;font-size:1.071rem;white-space:nowrap}
     .btn-primary:active{transform:translateY(1px)}
     .btn-secondary{color:var(--blue-dark);background:#eaf2ff}
-    .api-key-button{display:flex;align-items:center;justify-content:center;gap:6px;height:31.2px;min-height:31.2px;border:1px solid #c5d3e6;border-radius:999px;padding:0 7px;color:#28466d;background:linear-gradient(180deg,#f8fbff,#e7eef8);box-shadow:0 4px 10px #334d6d1c,inset 0 1px 0 #fff;font-size:.7rem;font-weight:850;white-space:nowrap}
-    #openGeminiKey{gap:4px;padding-inline:4px}
+    .api-key-button{display:flex;align-items:center;justify-content:center;gap:4px;height:36.4px;border:1px solid #c5d3e6;border-radius:999px;padding:0 4px;color:#28466d;background:#f1f5fa;font-size:.7rem;font-weight:850;white-space:nowrap}
     .api-key-button .key-dot{flex:none;background:#f59e0b;box-shadow:0 0 0 3px #f59e0b20}
     .api-key-button .key-dot.ready{background:#17a05d;box-shadow:0 0 0 3px #17a05d20}
     .visit-list{display:grid;gap:7px}
@@ -253,10 +254,10 @@
     </header>
 
     <main>
-      <section class="card visit-card">
+      <section class="card step-card visit-card">
         <div class="card-body">
-          <div class="section-head">
-            <h2>방문지 주소입력</h2>
+          <div class="section-head step-head">
+            <h2><svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>1단계 : 주소입력</span></h2>
             <span class="count" id="addressCount">0 / 20</span>
           </div>
           <div class="photo-capture-actions">
@@ -269,9 +270,9 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card step-card">
         <div class="card-body">
-          <div class="section-head"><h2>출발·도착 설정</h2></div>
+          <div class="section-head step-head"><h2><svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="5" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6h8a3 3 0 0 1 0 6H8a3 3 0 0 0 0 6h9"/></svg><span>2단계 : 출발 도착 설정</span></h2></div>
           <div class="inline-grid">
             <div class="field">
               <label for="startAddress">출발지 주소</label>
@@ -292,21 +293,20 @@
         </div>
       </section>
 
-      <section class="card">
+      <section class="card step-card">
         <div class="card-body">
+          <div class="section-head step-head"><h2><svg class="step-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8m-7 5h.1m5.9 0h.1M9 16h.1m5.9 0h.1"/></svg><span>3단계 : 경로계산</span></h2></div>
           <div class="route-actions">
-            <button class="btn btn-primary" id="calculate" type="button">최적경로 계산</button>
-            <div class="route-key-actions">
-              <button class="api-key-button" id="openKey" type="button" aria-label="TMAP API 키 설정">
-                <span class="key-dot" id="keyDot" aria-hidden="true"></span><span id="keyState">티맵 키 설정</span>
-              </button>
-              <button class="api-key-button" id="openGeminiKey" type="button" aria-label="Gemini API 키 설정">
-                <span class="key-dot" id="geminiKeyDot" aria-hidden="true"></span><span id="geminiKeyState">Gemini 키 설정</span>
-              </button>
-            </div>
+            <button class="btn btn-primary" id="calculate" type="button">경로계산</button>
+            <button class="api-key-button" id="openKey" type="button" aria-label="TMAP API 키 설정">
+              <span class="key-dot" id="keyDot" aria-hidden="true"></span><span id="keyState">티맵 키 설정</span>
+            </button>
+            <button class="api-key-button" id="openGeminiKey" type="button" aria-label="Gemini API 키 설정">
+              <span class="key-dot" id="geminiKeyDot" aria-hidden="true"></span><span id="geminiKeyState">Gemini 키 설정</span>
+            </button>
           </div>
-          <div class="status" id="status" role="status" aria-live="polite">주소와 출발지를 입력한 뒤 계산하세요.</div>
-          <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+          <div class="status" id="status" role="status" aria-live="polite" hidden></div>
+          <div class="progress" aria-hidden="true" hidden><span id="progressBar"></span></div>
         </div>
       </section>
 
@@ -454,6 +454,7 @@
     const ROUTE_DB_STORE = 'savedRoutes';
     const ROUTE_DB_RECORD = 'activeRoute';
     const MAX_VISITS = 20;
+    const ROUTE_INPUT_GUIDE = '주소와 출발지를 입력한 뒤 계산하세요.';
     const $ = id => document.getElementById(id);
 
     const state = {
@@ -585,9 +586,12 @@
       })[ch]);
     }
     function setStatus(message,type='info',progress=0){
-      $('status').textContent = message;
-      $('status').className = 'status' + (type === 'info' ? '' : ' ' + type);
-      $('progressBar').style.width = Math.max(0,Math.min(100,progress)) + '%';
+      const status=$('status'),bar=$('progressBar');
+      status.textContent=message;
+      status.className='status'+(type==='info'?'':' '+type);
+      status.hidden=!message;
+      bar.style.width=Math.max(0,Math.min(100,progress))+'%';
+      bar.parentElement.hidden=progress<=0||progress>=100;
     }
     function setKeyState(){
       const ready = Boolean(state.apiKey);
@@ -678,14 +682,14 @@
     function routeInputsChanged(){
       if(!$('calculate').disabled) return;
       cancelRouteCalculation();
-      setStatus('입력 내용이 변경되었습니다. 최적경로 계산을 다시 눌러 주세요.');
+      setStatus('입력 내용이 변경되었습니다. 경로계산을 다시 눌러 주세요.');
     }
-    function showAddressIssues(issues,serviceError=null){
+    function showAddressIssues(issues,{serviceError=null,guide=''}={}){
       const dialog=$('addressIssueDialog'),list=$('addressIssueList');
       list.replaceChildren();
       $('addressIssueMessage').textContent=serviceError
         ? '주소 확인을 중단했습니다. '+serviceError.message+' 아래 목록은 중단 전까지 확인한 항목입니다.'
-        : '주소를 수정한 뒤 최적경로 계산을 다시 누르세요.';
+        : guide||'주소를 수정한 뒤 경로계산을 다시 누르세요.';
       for(const issue of issues){
         state.addressIssues.add(issue.key);
         addressIssueInput(issue.key)?.setAttribute('aria-invalid','true');
@@ -710,7 +714,7 @@
         });
         item.append(detail,edit);list.appendChild(item);
       }
-      setStatus(issues.length+'개 주소를 확인해 주세요.','error',0);
+      setStatus(guide?'':issues.length+'개 주소를 확인해 주세요.','error');
       if(!dialog.open) dialog.showModal();
     }
 
@@ -1623,20 +1627,23 @@
       if($('calculate').disabled) return;
       clearAddressIssues();
       const {startAddress,endAddress,endMode,visits,entries}=routeAddressInputs();
-      if(!visits.length||visits.length>MAX_VISITS){
-        setStatus('방문지를 1곳 이상 '+MAX_VISITS+'곳 이하로 입력하세요.','error');
+      const missing=entries.filter(entry=>!entry.address).map(entry=>({...entry,reason:'주소를 입력하세요.'}));
+      if(!visits.length||missing.length){
+        const guide=ROUTE_INPUT_GUIDE+(!visits.length?' 경로에 포함할 방문지 주소를 한 곳 이상 입력하세요.':'');
+        showAddressIssues(missing,{guide});
         return;
       }
-      const problems=new Map(entries.filter(entry=>!entry.address).map(entry=>[entry.key,'주소를 입력하세요.']));
-      const addressIssues=()=>entries.flatMap(entry=>problems.has(entry.key)?[{...entry,reason:problems.get(entry.key)}]:[]);
+      if(visits.length>MAX_VISITS){
+        setStatus('방문지는 최대 '+MAX_VISITS+'곳까지 입력할 수 있습니다.','error');
+        return;
+      }
       if(!state.apiKey){
-        if(problems.size) showAddressIssues(addressIssues());
-        else{
-          setStatus('먼저 키 설정에서 TMAP API 키를 입력하세요.','error');
-          openKeyDialog();
-        }
+        setStatus('티맵 키 설정에서 TMAP API 키를 입력하세요.','error');
+        openKeyDialog();
         return;
       }
+      const problems=new Map();
+      const addressIssues=()=>entries.flatMap(entry=>problems.has(entry.key)?[{...entry,reason:problems.get(entry.key)}]:[]);
 
       const runId=++state.runId,apiKey=state.apiKey;
       const controller=new AbortController();
@@ -1645,7 +1652,6 @@
       try{
         const lookedUp=new Map();
         for(const [index,entry] of entries.entries()){
-          if(!entry.address) continue;
           setStatus('주소 확인 '+(index+1)+' / '+entries.length+' · '+entry.label,'info',5+Math.round((index+1)/entries.length*68));
           if(!lookedUp.has(entry.address)){
             lookedUp.set(entry.address,await geocode(entry.address,runId,apiKey,controller.signal));
@@ -1681,7 +1687,7 @@
         writeLocal(START_STORAGE,startAddress);
       }catch(error){
         if(runId!==state.runId) return;
-        if(problems.size) showAddressIssues(addressIssues(),error);
+        if(problems.size) showAddressIssues(addressIssues(),{serviceError:error});
         else setStatus('계산 실패: '+error.message,'error',0);
       }finally{
         if(runId===state.runId){state.routeController=null;$('calculate').disabled=false}
