@@ -59,16 +59,20 @@
     .btn{border:0;border-radius:12px;min-height:45px;padding:0 14px;font-weight:800;cursor:pointer}
     .btn:disabled{opacity:.55;cursor:wait}
     .btn-text{min-height:32px;border:1px solid #9f1d14;color:#fff;background:#d92d20;font-size:.8rem}
-    .photo-capture-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:7px}
+    .photo-capture-actions{display:grid;grid-template-columns:minmax(min-content,1.2fr) minmax(min-content,1fr) minmax(min-content,.8fr);gap:6px;margin-bottom:7px}
     .photo-capture-actions button{min-height:38px;padding:0 4px;white-space:nowrap}
-    .photo-capture-button{border:1px solid #171717;border-radius:10px;color:#171717;background:#f1f1f1;font-size:.83rem;font-weight:750}
+    .photo-capture-actions .btn-text{font-size:1.04rem}
+    .photo-capture-button{border:1px solid #171717;border-radius:10px;color:#171717;background:#f1f1f1;font-size:1.079rem;font-weight:750}
     .photo-capture-button:active{background:#dedede}
     .route-actions{display:grid;grid-template-columns:minmax(0,7fr) minmax(106px,3fr);gap:8px;align-items:center}
     .btn-primary{width:100%;min-height:52px;border:1px solid rgba(0,0,0,.16);border-radius:999px;color:#fff;background:linear-gradient(145deg,#ff9b21,#f26400 72%);box-shadow:0 9px 23px #ee720044,0 3px 7px #b84c0030,inset 0 1px 0 #ffffff70;font-size:1.53rem;text-shadow:0 1px 1px #a63c0040}
+    #calculate{width:70%;min-width:max-content;min-height:36.4px;padding:0 3px;font-size:1.071rem;white-space:nowrap;justify-self:center}
+    .route-key-actions{display:grid;gap:4px;min-width:0}
     .btn-primary:active{transform:translateY(1px)}
     .btn-secondary{color:var(--blue-dark);background:#eaf2ff}
     .api-key-button{display:flex;align-items:center;justify-content:center;gap:6px;height:31.2px;min-height:31.2px;border:1px solid #c5d3e6;border-radius:999px;padding:0 7px;color:#28466d;background:linear-gradient(180deg,#f8fbff,#e7eef8);box-shadow:0 4px 10px #334d6d1c,inset 0 1px 0 #fff;font-size:.7rem;font-weight:850;white-space:nowrap}
-    .api-key-button .key-dot{background:#f59e0b;box-shadow:0 0 0 3px #f59e0b20}
+    #openGeminiKey{gap:4px;padding-inline:4px}
+    .api-key-button .key-dot{flex:none;background:#f59e0b;box-shadow:0 0 0 3px #f59e0b20}
     .api-key-button .key-dot.ready{background:#17a05d;box-shadow:0 0 0 3px #17a05d20}
     .visit-list{display:grid;gap:7px}
     .visit-entry{border:1px solid #d5deea;border-radius:11px;background:#fbfcfe;overflow:hidden}
@@ -203,6 +207,8 @@
     .scan-row-option input{width:75px;min-height:36px;padding:5px 8px}
     .scan-row-option span{font-size:.77rem;color:#536177}
     .scan-privacy{margin:8px 0 0;color:#4b5b70;font-size:.74rem;line-height:1.45}
+    .scan-send-image{display:block;width:100%;max-height:50dvh;object-fit:contain;background:#eff2f5;border:1px solid #d5dde7;border-radius:9px}
+    .scan-send-dialog .dialog-body{max-height:calc(100dvh - 28px);overflow:auto}
     .scan-progress{height:5px;margin:9px 0 5px;border-radius:999px;background:#e4e9ef;overflow:hidden}
     .scan-progress span{display:block;width:0;height:100%;border-radius:inherit;background:#168653;transition:width .2s}
     .scan-status{min-height:20px;margin:0;color:#4d5a6d;font-size:.78rem;line-height:1.45}
@@ -223,6 +229,9 @@
     .scan-review-fields{display:grid;gap:5px;min-width:0}
     .scan-review-fields input{min-height:38px;border-radius:9px;padding:6px 8px;font-size:.84rem}
     .scan-review-context{color:#38506d;font-size:.8rem;font-weight:800;overflow-wrap:anywhere}
+    .scan-blank{margin:0;min-height:38px}
+    .scan-blank[hidden]{display:none}
+    .scan-blank input{min-height:20px;padding:0}
     .scan-apply{width:100%;min-height:45px;margin-top:10px;border:1px solid #0e683c;border-radius:11px;color:#fff;background:#117a46;font-size:.93rem;font-weight:900}
     .scan-apply:disabled{opacity:.5}
     @media(max-width:420px){
@@ -287,9 +296,14 @@
         <div class="card-body">
           <div class="route-actions">
             <button class="btn btn-primary" id="calculate" type="button">최적경로 계산</button>
-            <button class="api-key-button" id="openKey" type="button" aria-label="TMAP API 키 설정">
-              <span class="key-dot" id="keyDot"></span><span id="keyState">API 키 설정</span>
-            </button>
+            <div class="route-key-actions">
+              <button class="api-key-button" id="openKey" type="button" aria-label="TMAP API 키 설정">
+                <span class="key-dot" id="keyDot" aria-hidden="true"></span><span id="keyState">티맵 키 설정</span>
+              </button>
+              <button class="api-key-button" id="openGeminiKey" type="button" aria-label="Gemini API 키 설정">
+                <span class="key-dot" id="geminiKeyDot" aria-hidden="true"></span><span id="geminiKeyState">Gemini 키 설정</span>
+              </button>
+            </div>
           </div>
           <div class="status" id="status" role="status" aria-live="polite">주소와 출발지를 입력한 뒤 계산하세요.</div>
           <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
@@ -346,6 +360,21 @@
     </div>
   </dialog>
 
+  <dialog id="geminiKeyDialog" aria-labelledby="geminiKeyTitle">
+    <form class="dialog-body" id="geminiKeyForm">
+      <h2 id="geminiKeyTitle">Gemini API 키</h2>
+      <p><a href="https://aistudio.google.com/api-keys" target="_blank" rel="noopener noreferrer">Google AI Studio</a>에서 발급받은 본인 키를 붙여넣으세요. 초과 과금을 피하려면 결제 계정을 연결하지 않은 무료 프로젝트의 키를 쓰세요.</p>
+      <label for="geminiKey">Gemini API 키</label>
+      <input id="geminiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" required placeholder="Gemini API 키 붙여넣기">
+      <label class="remember"><input id="rememberGeminiKey" type="checkbox"> 이 브라우저에 키 저장</label>
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" id="closeGeminiKey" type="button">취소</button>
+        <button class="btn btn-primary" type="submit" style="min-height:45px;font-size:.92rem">적용</button>
+        <button class="btn dialog-delete wide" id="deleteGeminiKey" type="button">Gemini 키 삭제</button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="addressIssueDialog" class="address-dialog" aria-labelledby="addressIssueTitle">
     <div class="dialog-body">
       <h2 id="addressIssueTitle">확인이 필요한 주소</h2>
@@ -381,13 +410,13 @@
         <input id="scanRowCount" type="number" min="1" max="20" step="1" inputmode="numeric" placeholder="자동" aria-describedby="scanRowHint">
         <span id="scanRowHint"></span>
       </div>
-      <p class="scan-privacy">사진은 이 기기 안에서 분석합니다. 처음 사용할 때는 문자 인식 자료를 내려받느라 시간이 걸릴 수 있습니다.</p>
+      <p class="scan-privacy">선택 영역은 보내기 전에 확인할 수 있습니다. 외부 전송이 허용된 시설명과 주소만 선택하세요.</p>
       <div class="scan-progress" aria-hidden="true"><span id="scanProgressBar"></span></div>
       <p class="scan-status" id="scanStatus" role="status" aria-live="polite">사진을 선택하면 분석할 수 있습니다.</p>
       <div class="scan-actions">
         <button class="scan-secondary" id="retakeSchedulePhoto" type="button">다시 촬영</button>
         <button class="scan-secondary" id="resetScanArea" type="button" disabled>영역 다시 지정</button>
-        <button class="scan-primary" id="analyzeSchedulePhoto" type="button" disabled>선택 영역 분석</button>
+        <button class="scan-primary" id="analyzeSchedulePhoto" type="button" disabled>전송 이미지 확인</button>
       </div>
       <section class="scan-review" id="scanReview" hidden>
         <div class="scan-review-head"><h3>인식 결과 확인</h3><span id="scanReviewCount">0곳</span></div>
@@ -398,14 +427,27 @@
     </div>
   </dialog>
 
+  <dialog id="scanSendDialog" class="scan-send-dialog" aria-labelledby="scanSendTitle">
+    <div class="dialog-body">
+      <h2 id="scanSendTitle">Gemini에 보낼 이미지 확인</h2>
+      <p>아래 이미지가 Google로 전송됩니다. 시설번호나 연락처 같은 다른 정보가 보이면 영역을 다시 조정하세요.</p>
+      <img class="scan-send-image" id="scanSendImage" alt="Gemini에 전송할 선택 영역">
+      <div class="dialog-actions">
+        <button class="btn btn-secondary" id="cancelScanSend" type="button">영역 조정</button>
+        <button class="btn btn-primary" id="confirmScanSend" type="button" style="min-height:45px;font-size:.92rem">Gemini로 읽기</button>
+      </div>
+    </div>
+  </dialog>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js"></script>
   <script>
     'use strict';
 
     const TMAP_BASE = 'https://apis.openapi.sk.com';
     const KEY_STORAGE = 'mobileRoutePlanner.tmapKey.v1';
+    const GEMINI_KEY_STORAGE = 'mobileRoutePlanner.geminiKey.v1';
+    const GEMINI_MODEL = 'gemini-4-hydrogen';
     const START_STORAGE = 'mobileRoutePlanner.startAddress.v1';
     const ROUTE_STORAGE = 'mobileRoutePlanner.activeRoute.v1';
     const ROUTE_DB_NAME = 'mobileRoutePlanner';
@@ -416,6 +458,7 @@
 
     const state = {
       apiKey: '',
+      geminiKey: '',
       map: null,
       mapReady: false,
       markers: [],
@@ -435,7 +478,6 @@
       scanBusy:false,
       scanSourceCanvas:null,
       scanArea:null,
-      scanBoundaries:[],
       scanDrag:null,
       scanView:{zoom:1,x:.5,y:.5,pan:false}
     };
@@ -511,7 +553,7 @@
       return {
         version:1,
         savedAt:Date.now(),
-        inputRows:state.inputRows.map(row=>({name:row.name,address:row.address,phone:row.phone})),
+        inputRows:state.inputRows.map(row=>({name:row.name,address:row.address,phone:row.phone,omitFromRoute:row.omitFromRoute===true})),
         startAddress:$('startAddress').value.trim(),
         endMode:$('endMode').value,
         endAddress:$('endAddress').value.trim(),
@@ -526,7 +568,8 @@
         key:state.nextInputId++,
         name:String(row?.name || ''),
         address:String(row?.address || ''),
-        phone:String(row?.phone || '')
+        phone:String(row?.phone || ''),
+        omitFromRoute:row?.omitFromRoute===true
       }));
       $('startAddress').value=String(snapshot.startAddress || snapshot.result.startAddress || '');
       $('endMode').value=snapshot.endMode==='custom'?'custom':'return';
@@ -549,7 +592,7 @@
     function setKeyState(){
       const ready = Boolean(state.apiKey);
       $('keyDot').classList.toggle('ready',ready);
-      $('keyState').textContent = ready ? 'API 키 설정됨' : 'API 키 설정';
+      $('keyState').textContent = ready ? '티맵 키 설정됨' : '티맵 키 설정';
     }
     function currentStartTime(){
       const now = new Date();
@@ -580,7 +623,7 @@
       routeInputsChanged();
       state.addressIssues.delete(key);
       if(state.inputRows.length===1){
-        state.inputRows[0]={...state.inputRows[0],name:'',address:'',phone:''};
+        state.inputRows[0]={key,name:'',address:'',phone:''};
       }else state.inputRows=state.inputRows.filter(item=>item.key!==key);
       renderInputRows();
     }
@@ -592,13 +635,17 @@
           '<span class="visit-number">'+(index+1)+'</span>'+
           '<input data-field="name" aria-label="'+(index+1)+'번 방문지명" placeholder="방문지 '+(index+1)+'" value="'+escapeHtml(row.name)+'">'+
           '<div class="visit-buttons"><button class="visit-add" type="button" aria-label="아래에 방문지 추가">+</button><button class="visit-delete" type="button" aria-label="이 방문지 삭제">−</button></div></div>'+
-          '<div class="visit-bottom"><input data-field="address" autocomplete="street-address" aria-label="'+(index+1)+'번 주소" placeholder="주소" value="'+escapeHtml(row.address)+'">'+
+          '<div class="visit-bottom"><input data-field="address" autocomplete="street-address" aria-label="'+(index+1)+'번 주소" placeholder="'+(row.omitFromRoute?'주소 없음 · 경로 제외':'주소')+'" value="'+escapeHtml(row.address)+'">'+
           '<input data-field="phone" inputmode="tel" autocomplete="tel" aria-label="'+(index+1)+'번 전화번호" placeholder="전화번호" value="'+escapeHtml(row.phone)+'"></div>';
         const addressInput=entry.querySelector('[data-field="address"]');
         if(state.addressIssues.has(row.key)) addressInput.setAttribute('aria-invalid','true');
         for(const input of entry.querySelectorAll('input')) input.addEventListener('input',()=>{
           row[input.dataset.field]=input.value;
-          if(input===addressInput) clearAddressIssue(row.key,input);
+          if(input===addressInput){
+            row.omitFromRoute=false;
+            addressInput.placeholder='주소';
+            clearAddressIssue(row.key,input);
+          }
           routeInputsChanged();
         });
         entry.querySelector('.visit-add').addEventListener('click',()=>addInputRow(row.key));
@@ -687,6 +734,7 @@
     }
     function requestSchedulePhoto(field=state.scanField){
       if(state.scanBusy) return;
+      if(!state.geminiKey){openGeminiKeyDialog();return}
       state.scanField=field;
       $('schedulePhotoInput').value='';
       $('schedulePhotoInput').click();
@@ -714,7 +762,7 @@
       rowCount.readOnly=Boolean(state.scanTargetKeys.length);
       $('scanRowHint').textContent=state.scanTargetKeys.length?'현재 방문지 목록 기준':'자동 감지가 다르면 행 수 입력';
       showScanDialog();
-      state.scanRows=[];state.scanBoundaries=[];state.scanArea=null;state.scanDrag=null;state.scanSourceCanvas=null;
+      state.scanRows=[];state.scanArea=null;state.scanDrag=null;state.scanSourceCanvas=null;
       state.scanView={zoom:1,x:.5,y:.5,pan:false};
       $('scanCanvas').hidden=true;$('scanPlaceholder').hidden=false;
       updateScanView();
@@ -797,7 +845,7 @@
       updateScanViewControls();
     }
     function invalidateScanReview(){
-      state.scanRows=[];state.scanBoundaries=[];
+      state.scanRows=[];
       $('scanReview').hidden=true;
       $('analyzeSchedulePhoto').disabled=!state.scanArea;
       $('resetScanArea').disabled=!state.scanArea;
@@ -859,19 +907,6 @@
       context.fillStyle=color+'1f';context.fillRect(left,top,width,height);
       context.strokeStyle=color;context.lineWidth=2*scale;context.strokeRect(left,top,width,height);
       if(!state.scanDrag){
-        context.setLineDash([5*scale,4*scale]);context.lineWidth=1.5*scale;
-        state.scanBoundaries.slice(1,-1).forEach(y=>{
-          context.beginPath();context.moveTo(left,y);context.lineTo(right,y);context.stroke();
-        });
-        context.setLineDash([]);
-        context.font='bold '+(11*scale)+'px sans-serif';
-        context.textAlign='center';context.textBaseline='middle';
-        for(let index=0;index<state.scanBoundaries.length-1;index++){
-          const y=(state.scanBoundaries[index]+state.scanBoundaries[index+1])/2;
-          const x=Math.max(8*scale,left-9*scale);
-          context.fillStyle=color;context.fillRect(x-8*scale,y-7*scale,16*scale,14*scale);
-          context.fillStyle='#fff';context.fillText(index+1,x,y);
-        }
         const middleX=(left+right)/2,middleY=(top+bottom)/2;
         for(const [x,y] of [[left,top],[middleX,top],[right,top],[left,middleY],[right,middleY],[left,bottom],[middleX,bottom],[right,bottom]]){
           context.fillStyle='#fff';context.beginPath();context.arc(x,y,4.5*scale,0,Math.PI*2);context.fill();context.stroke();
@@ -929,7 +964,7 @@
       if(!drag.original||Object.keys(rect).some(edge=>Math.abs(rect[edge]-drag.original[edge])>.5)){
         state.scanArea=rect;
         invalidateScanReview();
-        setScanStatus('영역을 확인한 뒤 선택 영역 분석을 누르세요.','success',0);
+        setScanStatus('전송 이미지 확인을 눌러 잘라낸 영역을 확인하세요.','success',0);
       }
       drawScanAreaOverlay();event.preventDefault();
     }
@@ -937,290 +972,128 @@
       if(!state.scanDrag||state.scanDrag.pointerId!==event.pointerId) return;
       state.scanDrag=null;drawScanAreaOverlay();
     }
-    function median(values){
-      const sorted=values.filter(Number.isFinite).sort((a,b)=>a-b);
-      if(!sorted.length) return 0;
-      const middle=Math.floor(sorted.length/2);
-      return sorted.length%2?sorted[middle]:(sorted[middle-1]+sorted[middle])/2;
-    }
-    function cleanRecognizedText(value,type){
-      let text=String(value||'').normalize('NFKC').replace(/[\r\n\t]+/g,' ').replace(/\s{2,}/g,' ').trim();
-      text=text.replace(/\s*([(),])\s*/g,'$1').replace(/\s*-\s*/g,'-');
-      if(type==='address'){
-        text=text.replace(/경기\s+도/g,'경기도').replace(/([가-힣])\s+(시|군|구|읍|면|동|리)(?=\s|\d|$)/g,'$1$2');
-        text=text.replace(/번\s+길/g,'번길').replace(/\s+(로|길)(?=\s|\d|$)/g,'$1');
+    function prepareScheduleCrop(){
+      if(!state.scanArea||state.scanDrag||state.scanBusy) return;
+      if(!state.geminiKey){openGeminiKeyDialog();return}
+      const rowInput=$('scanRowCount');
+      const rowCount=state.scanTargetKeys.length||Number(rowInput.value);
+      if(!rowInput.validity.valid||!Number.isInteger(rowCount)||rowCount<0||rowCount>MAX_VISITS){
+        setScanStatus('표의 행 수는 1~'+MAX_VISITS+' 사이로 입력하세요.','error',0);
+        return;
       }
-      return text.replace(/^[|:;,.]+|[|:;,.]+$/g,'').trim();
-    }
-    function looksLikeAddress(value){
-      const text=String(value||'').replace(/\s/g,'');
-      return text.length>=6&&/[가-힣]/.test(text)&&/(시|군|구|읍|면|동|리|로|길)/.test(text)&&/\d/.test(text);
-    }
-    function hasAddressSignal(value){
-      const text=String(value||'').replace(/\s/g,'');
-      return text.length>=5&&/[가-힣]/.test(text)&&/(시|군|구|읍|면|동|리|로|길)/.test(text);
-    }
-    function ocrProgressMessage(message){
-      const labels={
-        'loading tesseract core':'문자 인식 엔진을 불러오는 중',
-        'initializing tesseract':'문자 인식 엔진을 준비하는 중',
-        'loading language traineddata':'문자 인식 자료를 불러오는 중',
-        'initializing api':'문자 인식 기능을 초기화하는 중',
-        'recognizing text':'선택한 열을 읽는 중'
-      };
-      return labels[message.status]||'사진을 분석하는 중';
-    }
-    function scanGridScores(source,area,startY,endY){
-      const inset=(area.right-area.left)*.03;
-      const width=area.right-area.left-inset*2;
-      const sample=document.createElement('canvas');
-      sample.width=Math.max(1,Math.min(540,Math.round(width)));sample.height=endY-startY+1;
-      const context=sample.getContext('2d',{willReadFrequently:true});
-      context.imageSmoothingQuality='high';
-      context.drawImage(source,area.left+inset,startY,width,sample.height,0,0,sample.width,sample.height);
-      const pixels=context.getImageData(0,0,sample.width,sample.height).data;
-      const gray=new Uint8Array(sample.width*sample.height);
-      for(let i=0;i<gray.length;i++) gray[i]=(77*pixels[i*4]+150*pixels[i*4+1]+29*pixels[i*4+2])>>8;
-      const step=Math.max(2,Math.min(7,Math.round(sample.height*.009)));
-      return Array.from({length:sample.height},(_,y)=>{
-        const upper=Math.max(0,y-step)*sample.width,lower=Math.min(sample.height-1,y+step)*sample.width;
-        const offset=y*sample.width;
-        let coverage=0,dark=0,run=0,longest=0;
-        for(let x=0;x<sample.width;x++){
-          const value=gray[offset+x];
-          if((gray[upper+x]+gray[lower+x])*.5-value>10){
-            coverage++;longest=Math.max(longest,++run);
-          }else run=0;
-          if(value<140) dark++;
-        }
-        return (.66*coverage+.20*longest+.14*dark)/sample.width;
-      });
-    }
-    function detectScheduleRowBoundaries(expectedRows=0){
-      const source=state.scanSourceCanvas,area=state.scanArea;
-      if(!source||!area) throw new Error('읽을 열의 영역을 먼저 지정하세요.');
-      const {top,bottom}=area,selectionHeight=bottom-top;
-      const margin=Math.max(8,selectionHeight*.04);
-      const startY=Math.max(0,Math.floor(top-margin)),endY=Math.min(source.height-1,Math.ceil(bottom+margin));
-      const scores=scanGridScores(source,area,startY,endY);
-      const baseline=median(scores),range=Math.max(.06,Math.max(...scores)-baseline);
-      const strongestNear=(target,radius)=>{
-        let best={y:target,strength:0};
-        for(let y=Math.max(startY,Math.ceil(target-radius));y<=Math.min(endY,Math.floor(target+radius));y++){
-          const strength=(scores[y-startY]-baseline)/range;
-          if(strength>best.strength||(strength===best.strength&&Math.abs(y-target)<Math.abs(best.y-target))) best={y,strength};
-        }
-        return best;
-      };
-      const outerTolerance=Math.max(5,(expectedRows?selectionHeight/expectedRows:selectionHeight)*.035);
-      const topLine=strongestNear(top,outerTolerance),bottomLine=strongestNear(bottom,outerTolerance);
-      const first=topLine.strength>=.19?topLine.y:top,last=bottomLine.strength>=.19?bottomLine.y:bottom;
-      const height=last-first;
-      const visibleLines=[];
-      const lineMergeDistance=Math.max(4,height*.009);
-      for(let y=Math.ceil(first+lineMergeDistance);y<last-lineMergeDistance;y++){
-        const strength=(scores[y-startY]-baseline)/range;
-        if(strength<.5) continue;
-        const previous=visibleLines.at(-1);
-        if(!previous||y-previous.y>lineMergeDistance) visibleLines.push({y,strength});
-        else if(strength>previous.strength) visibleLines[visibleLines.length-1]={y,strength};
-      }
-      const candidateFor=count=>{
-        const gap=height/count,boundaries=[first];
-        const tolerance=Math.max(3,gap*.24);
-        let support=0,minSupport=1,offset=0;
-        for(let number=1;number<count;number++){
-          const position=first+number*gap,peak=strongestNear(position,tolerance);
-          const detected=peak.strength>=.15;
-          boundaries.push(detected?peak.y:position);
-          support+=peak.strength;minSupport=Math.min(minSupport,peak.strength);
-          if(detected) offset+=Math.abs(peak.y-position)/tolerance;
-        }
-        boundaries.push(last);
-        const gaps=Math.max(1,count-1);
-        const aligned=visibleLines.filter(line=>boundaries.some(y=>Math.abs(y-line.y)<=lineMergeDistance*1.7)).length;
-        const coverage=aligned/Math.max(1,visibleLines.length);
-        return {boundaries,minSupport,score:support/gaps-offset/gaps*.23+coverage*.34-count*.012,estimated:minSupport<.25};
-      };
-      let automatic=candidateFor(1);
-      automatic.score=.13;
-      for(let count=2;count<=MAX_VISITS&&height/count>=10;count++){
-        const candidate=candidateFor(count);
-        if(candidate.minSupport>=.18&&candidate.score>automatic.score) automatic=candidate;
-      }
-      const detected=automatic.boundaries.length-1;
-      const confidentCount=range>=.22&&(detected>1
-        ? automatic.minSupport>=.48
-        : !visibleLines.length&&Math.min(topLine.strength,bottomLine.strength)>=.65);
-      if(state.scanTargetKeys.length&&confidentCount&&detected!==expectedRows){
-        throw new Error('사진에서 '+detected+'행, 방문지 목록에서 '+expectedRows+'행을 확인했습니다. 두 사진이 같은 첫 행과 마지막 행을 포함하는지 확인하세요.');
-      }
-      if(expectedRows&&height/expectedRows<10) throw new Error('행 수에 비해 선택 영역이 작습니다. 열 전체를 더 크게 촬영하거나 영역을 넓혀 주세요.');
-      if(expectedRows) return candidateFor(expectedRows);
-      return {...automatic,estimated:detected===1&&Math.min(topLine.strength,bottomLine.strength)<.25};
-    }
-    function scanSummedPixels(values,width,height){
-      const stride=width+1;
-      const summed=new Float32Array(stride*(height+1));
-      for(let y=0;y<height;y++){
-        let rowSum=0;
-        for(let x=0;x<width;x++){
-          rowSum+=values[y*width+x];
-          summed[(y+1)*stride+x+1]=summed[y*stride+x+1]+rowSum;
-        }
-      }
-      return summed;
-    }
-    function scanLocalMean(summed,width,height,x,y,radius){
-      const stride=width+1;
-      const left=Math.max(0,x-radius),right=Math.min(width,x+radius+1);
-      const top=Math.max(0,y-radius),bottom=Math.min(height,y+radius+1);
-      const sum=summed[bottom*stride+right]-summed[top*stride+right]-summed[bottom*stride+left]+summed[top*stride+left];
-      return sum/((right-left)*(bottom-top));
-    }
-    function scanMonitorAxis(gray,width,height,horizontal){
-      const length=horizontal?width:height,cross=horizontal?height:width;
-      if(length<32||cross<14) return null;
-      const profile=new Float32Array(length),samples=new Uint8Array(13);
-      for(let i=0;i<length;i++){
-        for(let k=0;k<samples.length;k++){
-          const at=Math.min(cross-1,Math.floor((k+.5)*cross/samples.length));
-          samples[k]=horizontal?gray[at*width+i]:gray[i*width+at];
-        }
-        samples.sort();
-        // The brighter samples are less likely to belong to printed strokes.
-        profile[i]=(samples[9]+samples[10]+samples[11])/3;
-      }
-      const residual=new Float32Array(length);
-      let energy=0;
-      for(let i=0;i<length;i++){
-        const first=Math.max(0,i-8),last=Math.min(length-1,i+8);
-        let local=0;
-        for(let j=first;j<=last;j++) local+=profile[j];
-        residual[i]=profile[i]-local/(last-first+1);
-        energy+=residual[i]**2;
-      }
-      if(Math.sqrt(energy/length)<2.2) return null;
-      let period=0,best=.44;
-      for(let lag=2;lag<=Math.min(14,Math.floor(length/5));lag++){
-        let sum=0,firstEnergy=0,secondEnergy=0;
-        for(let i=5;i<length-lag-5;i++){
-          const a=residual[i],b=residual[i+lag];
-          sum+=a*b;firstEnergy+=a*a;secondEnergy+=b*b;
-        }
-        const confidence=sum/Math.max(1,Math.sqrt(firstEnergy*secondEnergy))-lag*.016;
-        if(confidence>best){best=confidence;period=lag}
-      }
-      return period?{period,residual}:null;
-    }
-    function reduceScanMonitorGrid(gray,width,height){
-      let current=gray;
-      for(const horizontal of [true,false]){
-        const pattern=scanMonitorAxis(current,width,height,horizontal);
-        if(!pattern) continue;
-        const pitch=Math.max(1,Math.round(pattern.period/2)),step=horizontal?1:width;
-        const edge=horizontal?width-1:height-1;
-        const next=new Uint8ClampedArray(current.length);
-        for(let y=0;y<height;y++){
-          for(let x=0;x<width;x++){
-            const i=y*width+x,axis=horizontal?x:y;
-            const left=i-(axis-Math.max(0,axis-pitch))*step;
-            const right=i+(Math.min(edge,axis+pitch)-axis)*step;
-            const stripe=Math.max(-20,Math.min(20,pattern.residual[axis]));
-            next[i]=.72*current[i]+.14*(current[left]+current[right])-.45*stripe;
-          }
-        }
-        current=next;
-      }
-      return current;
-    }
-    function createOcrCellCanvas(source,bounds,top,bottom,variant='standard'){
-      const moire=variant==='monitor',expanded=variant==='detail',binary=variant==='binary';
-      const xInset=Math.max(4,(bounds.right-bounds.left)*.012);
-      const yInset=expanded?Math.max(2,(bottom-top)*.08):Math.max(3,(bottom-top)*.11);
-      const left=Math.max(0,Math.round(bounds.left+xInset)),right=Math.min(source.width,Math.round(bounds.right-xInset));
-      const cropTop=Math.max(0,Math.round(top+yInset)),cropBottom=Math.min(source.height,Math.round(bottom-yInset));
-      const width=Math.max(1,right-left),height=Math.max(1,cropBottom-cropTop);
+      const {left,right,top,bottom}=state.scanArea;
+      const x=Math.ceil(left),y=Math.ceil(top);
+      const width=Math.floor(right)-x,height=Math.floor(bottom)-y;
+      if(width<1||height<1) return;
       const crop=document.createElement('canvas');
       crop.width=width;crop.height=height;
-      const cropContext=crop.getContext('2d',{willReadFrequently:true});
-      cropContext.drawImage(source,left,cropTop,width,height,0,0,width,height);
-      const image=cropContext.getImageData(0,0,width,height);
-      const grayscale=new Uint8Array(width*height);
-      let bright=0,middle=0,ink=0;
-      for(let i=0;i<grayscale.length;i++){
-        const offset=i*4;
-        const value=(image.data[offset]*77+image.data[offset+1]*150+image.data[offset+2]*29)>>8;
-        grayscale[i]=value;
-        if(value>=240) bright++;
-        else if(value>75) middle++;
+      crop.getContext('2d').drawImage(state.scanSourceCanvas,x,y,width,height,0,0,width,height);
+      const preview=$('scanSendImage');
+      preview.src=crop.toDataURL('image/jpeg',.94);
+      $('scanSendDialog').showModal();
+    }
+
+    function readGeminiScanRows(response,expectedRows){
+      const candidate=response?.candidates?.[0];
+      const answer=candidate?.content?.parts?.filter(part=>!part.thought).map(part=>part.text||'').join('');
+      if(!answer||candidate.finishReason!=='STOP'){
+        throw new Error('Gemini가 분석을 완료하지 못했습니다. 선택 영역을 확인하고 다시 시도하세요.');
       }
-      // Average the monitor pixel grid before thresholding. Keep the radius small on lower-resolution photos.
-      const cleaned=moire?reduceScanMonitorGrid(grayscale,width,height):grayscale;
-      const clearBackground=variant==='standard'&&bright>=grayscale.length*.72&&middle<=grayscale.length*.055;
-      if(clearBackground){
-        for(let i=0;i<grayscale.length;i++){
-          const value=grayscale[i];
-          if(value<180) ink++;
-          image.data[i*4]=image.data[i*4+1]=image.data[i*4+2]=value;
-        }
-      }else{
-        const sourceSum=scanSummedPixels(cleaned,width,height);
-        let radius=expanded?Math.min(3,Math.round(height/42)):Math.min(binary?6:4,Math.round(height/(binary?28:44)));
-        if(cleaned!==grayscale) radius=Math.min(radius,2);
-        const softened=new Float32Array(grayscale.length);
-        for(let y=0;y<height;y++){
-          for(let x=0;x<width;x++) softened[y*width+x]=scanLocalMean(sourceSum,width,height,x,y,radius);
-        }
-        const smoothSum=scanSummedPixels(softened,width,height);
-        const backgroundRadius=Math.max(5,Math.round(height*.18));
-        for(let y=0;y<height;y++){
-          for(let x=0;x<width;x++){
-            const i=y*width+x,background=scanLocalMean(smoothSum,width,height,x,y,backgroundRadius);
-            const darkness=background-softened[i];
-            if(darkness>18) ink++;
-            const value=binary?(darkness>15?0:255):255-Math.max(0,darkness-9)*5;
-            image.data[i*4]=image.data[i*4+1]=image.data[i*4+2]=value;
-          }
-        }
+      let rows;
+      try{rows=JSON.parse(answer).rows}catch{}
+      if(!Array.isArray(rows)||!rows.length||rows.length>MAX_VISITS){
+        throw new Error('응답에서 표의 행을 확인할 수 없습니다. 행 수를 입력하고 다시 시도하세요.');
       }
-      cropContext.putImageData(image,0,0);
-      const scale=Math.min(2.5,112/height,1800/width);
-      const outputWidth=Math.max(1,Math.round(width*scale)),outputHeight=Math.max(1,Math.round(height*scale));
-      const padding=10,canvas=document.createElement('canvas');
-      canvas.width=outputWidth+padding*2;canvas.height=outputHeight+padding*2;
-      const context=canvas.getContext('2d');
-      context.fillStyle='#fff';context.fillRect(0,0,canvas.width,canvas.height);
-      context.imageSmoothingQuality='high';
-      context.drawImage(crop,padding,padding,outputWidth,outputHeight);
-      return {
-        canvas,hasInk:ink>=Math.max(6,width*height*.0018),monitorFiltered:cleaned!==grayscale,
-        sourceX:left,scaleX:outputWidth/width,padding
+      if(expectedRows&&rows.length!==expectedRows){
+        throw new Error('표는 '+expectedRows+'행인데 Gemini가 '+rows.length+'행을 반환했습니다. 빈 행까지 포함해 영역을 확인하세요.');
+      }
+      const byIndex=new Map();
+      for(const row of rows){
+        if(!row||!Number.isInteger(row.rowNumber)||row.rowNumber<1||row.rowNumber>rows.length
+          ||byIndex.has(row.rowNumber)||typeof row.text!=='string'
+          ||!['read','blank','unreadable'].includes(row.status)||row.text.length>500){
+          throw new Error('응답의 행 번호 또는 내용이 올바르지 않습니다. 영역을 확인하고 다시 시도하세요.');
+        }
+        const value=row.status==='read'?row.text.replace(/[\r\n]+/g,' ').trim():'';
+        byIndex.set(row.rowNumber,{value,omit:false});
+      }
+      return Array.from({length:rows.length},(_,index)=>byIndex.get(index+1));
+    }
+
+    function geminiServiceError(status,reason){
+      if(status===429) return 'Gemini 사용 한도에 도달했습니다. 한도가 갱신된 후 다시 시도하세요.';
+      if(reason==='FREE_TIER_VERIFICATION_REQUIRED') return 'Google AI Studio에서 무료 프로젝트의 기기 인증을 완료하세요.';
+      if(status===401||status===403||reason==='API_KEY_INVALID'||reason==='API_KEY_SERVICE_BLOCKED'){
+        return 'Gemini 키 또는 프로젝트 권한을 확인하세요. Google AI Studio에서 발급한 Gemini API 키를 사용하세요.';
+      }
+      if(status===404) return '이 프로젝트에서 사진 인식 모델을 사용할 수 없습니다. Google AI Studio의 모델 사용 가능 여부를 확인하세요.';
+      if(status===413) return '선택한 이미지가 너무 큽니다. 필요한 열만 다시 선택하세요.';
+      if(status>=500) return 'Gemini 서비스가 일시적으로 응답하지 않습니다. 잠시 후 다시 시도하세요.';
+      return 'Gemini가 요청을 처리하지 못했습니다. 키 설정과 선택 영역을 확인하세요. (HTTP '+status+')';
+    }
+
+    async function analyzeSchedulePhoto(){
+      const preview=$('scanSendImage');
+      if(!$('scanSendDialog').open||state.scanBusy) return;
+      const image=preview.getAttribute('src');
+      $('scanSendDialog').close();
+      if(!image||!state.geminiKey) return;
+      const expectedRows=state.scanTargetKeys.length||Number($('scanRowCount').value);
+      const label=state.scanField==='address'?'주소1':'시설명';
+      const prompt=[
+        '이미지는 일정표에서 '+label+' 열 하나를 잘라낸 사진입니다. 보이는 내용만 전사하세요.',
+        '위에서 아래로 표의 실제 행을 하나씩 반환하세요. 셀 안의 줄바꿈을 별도 행으로 세지 마세요.',
+        '첫 행부터 마지막 행까지 내용이 없는 실제 행도 생략하지 말고 순번을 연속으로 매기세요.',
+        expectedRows?'예상 행 수는 '+expectedRows+'행입니다. 차이가 나면 보이는 실제 행 수를 반환하세요.':'',
+        '한글, 영문 대소문자, 숫자, 번지의 하이픈과 기호를 원문 그대로 유지하세요. 번역하거나 주소를 교정하지 마세요.',
+        '정확히 읽을 수 있으면 status는 read, 실제 빈 셀이면 blank, 판독이 어려우면 unreadable로 반환하세요.',
+        'blank와 unreadable의 text는 빈 문자열로 두세요. 내용을 추정하지 마세요.'
+      ].filter(Boolean).join('\n');
+      const schema={
+        type:'object',required:['rows'],properties:{
+          rows:{type:'array',items:{
+            type:'object',required:['rowNumber','text','status'],properties:{
+              rowNumber:{type:'integer'},text:{type:'string'},status:{type:'string',enum:['read','blank','unreadable']}
+            }
+          }}
+        }
       };
-    }
-    function cleanCellText(value,type){
-      let text=cleanRecognizedText(value,type).replace(/^[|!\s]+|[|!_~\s]+$/g,'').trim();
-      if(type==='name'&&!/['’‘]$/.test(text)) text=text.replace(/^['’‘]+\s*(?=[가-힣])/,'');
-      if(type==='address'){
-        const administrative=text.search(/서울|부산|대구|인천|광주|대전|울산|세종|경기|강원|충북|충남|전북|전남|경북|경남|제주/);
-        if(administrative>0) text=text.slice(administrative);
-        text=text.replace(/(?:\s+[ㄱ-ㅎㅏ-ㅣ|Il&]+)+$/g,'').trim();
+      invalidateScanReview();
+      setScanBusy(true);
+      setScanStatus('Gemini가 선택한 '+label+' 열을 읽고 있습니다.','',35);
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),45000);
+      try{
+        const response=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+GEMINI_MODEL+':generateContent',{
+          method:'POST',
+          headers:{'Content-Type':'application/json','x-goog-api-key':state.geminiKey},
+          credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',cache:'no-store',signal:controller.signal,
+          body:JSON.stringify({
+            contents:[{parts:[{text:prompt},{inlineData:{mimeType:'image/jpeg',data:image.slice(image.indexOf(',')+1)}}]}],
+            generationConfig:{responseMimeType:'application/json',responseJsonSchema:schema,maxOutputTokens:4096}
+          })
+        });
+        const data=await response.json().catch(()=>null);
+        if(!response.ok){
+          const reason=data?.error?.details?.find(detail=>detail.reason)?.reason;
+          setScanStatus(geminiServiceError(response.status,reason),'error',0);
+          return;
+        }
+        state.scanRows=readGeminiScanRows(data,expectedRows);
+        renderScanReview();
+        setScanStatus(state.scanRows.length+'개 행을 읽었습니다. 원본을 확인한 뒤 반영하세요.','success',100);
+        $('scanReview').scrollIntoView({block:'nearest'});
+      }catch(error){
+        const message=controller.signal.aborted?'Gemini 응답이 지연되고 있습니다. 잠시 후 다시 시도하세요.'
+          :error instanceof TypeError?'Gemini에 연결하지 못했습니다. 인터넷 연결과 브라우저 또는 회사 네트워크 설정을 확인하세요.'
+          :error.message;
+        setScanStatus(message,'error',0);
+      }finally{
+        clearTimeout(timer);
+        setScanBusy(false);
       }
-      return text;
     }
-    function scanAddressLooksUncertain(address){
-      return !looksLikeAddress(address)
-        || /(?:^|\s)[A-Z]{2,}(?=\s|$)/.test(address)
-        || !/[가-힣](?:대로|번길|로|길|동|리|읍|가|면)\s*(?:산\s*)?\d/.test(address);
-    }
-    function scanNameLooksUncertain(value){
-      return /[\\□�×^]/u.test(value)||/[\s][.,'’](?=\s|$)/u.test(value)
-        || [['(',')'],['「','」'],['『','』'],['“','”']].some(([left,right])=>value.includes(left)!==value.includes(right));
-    }
-    function scanValueNeedsReview(value,confidence,field,numberConflict=false,characterConflict=false){
-      return !value.trim()||(confidence!=null&&confidence<(field==='address'?85:68))
-        || (field==='address'?(numberConflict||scanAddressLooksUncertain(value)):(characterConflict||scanNameLooksUncertain(value)));
-    }
+
     function setScanBusy(busy){
       state.scanBusy=busy;
       $('analyzeSchedulePhoto').disabled=busy||!state.scanArea;
@@ -1228,206 +1101,63 @@
       $('retakeSchedulePhoto').disabled=busy;$('closeScan').disabled=busy;$('scanRowCount').disabled=busy;
       updateScanViewControls();
     }
-    function scanMixedGlyph(words,value){
-      if(!/[가-힣]/.test(value)) return null;
-      for(const word of words){
-        if(!/^[A-Z0-9]{2,5}$/.test(word.text)||!value.endsWith(word.text)) continue;
-        const symbols=word.symbols||[];
-        const previous=symbols.at(-2)?.bbox,last=symbols.at(-1)?.bbox;
-        if(!previous||!last||last.x0<previous.x1) continue;
-        const letterHeight=previous.y1-previous.y0;
-        if(letterHeight>8&&last.x1-last.x0>(previous.x1-previous.x0)*1.48&&last.y1-last.y0>letterHeight*1.10){
-          return {previous,last,token:word.text};
-        }
-      }
-      return null;
+
+    function updateScanApply(){
+      $('applyScannedRows').disabled=!state.scanRows.length||state.scanRows.some(row=>!row.value.trim()&&!row.omit);
     }
-    async function retryScanMixedGlyph(worker,prepared,glyph,top,bottom){
-      const toSource=x=>prepared.sourceX+(x-prepared.padding)/prepared.scaleX;
-      const left=toSource(glyph.previous.x1+1),right=Math.min(state.scanArea.right,toSource(glyph.last.x1)+7);
-      if(right-left<13) return '';
-      const crop=createOcrCellCanvas(state.scanSourceCanvas,{left,right},top,bottom,'binary');
-      await worker.setParameters({tessedit_pageseg_mode:'10'});
-      try{
-        const {data}=await worker.recognize(crop.canvas);
-        const value=data.text.trim();
-        return data.confidence>=80&&/^[가-힣]$/.test(value)?value:'';
-      }finally{
-        await worker.setParameters({tessedit_pageseg_mode:'7'});
-      }
-    }
-    async function readScanName(worker,initial,top,bottom){
-      const source=state.scanSourceCanvas,area=state.scanArea;
-      const recognize=async prepared=>{
-        const {data}=await worker.recognize(prepared.canvas,{}, {blocks:true});
-        const value=cleanCellText(data.text,'name');
-        const words=(data.blocks||[]).flatMap(block=>block.paragraphs.flatMap(p=>p.lines.flatMap(line=>line.words)));
-        return {value:/[\p{L}\p{N}]/u.test(value)?value:'',confidence:data.confidence,words,prepared};
-      };
-      const first=await recognize(initial);
-      const firstGlyph=scanMixedGlyph(first.words,first.value);
-      if(firstGlyph){
-        const syllable=await retryScanMixedGlyph(worker,first.prepared,firstGlyph,top,bottom);
-        if(syllable) return {value:first.value.slice(0,-1)+syllable,confidence:first.confidence,characterConflict:true};
-      }
-      let detail=null;
-      if(scanNameLooksUncertain(first.value)){
-        detail=await recognize(createOcrCellCanvas(source,area,top,bottom,'detail'));
-        const glyph=scanMixedGlyph(detail.words,detail.value);
-        if(glyph){
-          const syllable=await retryScanMixedGlyph(worker,detail.prepared,glyph,top,bottom);
-          if(syllable) return {value:detail.value.slice(0,-1)+syllable,confidence:detail.confidence,characterConflict:true};
-        }
-      }
-      const firstMixed=/[가-힣]/.test(first.value)&&/[A-Za-z0-9]/.test(first.value);
-      let selected=first,characterConflict=false;
-      if(firstMixed||first.confidence<80||scanValueNeedsReview(first.value,first.confidence,'name')){
-        const corrected=createOcrCellCanvas(source,area,top,bottom,'monitor');
-        const retry=corrected.monitorFiltered?await recognize(corrected)
-          :detail||await recognize(createOcrCellCanvas(source,area,top,bottom,'detail'));
-        const score=result=>result.value?(result.confidence||0)-(scanNameLooksUncertain(result.value)?24:0):-Infinity;
-        const code=result=>(result.value.match(/[A-Za-z0-9]+/g)||[]).join('|');
-        const minimumGain=firstMixed&&code(first)===code(retry)?8:2;
-        if(score(retry)>score(first)+minimumGain) selected=retry;
-        if(detail&&score(detail)>score(selected)+2) selected=detail;
-        characterConflict=Boolean(first.value&&retry.value&&code(first)!==code(retry));
-        if(detail?.value&&first.value&&code(first)!==code(detail)) characterConflict=true;
-      }
-      let value=selected.value;
-      const mixed=selected===first?firstGlyph:scanMixedGlyph(selected.words,value);
-      if(mixed){
-        const syllable=selected===first||selected===detail?'':await retryScanMixedGlyph(worker,selected.prepared,mixed,top,bottom);
-        if(syllable) value=value.slice(0,-1)+syllable;
-        characterConflict=true;
-      }
-      return {value,confidence:selected.confidence,characterConflict};
-    }
-    async function readScanCell(worker,top,bottom,field){
-      const source=state.scanSourceCanvas,area=state.scanArea;
-      const cell=createOcrCellCanvas(source,area,top,bottom);
-      if(!cell.hasInk) return {value:'',confidence:null};
-      if(field==='name') return readScanName(worker,cell,top,bottom);
-      const recognize=async canvas=>{
-        const {data}=await worker.recognize(canvas);
-        const value=cleanCellText(data.text,field);
-        return {value:/[\p{L}\p{N}]/u.test(value)?value:'',confidence:data.confidence};
-      };
-      const first=await recognize(cell.canvas);
-      if(!scanValueNeedsReview(first.value,first.confidence,field)) return first;
-      const retry=await recognize(createOcrCellCanvas(source,area,top,bottom,'detail').canvas);
-      const score=result=>{
-        if(!result.value) return -Infinity;
-        return (result.confidence||0)-(scanAddressLooksUncertain(result.value)?22:0);
-      };
-      let selected=score(retry)>score(first)?retry:first;
-      if(!hasAddressSignal(selected.value)){
-        const corrected=createOcrCellCanvas(source,area,top,bottom,'monitor');
-        if(corrected.monitorFiltered){
-          const monitor=await recognize(corrected.canvas);
-          if(score(monitor)>score(selected)) selected=monitor;
-        }
-        if(!hasAddressSignal(selected.value)){
-          const binary=await recognize(createOcrCellCanvas(source,area,top,bottom,'binary').canvas);
-          if(score(binary)>score(selected)) selected=binary;
-        }
-      }
-      if([first,retry].every(result=>result.confidence>=55&&looksLikeAddress(result.value))){
-        const numbers=result=>(result.value.match(/\d+(?:-\d+)?/g)||[]).join(',');
-        return {...selected,numberConflict:numbers(first)!==numbers(retry)};
-      }
-      return selected;
-    }
-    async function analyzeSchedulePhoto(){
-      if(!state.scanArea||state.scanDrag||state.scanBusy) return;
-      if(typeof Tesseract==='undefined'){
-        setScanStatus('문자 인식 기능을 불러오지 못했습니다. 인터넷 연결 후 다시 시도하세요.','error',0);return;
-      }
-      const rowInput=$('scanRowCount'),expectedRows=state.scanTargetKeys.length||Number(rowInput.value);
-      if(rowInput.validity.badInput||(rowInput.value&&!rowInput.validity.valid)||!Number.isInteger(expectedRows)||expectedRows<0||expectedRows>MAX_VISITS){
-        setScanStatus('표의 행 수는 1~'+MAX_VISITS+' 사이로 입력하세요.','error',0);return;
-      }
-      const field=state.scanField;
-      invalidateScanReview();
-      setScanBusy(true);
-      drawScanAreaOverlay();
-      let worker;
-      try{
-        const layout=detectScheduleRowBoundaries(expectedRows);
-        state.scanBoundaries=layout.boundaries;
-        drawScanAreaOverlay();
-        const rowCount=layout.boundaries.length-1;
-        setScanStatus('문자 인식 기능을 준비하고 있습니다.','',5);
-        worker=await Tesseract.createWorker(field==='name'?['kor','eng']:'kor',1,{
-          logger:message=>{
-            if(message.status!=='recognizing text') setScanStatus(ocrProgressMessage(message)+' '+Math.round((message.progress||0)*100)+'%','',8+(message.progress||0)*25);
-          }
-        });
-        await worker.setParameters({tessedit_pageseg_mode:'7',preserve_interword_spaces:'1'});
-        const rows=[];
-        for(let rowIndex=0;rowIndex<rowCount;rowIndex++){
-          setScanStatus('일정표 '+(rowIndex+1)+' / '+rowCount+'행을 읽고 있습니다.','',35+Math.round(rowIndex/Math.max(1,rowCount)*60));
-          const top=layout.boundaries[rowIndex],bottom=layout.boundaries[rowIndex+1];
-          rows.push(await readScanCell(worker,top,bottom,field));
-        }
-        state.scanRows=rows;
-        renderScanReview();
-        const reviewCount=rows.filter(row=>scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict,row.characterConflict)).length;
-        const message=layout.estimated?'가로줄이 희미합니다. 사진 위 행 번호와 첫·마지막 행을 확인하세요.'
-          :reviewCount?'빈칸과 노란 행을 원본에서 확인하세요.':'결과를 원본과 대조하세요.';
-        setScanStatus(rowCount+'개 행을 나눴습니다. '+message,reviewCount||layout.estimated?'':'success',100);
-      }catch(error){
-        setScanStatus('분석 실패: '+error.message,'error',0);
-      }finally{
-        if(worker) await worker.terminate().catch(()=>{});
-        setScanBusy(false);
-      }
-    }
+
     function renderScanReview(){
-      const host=$('scanReviewList'),field=state.scanField,isAddress=field==='address';
+      const host=$('scanReviewList'),isAddress=state.scanField==='address';
       const label=isAddress?'주소':'시설명';
       host.replaceChildren();
       $('scanReviewWarning').textContent=isAddress
-        ? '사진의 첫 행과 마지막 행이 방문지 목록과 같은지 확인하세요. 실제로 주소가 없는 행은 빈칸으로 두세요.'
-        : '행 수와 순서를 사진과 대조하세요. 시설명을 적용한 다음 같은 행의 주소 열을 촬영하세요.';
+        ? '사진과 행 순서 및 주소 숫자를 대조하세요. 원본 주소가 빈 행은 아래에서 경로 제외를 선택하세요.'
+        : '행 수와 글자를 원본과 대조하세요. 시설명을 적용한 뒤 같은 순서로 주소 열을 촬영하세요.';
       state.scanRows.forEach((row,index)=>{
-        const entry=document.createElement('div');
-        entry.className='scan-review-row';
-        const flagRow=()=>entry.classList.toggle('needs-review',scanValueNeedsReview(row.value,row.confidence,field,row.numberConflict,row.characterConflict));
-        const number=document.createElement('span');
-        number.className='scan-review-number';number.textContent=index+1;
-        const fields=document.createElement('div');
-        fields.className='scan-review-fields';
+        const entry=document.createElement('div');entry.className='scan-review-row';
+        const number=document.createElement('span');number.className='scan-review-number';number.textContent=index+1;
+        const fields=document.createElement('div');fields.className='scan-review-fields';
         const target=state.inputRows.find(visit=>visit.key===state.scanTargetKeys[index]);
         if(isAddress&&target&&(target.name||target.address)){
-          const context=document.createElement('span');
-          context.className='scan-review-context';
+          const context=document.createElement('span');context.className='scan-review-context';
           context.textContent=target.name||'기존 주소 '+target.address;
           fields.append(context);
         }
         const input=document.createElement('input');
         input.setAttribute('aria-label',(index+1)+'번 '+label);
-        input.placeholder=label+' 빈칸';
+        input.placeholder=label+' 확인 필요';
         input.value=row.value;
-        if(row.numberConflict||row.characterConflict) input.setAttribute('aria-describedby','scanNumberWarning'+index);
-        const numberWarning=document.createElement('span');
-        numberWarning.id='scanNumberWarning'+index;
-        numberWarning.className='scan-review-context';
-        numberWarning.textContent=isAddress?'주소 숫자를 사진과 대조하세요.':'섞여 있는 영문·숫자와 한글을 사진과 대조하세요.';
-        numberWarning.hidden=!(row.numberConflict||row.characterConflict);
+        const omitToggle=document.createElement('input');omitToggle.type='checkbox';
+        const omitLabel=document.createElement('label');omitLabel.className='remember scan-blank';
+        omitLabel.append(omitToggle,'주소 없음 · 경로 제외');
+        function updateReviewRow(){
+          const empty=!row.value.trim();
+          entry.classList.toggle('needs-review',empty&&!row.omit);
+          omitLabel.hidden=!isAddress||!empty;
+          updateScanApply();
+        }
         input.addEventListener('input',()=>{
-          row.value=input.value;row.confidence=null;row.numberConflict=false;row.characterConflict=false;
-          numberWarning.hidden=true;input.removeAttribute('aria-describedby');flagRow();
+          row.value=input.value;
+          row.omit=false;
+          omitToggle.checked=false;
+          updateReviewRow();
         });
-        fields.append(input,numberWarning);entry.append(number,fields);
-        flagRow();host.append(entry);
+        omitToggle.addEventListener('change',()=>{
+          row.omit=omitToggle.checked&&!row.value.trim();
+          updateReviewRow();
+        });
+        fields.append(input);
+        if(isAddress) fields.append(omitLabel);
+        entry.append(number,fields);host.append(entry);
+        updateReviewRow();
       });
       $('scanReviewCount').textContent=state.scanRows.length+'행';
       $('applyScannedRows').textContent=label+'을 방문지 목록에 적용';
-      $('applyScannedRows').disabled=!state.scanRows.length;
       $('scanReview').hidden=false;
     }
+
     async function applyScannedRows(){
-      if(state.scanBusy||!state.scanRows.length) return;
+      if(state.scanBusy||$('applyScannedRows').disabled) return;
       const keys=state.scanTargetKeys,existing=state.inputRows,field=state.scanField;
       const label=field==='address'?'주소':'시설명';
       const values=state.scanRows.map(row=>row.value.trim());
@@ -1438,37 +1168,46 @@
       if(!keys.length&&!values.some(Boolean)){
         setScanStatus('가져올 '+label+'이 비어 있습니다. 결과를 수정하거나 다시 촬영하세요.','error',100);return;
       }
-      const changes=values.some((value,index)=>(existing[index]?.[field]||'')!==value);
+      const applyingAddress=field==='address';
+      const changes=values.some((value,index)=>{
+        const visit=existing[index];
+        return (visit?.[field]||'')!==value
+          ||(applyingAddress&&Boolean(visit?.omitFromRoute)!==state.scanRows[index].omit);
+      });
       const overwrites=keys.length&&existing.some((row,index)=>row[field].trim()&&row[field]!==values[index]);
-      if(overwrites&&!confirm('검토한 '+label+'으로 기존 값을 바꿀까요? 사진에서 확인한 빈칸도 반영됩니다.')) return;
+      if(overwrites&&!confirm('기존 '+label+'을 검토한 내용으로 바꿀까요?')) return;
       if(!changes){closeScanDialog();setStatus('기존 '+label+'과 동일합니다.','success');return}
       if(!keys.length) while(existing.length<values.length) existing.push({key:state.nextInputId++,name:'',address:'',phone:''});
       cancelRouteCalculation();
       values.forEach((value,index)=>{
         const visit=existing[index];
-        if(field==='address'&&visit.address!==value) clearAddressIssue(visit.key);
+        if(applyingAddress){
+          if(visit.address!==value||state.scanRows[index].omit) clearAddressIssue(visit.key);
+          visit.omitFromRoute=state.scanRows[index].omit;
+        }
         visit[field]=value;
       });
+      const excluded=applyingAddress?state.scanRows.filter(row=>row.omit).length:0;
       renderInputRows();
       state.result=null;$('results').hidden=true;$('resultPlaceholder').hidden=false;clearMap();
       closeScanDialog();
       setStatus(field==='name'
         ? values.length+'개 행에 시설명을 반영했습니다. 같은 순서로 주소를 촬영하세요.'
-        : values.length+'개 행에 주소를 반영했습니다.'+(values.includes('')?' 주소가 없는 행은 빈칸으로 유지했습니다.':' 주소를 확인한 뒤 경로를 계산하세요.'),'success');
+        : (values.length-excluded)+'개 주소를 반영했습니다.'+(excluded?' 주소가 없는 '+excluded+'개 행은 경로에서 제외했습니다.':''),'success');
       document.querySelector('.visit-card')?.scrollIntoView({behavior:'smooth',block:'start'});
       await deleteRouteSnapshot();
     }
     function routeAddressInputs(){
       const startAddress=$('startAddress').value.trim(),endMode=$('endMode').value;
       const endAddress=endMode==='return'?startAddress:$('endAddress').value.trim();
-      const visits=state.inputRows.map((row,index)=>({
-        key:row.key,id:'visit-'+(index+1),name:row.name.trim()||'방문지 '+(index+1),address:row.address.trim(),phone:row.phone.trim()
-      }));
-      const entries=[{key:'start',label:'출발지',address:startAddress}];
+      const visits=[],entries=[{key:'start',label:'출발지',address:startAddress}];
       if(endMode!=='return') entries.push({key:'end',label:'도착지',address:endAddress});
-      visits.forEach((visit,index)=>{
-        const label=(index+1)+'번 방문지'+(visit.name==='방문지 '+(index+1)?'':' · '+visit.name);
-        entries.push({key:visit.key,label,address:visit.address});
+      state.inputRows.forEach((row,index)=>{
+        const address=row.address.trim();
+        if(row.omitFromRoute&&!address) return;
+        const number=index+1,name=row.name.trim();
+        visits.push({key:row.key,id:'visit-'+number,name:name||'방문지 '+number,address,phone:row.phone.trim()});
+        entries.push({key:row.key,label:number+'번 방문지'+(name?' · '+name:''),address});
       });
       return {startAddress,endAddress,endMode,visits,entries};
     }
@@ -1483,6 +1222,19 @@
     function closeKeyDialog(){
       if(typeof $('keyDialog').close === 'function') $('keyDialog').close();
       else $('keyDialog').removeAttribute('open');
+    }
+
+    function setGeminiKeyState(){
+      const ready=Boolean(state.geminiKey);
+      $('geminiKeyDot').classList.toggle('ready',ready);
+      $('geminiKeyState').textContent=ready?'Gemini 키 설정됨':'Gemini 키 설정';
+    }
+    function openGeminiKeyDialog(){
+      $('geminiKey').value=state.geminiKey;
+      $('geminiKey').setCustomValidity('');
+      $('rememberGeminiKey').checked=Boolean(readLocal(GEMINI_KEY_STORAGE));
+      $('deleteGeminiKey').disabled=!state.geminiKey;
+      $('geminiKeyDialog').showModal();
     }
 
     function initMap(){
@@ -2010,13 +1762,18 @@
       drawScanAreaOverlay();
       if(state.scanArea) setScanStatus('변경한 행 수로 다시 분석하세요.','',0);
     });
-    $('analyzeSchedulePhoto').addEventListener('click',analyzeSchedulePhoto);
+    $('analyzeSchedulePhoto').addEventListener('click',prepareScheduleCrop);
+    $('confirmScanSend').addEventListener('click',analyzeSchedulePhoto);
+    $('cancelScanSend').addEventListener('click',()=>$('scanSendDialog').close());
+    $('scanSendDialog').addEventListener('close',()=>{
+      if(!$('scanSendDialog').open) $('scanSendImage').removeAttribute('src');
+    });
     $('applyScannedRows').addEventListener('click',applyScannedRows);
     $('closeScan').addEventListener('click',closeScanDialog);
     $('scanDialog').addEventListener('cancel',event=>{if(state.scanBusy) event.preventDefault()});
     $('scanDialog').addEventListener('close',()=>{
       if($('scanDialog').open) return;
-      state.scanSourceCanvas=null;state.scanArea=null;state.scanDrag=null;state.scanRows=[];state.scanBoundaries=[];
+      state.scanSourceCanvas=null;state.scanArea=null;state.scanDrag=null;state.scanRows=[];
       const canvas=$('scanCanvas');canvas.width=1;canvas.height=1;
       updateScanView();
     });
@@ -2050,11 +1807,38 @@
       if(event.target===$('keyDialog')) closeKeyDialog();
     });
 
+    $('openGeminiKey').addEventListener('click',openGeminiKeyDialog);
+    $('closeGeminiKey').addEventListener('click',()=>$('geminiKeyDialog').close());
+    $('geminiKeyDialog').addEventListener('close',()=>{
+      if(!$('geminiKeyDialog').open) $('geminiKey').value='';
+    });
+    $('geminiKey').addEventListener('input',event=>event.target.setCustomValidity(''));
+    $('geminiKeyForm').addEventListener('submit',event=>{
+      event.preventDefault();
+      const input=$('geminiKey'),key=input.value.trim();
+      if(!key||!/^[!-~]+$/.test(key)){
+        input.setCustomValidity('발급받은 Gemini API 키만 붙여넣으세요.');
+        input.reportValidity();
+        return;
+      }
+      state.geminiKey=key;
+      writeLocal(GEMINI_KEY_STORAGE,$('rememberGeminiKey').checked?key:'');
+      setGeminiKeyState();
+      $('geminiKeyDialog').close();
+    });
+    $('deleteGeminiKey').addEventListener('click',()=>{
+      state.geminiKey='';
+      writeLocal(GEMINI_KEY_STORAGE,'');
+      setGeminiKeyState();
+      $('geminiKeyDialog').close();
+    });
+
     window.addEventListener('DOMContentLoaded',async()=>{
       state.apiKey=readLocal(KEY_STORAGE);
+      state.geminiKey=readLocal(GEMINI_KEY_STORAGE);
       $('startAddress').value=readLocal(START_STORAGE);
       state.inputRows=[{key:state.nextInputId++,name:'',address:'',phone:''}];
-      setKeyState();renderInputRows();initMap();
+      setKeyState();setGeminiKeyState();renderInputRows();initMap();
       const restored=await restoreSavedRoute();
       if(restored) setStatus('저장된 최적경로를 복원했습니다.','success',100);
     });
